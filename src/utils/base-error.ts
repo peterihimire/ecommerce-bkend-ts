@@ -1,8 +1,12 @@
-// class BaseError extends Error {
-//   constructor(message: string, errorCode: number) {
-//     super(message);
-//     this.code = errorCode;
-//     Error.captureStackTrace(this);
-//   }
-// }
-// export default BaseError;
+class BaseError extends Error {
+  constructor(
+    public message: string,
+    public errorCode: number
+  ) // public code: number
+  {
+    super(message);
+    this.errorCode = errorCode;
+    Error.captureStackTrace(this);
+  }
+}
+export default BaseError;
