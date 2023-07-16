@@ -54,4 +54,4 @@ const configDB: ConfigTs = {
 };
 export default configDB;
 
-module.exports = configDB;
+// module.exports = configDB;

@@ -1,10 +1,10 @@
-// const path = require('path');
-import { resolve } from "path";
+const path = require('path');
+// import { resolve } from "path";
 
 module.exports = {
   env: process.env.NODE_ENV || "development",
-  config: resolve("./dist/database/config", "config.js"),
-  "models-path": resolve("./dist/src/database/models"),
-  "seeders-path": resolve("./dist/src/database/seeders"),
-  "migrations-path": resolve("./dist/src/database/migrations"),
+  config: path.resolve("./dist/database/config", "config.js"),
+  "models-path": path.resolve("./dist/src/database/models"),
+  "seeders-path": path.resolve("./dist/src/database/seeders"),
+  "migrations-path": path.resolve("./dist/src/database/migrations"),
 };

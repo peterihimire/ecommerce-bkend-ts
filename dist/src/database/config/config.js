@@ -49,4 +49,4 @@ const configDB = {
     },
 };
 exports.default = configDB;
-module.exports = configDB;
+// module.exports = configDB;
