@@ -1,4 +1,4 @@
-import express from "express";
+import express, { Application } from "express";
 import authRoute from "./src/routes/auth-route";
 import testRoute from "./src/routes/test-route";
 import {
@@ -7,7 +7,7 @@ import {
   unknownRoute,
 } from "./src/middlewares/error-handler";
 
-const app = express();
+const app: Application = express();
 
 app.set("trust proxy", 1);
 app.use("/api/ecommerce/v1/auth", authRoute);
