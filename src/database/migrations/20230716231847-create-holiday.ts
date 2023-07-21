@@ -1,13 +1,17 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
+import { QueryInterface, DataTypes, QueryTypes } from "sequelize";
+
 module.exports = {
-    up: (queryInterface) => queryInterface.sequelize.transaction(async (transaction) => {
-        // here go all migration changes
+  up: (queryInterface: QueryInterface): Promise<void> =>
+    queryInterface.sequelize.transaction(async (transaction) => {
+      // here go all migration changes
     }),
-    down: (queryInterface) => queryInterface.sequelize.transaction(async (transaction) => {
-        // here go all migration undo changes
+
+  down: (queryInterface: QueryInterface): Promise<void> =>
+    queryInterface.sequelize.transaction(async (transaction) => {
+      // here go all migration undo changes
     }),
 };
+
 // 'use strict';
 // /** @type {import('sequelize-cli').Migration} */
 // module.exports = {

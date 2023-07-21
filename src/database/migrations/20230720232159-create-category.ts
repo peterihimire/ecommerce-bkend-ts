@@ -1,37 +1,35 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
+import { QueryInterface, DataTypes, QueryTypes } from "sequelize";
+
 module.exports = {
-    up: (queryInterface) => queryInterface.sequelize.transaction(async (transaction) => {
-        // here go all migration changes
+  up: (queryInterface: QueryInterface): Promise<void> =>
+    queryInterface.sequelize.transaction(async (transaction) => {
+      // here go all migration changes
     }),
-    down: (queryInterface) => queryInterface.sequelize.transaction(async (transaction) => {
-        // here go all migration undo changes
+
+  down: (queryInterface: QueryInterface): Promise<void> =>
+    queryInterface.sequelize.transaction(async (transaction) => {
+      // here go all migration undo changes
     }),
 };
+
 // 'use strict';
 // /** @type {import('sequelize-cli').Migration} */
 // module.exports = {
 //   async up(queryInterface, Sequelize) {
-//     await queryInterface.createTable('Holidays', {
+//     await queryInterface.createTable('Categories', {
 //       id: {
 //         allowNull: false,
 //         autoIncrement: true,
 //         primaryKey: true,
 //         type: Sequelize.INTEGER
 //       },
-//       holiday_name: {
+//       category_name: {
 //         type: Sequelize.STRING
 //       },
-//       start_date: {
+//       category_desc: {
 //         type: Sequelize.STRING
 //       },
 //       acct_id: {
-//         type: Sequelize.STRING
-//       },
-//       end_date: {
-//         type: Sequelize.STRING
-//       },
-//       exempted_personnels: {
 //         type: Sequelize.STRING
 //       },
 //       createdAt: {
@@ -45,6 +43,6 @@ module.exports = {
 //     });
 //   },
 //   async down(queryInterface, Sequelize) {
-//     await queryInterface.dropTable('Holidays');
+//     await queryInterface.dropTable('Categories');
 //   }
 // };

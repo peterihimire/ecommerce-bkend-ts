@@ -1,10 +1,9 @@
-"use strict";
 // 'use strict';
 // const {
 //   Model
 // } = require('sequelize');
 // module.exports = (sequelize, DataTypes) => {
-//   class Holiday extends Model {
+//   class Category extends Model {
 //     /**
 //      * Helper method for defining associations.
 //      * This method is not a part of Sequelize lifecycle.
@@ -14,15 +13,13 @@
 //       // define association here
 //     }
 //   }
-//   Holiday.init({
-//     holiday_name: DataTypes.STRING,
-//     start_date: DataTypes.STRING,
-//     acct_id: DataTypes.STRING,
-//     end_date: DataTypes.STRING,
-//     exempted_personnels: DataTypes.STRING
+//   Category.init({
+//     category_name: DataTypes.STRING,
+//     category_desc: DataTypes.STRING,
+//     acct_id: DataTypes.STRING
 //   }, {
 //     sequelize,
-//     modelName: 'Holiday',
+//     modelName: 'Category',
 //   });
-//   return Holiday;
+//   return Category;
 // };
