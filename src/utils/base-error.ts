@@ -1,9 +1,5 @@
 class BaseError extends Error {
-  constructor(
-    public message: string,
-    public errorCode: number
-  ) // public code: number
-  {
+  constructor(public message: string, public errorCode: number) {
     super(message);
     this.errorCode = errorCode;
     Error.captureStackTrace(this);
