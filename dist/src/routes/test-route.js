@@ -17,5 +17,5 @@ const testFunction = (req, res, next) => {
         next(error);
     }
 };
-router.get("/test-api", testFunction);
+router.get("/test_api", testFunction);
 exports.default = router;

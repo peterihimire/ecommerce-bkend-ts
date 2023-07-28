@@ -17,6 +17,6 @@ const testFunction: RequestHandler = (req, res, next) => {
   }
 };
 
-router.get("/test-api", testFunction);
+router.get("/test_api", testFunction);
 
 export default router;
