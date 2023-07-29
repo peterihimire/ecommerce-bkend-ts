@@ -2,7 +2,8 @@ import { RequestHandler } from "express";
 import { httpStatusCodes } from "../utils/http-status-codes";
 import BaseError from "../utils/base-error";
 import db from "../database/models";
-import bcrypt from "bcryptjs";
+// import bcrypt from "bcryptjs";
+import { default as bcrypt } from "bcryptjs";
 import randomString from "../utils/acc-generator";
 import { CHARLIST } from "../utils/list-data";
 import { sign, verify } from "jsonwebtoken";
@@ -12,10 +13,13 @@ const User = db.User;
 export const register: RequestHandler = async (req, res, next) => {
   const { first_name, last_name, email, phone } = req.body;
   const original_password = req.body.password;
+
   let acctnum;
   acctnum = randomString(10, CHARLIST);
 
+  console.log("thia is ...", User);
   try {
+    console.log("This is ...", User);
     const foundUser = await User.findOne({
       attributes: ["email"],
       where: { email: email },
@@ -37,7 +41,8 @@ export const register: RequestHandler = async (req, res, next) => {
       acctnum = randomString(10, CHARLIST);
       console.log("After the code block, here's new acctnum!", acctnum);
     }
-    const hashed_password = await bcrypt.hash(original_password, 10);
+    const salt = await bcrypt.genSalt();
+    const hashed_password = await bcrypt.hash(original_password, salt);
 
     // CREATE NEW ACCOUNT
     const createdUser = await User.create({

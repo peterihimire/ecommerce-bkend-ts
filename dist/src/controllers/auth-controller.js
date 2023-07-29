@@ -7,6 +7,7 @@ exports.logout = exports.login = exports.register = void 0;
 const http_status_codes_1 = require("../utils/http-status-codes");
 const base_error_1 = __importDefault(require("../utils/base-error"));
 const models_1 = __importDefault(require("../database/models"));
+// import bcrypt from "bcryptjs";
 const bcryptjs_1 = __importDefault(require("bcryptjs"));
 const acc_generator_1 = __importDefault(require("../utils/acc-generator"));
 const list_data_1 = require("../utils/list-data");
@@ -17,7 +18,9 @@ const register = async (req, res, next) => {
     const original_password = req.body.password;
     let acctnum;
     acctnum = (0, acc_generator_1.default)(10, list_data_1.CHARLIST);
+    console.log("thia is ...", User);
     try {
+        console.log("This is ...", User);
         const foundUser = await User.findOne({
             attributes: ["email"],
             where: { email: email },
@@ -33,7 +36,8 @@ const register = async (req, res, next) => {
             acctnum = (0, acc_generator_1.default)(10, list_data_1.CHARLIST);
             console.log("After the code block, here's new acctnum!", acctnum);
         }
-        const hashed_password = await bcryptjs_1.default.hash(original_password, 10);
+        const salt = await bcryptjs_1.default.genSalt();
+        const hashed_password = await bcryptjs_1.default.hash(original_password, salt);
         // CREATE NEW ACCOUNT
         const createdUser = await User.create({
             first_name: first_name,

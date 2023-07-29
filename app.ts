@@ -1,4 +1,5 @@
 import express, { Application } from "express";
+import cookieParser from "cookie-parser";
 import authRoute from "./src/routes/auth-route";
 import testRoute from "./src/routes/test-route";
 import {
@@ -8,6 +9,9 @@ import {
 } from "./src/middlewares/error-handler";
 
 const app: Application = express();
+
+app.use(cookieParser());
+app.use(express.json());
 
 app.set("trust proxy", 1);
 app.use("/api/ecommerce/v1/auth", authRoute);

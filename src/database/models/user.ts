@@ -2,7 +2,6 @@
 import { BuildOptions, DataTypes, Model, Sequelize } from "sequelize";
 
 interface UserAttributes {
-  id: number;
   email: string;
   first_name: string;
   last_name: string;
@@ -13,7 +12,6 @@ interface UserAttributes {
 
 module.exports = (sequelize: any, DataTypes: any) => {
   class User extends Model<UserAttributes> implements UserAttributes {
-    id!: number;
     email!: string;
     first_name!: string;
     last_name!: string;
@@ -32,7 +30,6 @@ module.exports = (sequelize: any, DataTypes: any) => {
   }
   User.init(
     {
-      id: DataTypes.INTEGER,
       email: DataTypes.STRING,
       first_name: DataTypes.STRING,
       last_name: DataTypes.STRING,
