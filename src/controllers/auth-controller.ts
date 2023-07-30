@@ -68,5 +68,15 @@ export const register: RequestHandler = async (req, res, next) => {
     next(error);
   }
 };
-export const login: RequestHandler = (req, res, next) => {};
+export const login: RequestHandler = (req, res, next) => {
+  const { email, password } = req.body;
+
+  try {
+  } catch (error: any) {
+    if (!error.statusCode) {
+      error.statusCode = httpStatusCodes.INTERNAL_SERVER;
+    }
+    next(error);
+  }
+};
 export const logout: RequestHandler = (req, res, next) => {};

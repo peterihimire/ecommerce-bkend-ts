@@ -62,7 +62,17 @@ const register = async (req, res, next) => {
     }
 };
 exports.register = register;
-const login = (req, res, next) => { };
+const login = (req, res, next) => {
+    const { email, password } = req.body;
+    try {
+    }
+    catch (error) {
+        if (!error.statusCode) {
+            error.statusCode = http_status_codes_1.httpStatusCodes.INTERNAL_SERVER;
+        }
+        next(error);
+    }
+};
 exports.login = login;
 const logout = (req, res, next) => { };
 exports.logout = logout;
