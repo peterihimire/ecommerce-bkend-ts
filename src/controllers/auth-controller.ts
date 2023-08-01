@@ -68,10 +68,35 @@ export const register: RequestHandler = async (req, res, next) => {
     next(error);
   }
 };
-export const login: RequestHandler = (req, res, next) => {
-  const { email, password } = req.body;
+export const login: RequestHandler = async (req, res, next) => {
+  const { email } = req.body;
+  const original_password = req.body.password;
 
   try {
+    const foundUser = await User.findOne({
+      attributes: ["email"],
+      where: { email: email },
+    });
+
+    if (!foundUser) {
+      return next(
+        new BaseError(
+          "Error login in check credentials!",
+          httpStatusCodes.CONFLICT
+        )
+      );
+    }
+
+    const hashedPassword = await bcrypt.compare(original_password, foundUser.password);
+
+    if (!hashedPassword) {
+      return next(
+        new BaseError(
+          "Wrong password or username!",
+          httpStatusCodes.UNAUTHORIZED
+        )
+      );
+    }
   } catch (error: any) {
     if (!error.statusCode) {
       error.statusCode = httpStatusCodes.INTERNAL_SERVER;

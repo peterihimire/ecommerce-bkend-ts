@@ -62,9 +62,21 @@ const register = async (req, res, next) => {
     }
 };
 exports.register = register;
-const login = (req, res, next) => {
-    const { email, password } = req.body;
+const login = async (req, res, next) => {
+    const { email } = req.body;
+    const original_password = req.body.password;
     try {
+        const foundUser = await User.findOne({
+            attributes: ["email"],
+            where: { email: email },
+        });
+        if (!foundUser) {
+            return next(new base_error_1.default("Error login in check credentials!", http_status_codes_1.httpStatusCodes.CONFLICT));
+        }
+        const hashedPassword = await bcryptjs_1.default.compare(original_password, foundUser.password);
+        if (!hashedPassword) {
+            return next(new base_error_1.default("Wrong password or username!", http_status_codes_1.httpStatusCodes.UNAUTHORIZED));
+        }
     }
     catch (error) {
         if (!error.statusCode) {
