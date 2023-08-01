@@ -1,6 +1,8 @@
 import express, { Application } from "express";
+import session from "express-session";
+import cors from "cors";
 import cookieParser from "cookie-parser";
-import redis from "redis";
+import * as redis from "redis";
 import RedisStore from "connect-redis";
 
 import authRoute from "./src/routes/auth-route";
@@ -14,7 +16,7 @@ import {
 let redisclient = redis.createClient({
   legacyMode: false,
   socket: {
-    port: process.env.REDIS_PORT,
+    port: Number(process.env.REDIS_PORT),
     host: process.env.REDIS_URL,
   },
 });
@@ -35,9 +37,9 @@ redisclient.on("error", (err) => {
   console.log("Error in the connection!");
 });
 
-let redisStore = new RedisStore({
+let redisStore = new (RedisStore as any)({
   client: redisclient,
-  prefix: "recallo_lite:",
+  prefix: "ecommerce_store",
 });
 
 const corsOptions = {
@@ -51,7 +53,7 @@ const corsOptions = {
 const sessionOptions = {
   // store: new RedisStore({ client: redisClient }),
   store: redisStore,
-  secret: process.env.SESSION_SECRET,
+  secret: String(process.env.SESSION_SECRET),
   resave: false,
   saveUninitialized: false,
   cookie: {
@@ -62,12 +64,12 @@ const sessionOptions = {
 };
 
 const app: Application = express();
-
+app.use(cors(corsOptions));
 app.use(cookieParser());
 app.use(express.json());
 
 app.set("trust proxy", 1);
-app.use("/api/ecommerce/v1/auth", authRoute);
+app.use("/api/ecommerce/v1/auth", session(sessionOptions), authRoute);
 app.use("/api/ecommerce/v1/test", testRoute);
 
 app.use(unknownRoute);
