@@ -3,9 +3,6 @@ import { BuildOptions, DataTypes, Model, Sequelize } from "sequelize";
 
 interface UserAttributes {
   email: string;
-  first_name: string;
-  last_name: string;
-  phone: string;
   acct_id: string;
   password: string;
 }
@@ -13,9 +10,6 @@ interface UserAttributes {
 module.exports = (sequelize: any, DataTypes: any) => {
   class User extends Model<UserAttributes> implements UserAttributes {
     email!: string;
-    first_name!: string;
-    last_name!: string;
-    phone!: string;
     acct_id!: string;
     password!: string;
 
@@ -26,15 +20,23 @@ module.exports = (sequelize: any, DataTypes: any) => {
      */
     static associate(models: any) {
       // define association here
+      User.hasOne(models.Profile, {
+        as: "profile",
+        foreignKey: "userId",
+        onDelete: "CASCADE",
+        hooks: true,
+      });
     }
   }
   User.init(
     {
       email: DataTypes.STRING,
-      first_name: DataTypes.STRING,
-      last_name: DataTypes.STRING,
-      phone: DataTypes.STRING,
-      acct_id: DataTypes.STRING,
+      acct_id: {
+        type: DataTypes.UUID,
+        defaultValue: DataTypes.UUIDV4,
+        allowNull: false,
+        unique: true,
+      },
       password: DataTypes.STRING,
     },
     {

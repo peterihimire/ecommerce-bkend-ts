@@ -4,9 +4,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const index_1 = __importDefault(require("./src/database/models/index"));
+const app_1 = __importDefault(require("./app"));
 const PORT = 4040;
 const HOST = "0.0.0.0";
-const app_1 = __importDefault(require("./app"));
 app_1.default.listen(PORT, () => {
     console.log(`Server is running on http://${HOST}:${PORT}`);
 });

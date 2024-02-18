@@ -59,11 +59,25 @@ let redisStore = new connect_redis_1.default({
     prefix: "ecommerce_store",
 });
 const corsOptions = {
-    origin: ["*", "http://localhost:3020"],
-    methods: ["*"],
-    allowedHeaders: ["*"],
+    origin: [
+        // process.env.CORS_ORIGIN as string,
+        "https://silexcms.onrender.com",
+        "http://localhost:3000",
+        "https://localhost:3000",
+    ],
+    methods: ["GET", "PUT", "PATCH", "POST", "OPTIONS", "DELETE", "HEAD"],
+    allowedHeaders: [
+        "Content-Type",
+        "Authorization",
+        "X-Requested-With",
+        "Access-Control-Allow-Origin",
+        "Access-Control-Allow-Headers",
+        "Origin",
+        "Accept",
+    ],
     credentials: true,
     optionSuccessStatus: 200,
+    preflightContinue: false,
 };
 const sessionOptions = {
     // store: new RedisStore({ client: redisClient }),
