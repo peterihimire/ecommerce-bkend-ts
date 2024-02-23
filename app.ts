@@ -1,9 +1,15 @@
-import express, { Application } from "express";
+import express, { Application, Request } from "express";
 import session from "express-session";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import * as redis from "redis";
 import RedisStore from "connect-redis";
+
+import multer from "multer";
+import path from "path";
+
+const BaseError = require("./src/utils/base-error");
+const httpStatusCodes = require("./src/utils/http-status-codes");
 
 import authRoute from "./src/routes/auth-route";
 import testRoute from "./src/routes/test-route";
@@ -12,6 +18,62 @@ import {
   returnError,
   unknownRoute,
 } from "./src/middlewares/error-handler";
+
+type User = {
+  id: string;
+  email: string;
+};
+
+// Augment express-session with a custom SessionData object
+declare module "express-session" {
+  interface SessionData {
+    user: User;
+  }
+}
+
+const file_storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    // console.log("🚀 ~ file: upload.ts:11 ~ file", process.cwd());
+    cb(null, "images");
+  },
+  filename: (req, file, cb) => {
+    const ext = file.originalname.split(".").pop();
+    cb(
+      null,
+      file.originalname.split(".")[0] +
+        "-" +
+        new Date().toISOString() +
+        "." +
+        ext
+    );
+    // cb(null, new Date().toISOString() + "-" + file.originalname);
+  },
+});
+
+const file_filter = (req: Request, file: any, cb: Function) => {
+  const fileSize = parseInt(req.headers["content-length"] as string);
+  console.log("This si req file size", fileSize);
+  if (fileSize > 500000) {
+    cb(
+      new BaseError(
+        "Images must be under 500kb!",
+        httpStatusCodes.UNPROCESSABLE_ENTITY
+      ),
+      false
+    );
+  }
+  if (file.mimetype.startsWith("image")) {
+    cb(null, true);
+  } else {
+    cb(
+      new BaseError(
+        "Only images are allowed!",
+        httpStatusCodes.UNPROCESSABLE_ENTITY
+      ),
+      false
+    );
+  }
+};
 
 let redisclient = redis.createClient({
   legacyMode: false,

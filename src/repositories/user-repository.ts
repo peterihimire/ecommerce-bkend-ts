@@ -12,19 +12,19 @@ import db from "../database/models";
 const User = db.User;
 const Profile = db.Profile;
 
-const foundUser = async (email: string) => {
+export const foundUser = async (email: string) => {
   return User.findOne({
     where: { email: email },
   });
 };
 
-const existingAcctId = async (acct_id: string) => {
+export const existingAcctId = async (acct_id: string) => {
   return User.findOne({
     where: { acct_id: acct_id },
   });
 };
 
-const createUser = async (data: {
+export const createUser = async (data: {
   email: string;
   password: string;
   acct_id: string;
@@ -36,22 +36,23 @@ const createUser = async (data: {
   });
 };
 
-const createProfile = async (data: {
-  first_name: string;
-  last_name: string;
+export const createProfile = async (data: {
+  // first_name: string;
+  // last_name: string;
   acct_id: string;
   userId: number;
 }) => {
   return Profile.create({
-    first_name: data.first_name,
-    last_name: data.last_name,
+    // first_name: data.first_name,
+    // last_name: data.last_name,
     acct_id: data.acct_id,
     userId: data.userId,
   });
 };
 
-module.exports = {
-  foundUser,
-  existingAcctId,
-  createUser,
-};
+// module.exports = {
+//   foundUser,
+//   existingAcctId,
+//   createUser,
+//   createProfile,
+// };

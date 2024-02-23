@@ -32,9 +32,40 @@ const cors_1 = __importDefault(require("cors"));
 const cookie_parser_1 = __importDefault(require("cookie-parser"));
 const redis = __importStar(require("redis"));
 const connect_redis_1 = __importDefault(require("connect-redis"));
+const multer_1 = __importDefault(require("multer"));
+const BaseError = require("./src/utils/base-error");
+const httpStatusCodes = require("./src/utils/http-status-codes");
 const auth_route_1 = __importDefault(require("./src/routes/auth-route"));
 const test_route_1 = __importDefault(require("./src/routes/test-route"));
 const error_handler_1 = require("./src/middlewares/error-handler");
+const file_storage = multer_1.default.diskStorage({
+    destination: (req, file, cb) => {
+        // console.log("🚀 ~ file: upload.ts:11 ~ file", process.cwd());
+        cb(null, "images");
+    },
+    filename: (req, file, cb) => {
+        const ext = file.originalname.split(".").pop();
+        cb(null, file.originalname.split(".")[0] +
+            "-" +
+            new Date().toISOString() +
+            "." +
+            ext);
+        // cb(null, new Date().toISOString() + "-" + file.originalname);
+    },
+});
+const file_filter = (req, file, cb) => {
+    const fileSize = parseInt(req.headers["content-length"]);
+    console.log("This si req file size", fileSize);
+    if (fileSize > 500000) {
+        cb(new BaseError("Images must be under 500kb!", httpStatusCodes.UNPROCESSABLE_ENTITY), false);
+    }
+    if (file.mimetype.startsWith("image")) {
+        cb(null, true);
+    }
+    else {
+        cb(new BaseError("Only images are allowed!", httpStatusCodes.UNPROCESSABLE_ENTITY), false);
+    }
+};
 let redisclient = redis.createClient({
     legacyMode: false,
     socket: {
