@@ -6,7 +6,7 @@ import db from "../database/models";
 // import { default as bcrypt } from "bcryptjs";
 import bcrypt from "bcrypt";
 import randomString from "../utils/acc-generator";
-import { CHARLIST } from "../utils/list-data";
+import { NUMLIST } from "../utils/list-data";
 import { sign, verify } from "jsonwebtoken";
 import dotenv from "dotenv";
 dotenv.config();
@@ -18,12 +18,15 @@ import {
   createProfile,
 } from "../repositories/user-repository";
 
+// @route POST api/auth/login
+// @desc Login into account
+// @access Private
 export const register: RequestHandler = async (req, res, next) => {
   const { email } = req.body;
   const original_password = req.body.password;
 
   let acctnum;
-  acctnum = randomString(10, CHARLIST);
+  acctnum = randomString(10, NUMLIST);
 
   console.log("thia is ...", User);
   try {
@@ -54,7 +57,7 @@ export const register: RequestHandler = async (req, res, next) => {
 
     if (existing_acct_id) {
       console.log("This code block got executed!", acctnum);
-      acctnum = randomString(10, CHARLIST);
+      acctnum = randomString(10, NUMLIST);
       console.log("After the code block, here's new acctnum!", acctnum);
     }
     const salt = await bcrypt.genSalt();
@@ -97,6 +100,10 @@ export const register: RequestHandler = async (req, res, next) => {
     next(error);
   }
 };
+
+// @route POST api/auth/login
+// @desc Login into account
+// @access Private
 export const login: RequestHandler = async (req, res, next) => {
   const { email } = req.body;
   const original_password = req.body.password;
@@ -166,4 +173,19 @@ export const login: RequestHandler = async (req, res, next) => {
     next(error);
   }
 };
-export const logout: RequestHandler = (req, res, next) => {};
+
+// @route POST api/auth/login
+// @desc Login into account
+// @access Private
+export const logout: RequestHandler = (req, res, next) => {
+  req.session.destroy((err) => {
+    if (err) {
+      return next(new BaseError("Logout error!", httpStatusCodes.UNAUTHORIZED));
+    }
+    console.log("Logout successful!");
+    res.status(200).json({
+      status: "success",
+      msg: "Logout successful!",
+    });
+  });
+};

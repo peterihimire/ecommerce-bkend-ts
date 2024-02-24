@@ -2,14 +2,13 @@ import express, { Application, Request } from "express";
 import session from "express-session";
 import cors from "cors";
 import cookieParser from "cookie-parser";
-import * as redis from "redis";
-import RedisStore from "connect-redis";
-
 import multer from "multer";
 import path from "path";
 
-const BaseError = require("./src/utils/base-error");
-const httpStatusCodes = require("./src/utils/http-status-codes");
+import BaseError from "./src/utils/base-error";
+import { httpStatusCodes } from "./src/utils/http-status-codes";
+
+import { redisclient } from "./src/utils/redis-client";
 
 import authRoute from "./src/routes/auth-route";
 import testRoute from "./src/routes/test-route";
@@ -18,6 +17,7 @@ import {
   returnError,
   unknownRoute,
 } from "./src/middlewares/error-handler";
+import RedisStore from "connect-redis";
 
 type User = {
   id: string;
@@ -75,35 +75,6 @@ const file_filter = (req: Request, file: any, cb: Function) => {
   }
 };
 
-let redisclient = redis.createClient({
-  legacyMode: false,
-  socket: {
-    port: Number(process.env.REDIS_PORT),
-    host: process.env.REDIS_URL,
-  },
-});
-
-(async () => {
-  await redisclient.connect();
-})();
-
-redisclient.on("ready", () => {
-  console.log("Redis client is ready!");
-});
-
-redisclient.on("connect", function () {
-  console.log("Redis client connected...");
-});
-
-redisclient.on("error", (err) => {
-  console.log("Error in the connection!");
-});
-
-let redisStore = new (RedisStore as any)({
-  client: redisclient,
-  prefix: "ecommerce_store",
-});
-
 const corsOptions = {
   origin: [
     // process.env.CORS_ORIGIN as string,
@@ -126,9 +97,28 @@ const corsOptions = {
   preflightContinue: false,
 };
 
+let redisStoreOne = new (RedisStore as any)({
+  client: redisclient,
+  prefix: "ecommerce_store",
+});
+// const redisStoreTwo = new RedisStore({
+//   client: redisclient,
+//   prefix: "ecommerce_admin:",
+// });
+
+// const redisStoreThree = new RedisStore({
+//   client: redisclient,
+//   prefix: "ecommerce_reset:",
+// });
+
+// const redisStoreFour = new RedisStore({
+//   client: redisclient,
+//   prefix: "ecommerce_client:",
+// });
+
 const sessionOptions = {
   // store: new RedisStore({ client: redisClient }),
-  store: redisStore,
+  store: redisStoreOne,
   secret: String(process.env.SESSION_SECRET),
   resave: false,
   saveUninitialized: false,

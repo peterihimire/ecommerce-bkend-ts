@@ -16,11 +16,14 @@ const dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config();
 const User = models_1.default.User;
 const user_repository_1 = require("../repositories/user-repository");
+// @route POST api/auth/login
+// @desc Login into account
+// @access Private
 const register = async (req, res, next) => {
     const { email } = req.body;
     const original_password = req.body.password;
     let acctnum;
-    acctnum = (0, acc_generator_1.default)(10, list_data_1.CHARLIST);
+    acctnum = (0, acc_generator_1.default)(10, list_data_1.NUMLIST);
     console.log("thia is ...", User);
     try {
         console.log("This is ...", User);
@@ -40,7 +43,7 @@ const register = async (req, res, next) => {
         console.log("this is existing account identity...", existing_acct_id);
         if (existing_acct_id) {
             console.log("This code block got executed!", acctnum);
-            acctnum = (0, acc_generator_1.default)(10, list_data_1.CHARLIST);
+            acctnum = (0, acc_generator_1.default)(10, list_data_1.NUMLIST);
             console.log("After the code block, here's new acctnum!", acctnum);
         }
         const salt = await bcrypt_1.default.genSalt();
@@ -79,6 +82,9 @@ const register = async (req, res, next) => {
     }
 };
 exports.register = register;
+// @route POST api/auth/login
+// @desc Login into account
+// @access Private
 const login = async (req, res, next) => {
     const { email } = req.body;
     const original_password = req.body.password;
@@ -127,5 +133,19 @@ const login = async (req, res, next) => {
     }
 };
 exports.login = login;
-const logout = (req, res, next) => { };
+// @route POST api/auth/login
+// @desc Login into account
+// @access Private
+const logout = (req, res, next) => {
+    req.session.destroy((err) => {
+        if (err) {
+            return next(new base_error_1.default("Logout error!", http_status_codes_1.httpStatusCodes.UNAUTHORIZED));
+        }
+        console.log("Logout successful!");
+        res.status(200).json({
+            status: "success",
+            msg: "Logout successful!",
+        });
+    });
+};
 exports.logout = logout;
