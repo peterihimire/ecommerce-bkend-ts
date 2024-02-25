@@ -16,6 +16,12 @@ module.exports = (sequelize: any, DataTypes: any) => {
      */
     static associate(models: any) {
       // define association here
+         Role.belongsToMany(models.Admin, {
+           as: "admins",
+           foreignKey: "roleId",
+           through: "admin_roles",
+           onDelete: "CASCADE",
+         });
     }
   }
   Role.init(

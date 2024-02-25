@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const sequelize_1 = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
-    class Role extends sequelize_1.Model {
+    class Admin extends sequelize_1.Model {
         /**
          * Helper method for defining associations.
          * This method is not a part of Sequelize lifecycle.
@@ -10,20 +10,26 @@ module.exports = (sequelize, DataTypes) => {
          */
         static associate(models) {
             // define association here
-            Role.belongsToMany(models.Admin, {
-                as: "admins",
-                foreignKey: "roleId",
+            Admin.belongsToMany(models.Role, {
+                as: "roles",
+                foreignKey: "adminId",
                 through: "admin_roles",
                 onDelete: "CASCADE",
             });
         }
     }
-    Role.init({
+    Admin.init({
         name: DataTypes.STRING,
+        email: DataTypes.STRING,
+        user_name: DataTypes.STRING,
+        phone: DataTypes.STRING,
+        last_login: DataTypes.STRING,
+        status: DataTypes.STRING,
+        password: DataTypes.STRING,
     }, {
         sequelize,
-        modelName: "Role",
-        tableName: "roles",
+        modelName: "Admin",
+        tableName: "admins",
     });
-    return Role;
+    return Admin;
 };
