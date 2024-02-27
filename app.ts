@@ -11,6 +11,7 @@ import { httpStatusCodes } from "./src/utils/http-status-codes";
 import { redisclient } from "./src/utils/redis-client";
 
 import authRoute from "./src/routes/auth-route";
+import adminAuthRoute from "./src/routes/admin-auth-route";
 import testRoute from "./src/routes/test-route";
 import {
   logErrorMiddleware,
@@ -130,11 +131,18 @@ const sessionOptions = {
 };
 
 const app: Application = express();
+app.set("trust proxy", 1);
+
+// MIDDLEWARES
 app.use(cors(corsOptions));
 app.use(cookieParser());
 app.use(express.json());
 
-app.set("trust proxy", 1);
+app.use(
+  "/api/ecommerce/v1/admins/auth",
+  session(sessionOptions),
+  adminAuthRoute
+);
 app.use("/api/ecommerce/v1/auth", session(sessionOptions), authRoute);
 app.use("/api/ecommerce/v1/test", testRoute);
 

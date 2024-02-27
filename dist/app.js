@@ -12,6 +12,7 @@ const base_error_1 = __importDefault(require("./src/utils/base-error"));
 const http_status_codes_1 = require("./src/utils/http-status-codes");
 const redis_client_1 = require("./src/utils/redis-client");
 const auth_route_1 = __importDefault(require("./src/routes/auth-route"));
+const admin_auth_route_1 = __importDefault(require("./src/routes/admin-auth-route"));
 const test_route_1 = __importDefault(require("./src/routes/test-route"));
 const error_handler_1 = require("./src/middlewares/error-handler");
 const connect_redis_1 = __importDefault(require("connect-redis"));
@@ -93,10 +94,12 @@ const sessionOptions = {
     },
 };
 const app = (0, express_1.default)();
+app.set("trust proxy", 1);
+// MIDDLEWARES
 app.use((0, cors_1.default)(corsOptions));
 app.use((0, cookie_parser_1.default)());
 app.use(express_1.default.json());
-app.set("trust proxy", 1);
+app.use("/api/ecommerce/v1/admins/auth", (0, express_session_1.default)(sessionOptions), admin_auth_route_1.default);
 app.use("/api/ecommerce/v1/auth", (0, express_session_1.default)(sessionOptions), auth_route_1.default);
 app.use("/api/ecommerce/v1/test", test_route_1.default);
 app.use(error_handler_1.unknownRoute);
