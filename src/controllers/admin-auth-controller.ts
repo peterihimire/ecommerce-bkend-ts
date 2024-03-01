@@ -68,3 +68,81 @@ export const register: RequestHandler = async (req, res, next) => {
     next(error);
   }
 };
+
+// @route POST api/auth/login
+// @desc Login into account
+// @access Private
+export const login: RequestHandler = async (req, res, next) => {
+  const { email } = req.body;
+  const original_password = req.body.password;
+
+  try {
+    const found_admin = await foundAdmin(email);
+    console.log("This is found admin....", found_admin);
+
+    if (!found_admin) {
+      return next(
+        new BaseError(
+          "Account does not exist , please signup for an account!",
+          httpStatusCodes.NOT_FOUND
+        )
+      );
+    }
+
+    const hashedPassword = await bcrypt.compare(
+      original_password,
+      found_admin.password
+    );
+
+    if (!hashedPassword) {
+      return next(
+        new BaseError(
+          "Wrong password or username!",
+          httpStatusCodes.UNAUTHORIZED
+        )
+      );
+    }
+
+    // Session
+    const { createdAt, updatedAt, ...session_data } = found_admin.dataValues;
+    console.log("This is the session data going to the session", session_data);
+
+    // const new_session = {
+    //   id: session_data.id.toString(),
+    //   acct_id: session_data.acct_id,
+    //   email: session_data.email,
+    //   password: session_data.password,
+    // };
+    // console.log("This is the new session...", new_session);
+
+    req.session.admin = session_data;
+
+    // added this 30th May 2023
+    req.session.save(function (err) {
+      if (err) return next(err);
+    });
+
+    const { id, password, ...others } = found_admin.dataValues;
+    const authorities = [];
+    const admin_roles = await found_admin.getRoles();
+    console.log(admin_roles);
+
+    for (let i = 0; i < admin_roles.length; i++) {
+      authorities.push("ROLE_" + admin_roles[i].name.toUpperCase());
+    }
+
+    res.status(httpStatusCodes.OK).json({
+      status: "success",
+      msg: `${authorities} logged in`,
+      data: {
+        ...others,
+        roles: authorities,
+      },
+    });
+  } catch (error: any) {
+    if (!error.statusCode) {
+      error.statusCode = httpStatusCodes.INTERNAL_SERVER;
+    }
+    next(error);
+  }
+};

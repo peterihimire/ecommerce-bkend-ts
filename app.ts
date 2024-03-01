@@ -20,7 +20,13 @@ import {
 } from "./src/middlewares/error-handler";
 import RedisStore from "connect-redis";
 
+// This works with the verify-session file
 type User = {
+  id: string;
+  email: string;
+};
+
+type Admin = {
   id: string;
   email: string;
 };
@@ -29,6 +35,7 @@ type User = {
 declare module "express-session" {
   interface SessionData {
     user: User;
+    admin: Admin;
   }
 }
 
