@@ -18,16 +18,16 @@ module.exports = {
                 type: sequelize_1.DataTypes.STRING,
             },
             images: {
-                type: sequelize_1.DataTypes.STRING,
+                type: sequelize_1.DataTypes.ARRAY(sequelize_1.DataTypes.TEXT), // Change to ARRAY type
             },
             colors: {
-                type: sequelize_1.DataTypes.STRING,
+                type: sequelize_1.DataTypes.ARRAY(sequelize_1.DataTypes.STRING), // Change to ARRAY type
             },
             categories: {
-                type: sequelize_1.DataTypes.STRING,
+                type: sequelize_1.DataTypes.ARRAY(sequelize_1.DataTypes.STRING), // Change to ARRAY type
             },
             price: {
-                type: sequelize_1.DataTypes.DECIMAL,
+                type: sequelize_1.DataTypes.DECIMAL(10, 2),
             },
             brand: {
                 type: sequelize_1.DataTypes.STRING,
@@ -36,13 +36,13 @@ module.exports = {
                 type: sequelize_1.DataTypes.INTEGER,
             },
             rating: {
-                type: sequelize_1.DataTypes.INTEGER,
+                type: sequelize_1.DataTypes.FLOAT, // Change to DataTypes.FLOAT if rating can be decimal
             },
             desc: {
                 type: sequelize_1.DataTypes.STRING,
             },
             sizes: {
-                type: sequelize_1.DataTypes.STRING,
+                type: sequelize_1.DataTypes.ARRAY(sequelize_1.DataTypes.STRING), // Change to ARRAY type
             },
             numReviews: {
                 type: sequelize_1.DataTypes.STRING,

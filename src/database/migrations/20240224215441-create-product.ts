@@ -20,16 +20,16 @@ module.exports = {
           type: DataTypes.STRING,
         },
         images: {
-          type: DataTypes.STRING,
+          type: DataTypes.ARRAY(DataTypes.TEXT), // Change to ARRAY type
         },
         colors: {
-          type: DataTypes.STRING,
+          type: DataTypes.ARRAY(DataTypes.STRING), // Change to ARRAY type
         },
         categories: {
-          type: DataTypes.STRING,
+          type: DataTypes.ARRAY(DataTypes.STRING), // Change to ARRAY type
         },
         price: {
-          type: DataTypes.DECIMAL,
+          type: DataTypes.DECIMAL(10, 2),
         },
         brand: {
           type: DataTypes.STRING,
@@ -38,13 +38,13 @@ module.exports = {
           type: DataTypes.INTEGER,
         },
         rating: {
-          type: DataTypes.INTEGER,
+          type: DataTypes.FLOAT, // Change to DataTypes.FLOAT if rating can be decimal
         },
         desc: {
           type: DataTypes.STRING,
         },
         sizes: {
-          type: DataTypes.STRING,
+          type: DataTypes.ARRAY(DataTypes.STRING), // Change to ARRAY type
         },
         numReviews: {
           type: DataTypes.STRING,

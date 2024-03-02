@@ -77,23 +77,24 @@ const login = async (req, res, next) => {
         // Session
         const { createdAt, updatedAt, ...session_data } = found_admin.dataValues;
         console.log("This is the session data going to the session", session_data);
-        // const new_session = {
-        //   id: session_data.id.toString(),
-        //   acct_id: session_data.acct_id,
-        //   email: session_data.email,
-        //   password: session_data.password,
-        // };
-        // console.log("This is the new session...", new_session);
-        req.session.admin = session_data;
+        const new_session = {
+            id: session_data.id.toString(),
+            // acct_id: session_data.acct_id,
+            email: session_data.email,
+            // password: session_data.password,
+        };
+        console.log("This is the new session...", new_session);
+        req.session.admin = new_session;
         // added this 30th May 2023
         req.session.save(function (err) {
             if (err)
                 return next(err);
+            console.log("This is saved!!!!");
         });
         const { id, password, ...others } = found_admin.dataValues;
         const authorities = [];
         const admin_roles = await found_admin.getRoles();
-        console.log(admin_roles);
+        // console.log(admin_roles);
         for (let i = 0; i < admin_roles.length; i++) {
             authorities.push("ROLE_" + admin_roles[i].name.toUpperCase());
         }

@@ -13,6 +13,7 @@ const http_status_codes_1 = require("./src/utils/http-status-codes");
 const redis_client_1 = require("./src/utils/redis-client");
 const auth_route_1 = __importDefault(require("./src/routes/auth-route"));
 const admin_auth_route_1 = __importDefault(require("./src/routes/admin-auth-route"));
+const product_route_1 = __importDefault(require("./src/routes/product-route"));
 const test_route_1 = __importDefault(require("./src/routes/test-route"));
 const error_handler_1 = require("./src/middlewares/error-handler");
 const connect_redis_1 = __importDefault(require("connect-redis"));
@@ -69,18 +70,10 @@ let redisStoreOne = new connect_redis_1.default({
     client: redis_client_1.redisclient,
     prefix: "ecommerce_store",
 });
-// const redisStoreTwo = new RedisStore({
-//   client: redisclient,
-//   prefix: "ecommerce_admin:",
-// });
-// const redisStoreThree = new RedisStore({
-//   client: redisclient,
-//   prefix: "ecommerce_reset:",
-// });
-// const redisStoreFour = new RedisStore({
-//   client: redisclient,
-//   prefix: "ecommerce_client:",
-// });
+let redisStoreTwo = new connect_redis_1.default({
+    client: redis_client_1.redisclient,
+    prefix: "ecommerce_admin",
+});
 const sessionOptions = {
     // store: new RedisStore({ client: redisClient }),
     store: redisStoreOne,
@@ -89,8 +82,22 @@ const sessionOptions = {
     saveUninitialized: false,
     cookie: {
         secure: false,
-        httpOnly: false,
+        httpOnly: true,
         maxAge: 1000 * 60 * 60, // session max age in miliseconds
+        // sameSite: "none",
+    },
+};
+const sessionOptionsTwo = {
+    // store: new RedisStore({ client: redisClient }),
+    store: redisStoreTwo,
+    secret: String(process.env.ADMIN_SESSION_SECRET),
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+        secure: false,
+        httpOnly: true,
+        maxAge: 1000 * 60 * 60, // session max age in miliseconds
+        // sameSite: "none",
     },
 };
 const app = (0, express_1.default)();
@@ -99,8 +106,9 @@ app.set("trust proxy", 1);
 app.use((0, cors_1.default)(corsOptions));
 app.use((0, cookie_parser_1.default)());
 app.use(express_1.default.json());
-app.use("/api/ecommerce/v1/admins/auth", (0, express_session_1.default)(sessionOptions), admin_auth_route_1.default);
+app.use("/api/ecommerce/v1/admins/auth", (0, express_session_1.default)(sessionOptionsTwo), admin_auth_route_1.default);
 app.use("/api/ecommerce/v1/auth", (0, express_session_1.default)(sessionOptions), auth_route_1.default);
+app.use("/api/ecommerce/v1/products", (0, express_session_1.default)(sessionOptionsTwo), product_route_1.default);
 app.use("/api/ecommerce/v1/test", test_route_1.default);
 app.use(error_handler_1.unknownRoute);
 app.use(error_handler_1.logErrorMiddleware);

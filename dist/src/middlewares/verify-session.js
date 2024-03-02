@@ -6,6 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.verifySessionAdmin = exports.verifySessionAndAuthorization = exports.verifySession = void 0;
 const base_error_1 = __importDefault(require("../utils/base-error"));
 const http_status_codes_1 = require("../utils/http-status-codes");
+const admin_auth_repository_1 = require("../repositories/admin-auth-repository");
 // VALIDATE USER SESSION
 const verifySession = (req, res, next) => {
     const { user } = req.session;
@@ -20,7 +21,8 @@ const verifySession = (req, res, next) => {
 };
 exports.verifySession = verifySession;
 const verifyAdmin = (req, res, next) => {
-    const { admin } = req.session; // works with the app.ts admin type
+    console.log("Request dot session", req === null || req === void 0 ? void 0 : req.session);
+    const { admin } = req === null || req === void 0 ? void 0 : req.session; // works with the app.ts admin type
     console.log("This is the session ADMIN...", admin);
     if (!admin) {
         return next(new base_error_1.default("Session is invalid or expired, login to continue!", http_status_codes_1.httpStatusCodes.UNAUTHORIZED));
@@ -50,11 +52,9 @@ const verifySessionAdmin = (req, res, next) => {
     verifyAdmin(req, res, async () => {
         const admin = req.admin;
         if (!(admin === null || admin === void 0 ? void 0 : admin.email)) {
-            return next(new base_error_1.default("Session invalid or expired!", http_status_codes_1.httpStatusCodes.UNAUTHORIZED));
+            return next(new base_error_1.default("Session invalid!", http_status_codes_1.httpStatusCodes.UNAUTHORIZED));
         }
-        const found_admin = await admin.findOne({
-            where: { email: admin.email },
-        });
+        const found_admin = await (0, admin_auth_repository_1.foundAdmin)(admin.email);
         console.log("This is found ADMIN...", found_admin);
         const admin_roles = await found_admin.getRoles();
         console.log("This is role ADMIN...", admin_roles);

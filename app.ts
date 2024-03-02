@@ -12,6 +12,7 @@ import { redisclient } from "./src/utils/redis-client";
 
 import authRoute from "./src/routes/auth-route";
 import adminAuthRoute from "./src/routes/admin-auth-route";
+import productRoute from "./src/routes/product-route";
 import testRoute from "./src/routes/test-route";
 import {
   logErrorMiddleware,
@@ -109,20 +110,11 @@ let redisStoreOne = new (RedisStore as any)({
   client: redisclient,
   prefix: "ecommerce_store",
 });
-// const redisStoreTwo = new RedisStore({
-//   client: redisclient,
-//   prefix: "ecommerce_admin:",
-// });
 
-// const redisStoreThree = new RedisStore({
-//   client: redisclient,
-//   prefix: "ecommerce_reset:",
-// });
-
-// const redisStoreFour = new RedisStore({
-//   client: redisclient,
-//   prefix: "ecommerce_client:",
-// });
+let redisStoreTwo = new (RedisStore as any)({
+  client: redisclient,
+  prefix: "ecommerce_admin",
+});
 
 const sessionOptions = {
   // store: new RedisStore({ client: redisClient }),
@@ -132,8 +124,23 @@ const sessionOptions = {
   saveUninitialized: false,
   cookie: {
     secure: false, // if true only transmit cookie over https
-    httpOnly: false, // if true prevent client side JS from reading the cookie
+    httpOnly: true, // if true prevent client side JS from reading the cookie
     maxAge: 1000 * 60 * 60, // session max age in miliseconds
+    // sameSite: "none",
+  },
+};
+
+const sessionOptionsTwo = {
+  // store: new RedisStore({ client: redisClient }),
+  store: redisStoreTwo,
+  secret: String(process.env.ADMIN_SESSION_SECRET),
+  resave: false,
+  saveUninitialized: false,
+  cookie: {
+    secure: false, // if true only transmit cookie over https
+    httpOnly: true, // if true prevent client side JS from reading the cookie
+    maxAge: 1000 * 60 * 60, // session max age in miliseconds
+    // sameSite: "none",
   },
 };
 
@@ -147,10 +154,11 @@ app.use(express.json());
 
 app.use(
   "/api/ecommerce/v1/admins/auth",
-  session(sessionOptions),
+  session(sessionOptionsTwo),
   adminAuthRoute
 );
 app.use("/api/ecommerce/v1/auth", session(sessionOptions), authRoute);
+app.use("/api/ecommerce/v1/products", session(sessionOptionsTwo), productRoute);
 app.use("/api/ecommerce/v1/test", testRoute);
 
 app.use(unknownRoute);

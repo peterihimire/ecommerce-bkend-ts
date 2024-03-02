@@ -15,9 +15,21 @@ module.exports = (sequelize, DataTypes) => {
     Product.init({
         title: DataTypes.STRING,
         slug: DataTypes.STRING,
-        images: DataTypes.STRING,
-        colors: DataTypes.STRING,
-        categories: DataTypes.STRING,
+        images: {
+            type: DataTypes.ARRAY(DataTypes.TEXT),
+            allowNull: true,
+            defaultValue: [],
+        },
+        colors: {
+            type: DataTypes.ARRAY(DataTypes.STRING),
+            allowNull: true,
+            defaultValue: [],
+        },
+        categories: {
+            type: DataTypes.ARRAY(DataTypes.STRING),
+            allowNull: true,
+            defaultValue: [],
+        },
         price: {
             type: DataTypes.DECIMAL(10, 2),
             get() {
@@ -32,9 +44,18 @@ module.exports = (sequelize, DataTypes) => {
         countInStock: DataTypes.INTEGER,
         rating: DataTypes.FLOAT,
         desc: DataTypes.STRING,
-        sizes: DataTypes.STRING,
+        sizes: {
+            type: DataTypes.ARRAY(DataTypes.STRING),
+            allowNull: true,
+            defaultValue: [],
+        },
         numReviews: DataTypes.STRING,
-        uuid: DataTypes.STRING,
+        uuid: {
+            type: DataTypes.UUID,
+            defaultValue: DataTypes.UUIDV4,
+            allowNull: false,
+            unique: true,
+        },
     }, {
         sequelize,
         modelName: "Product",

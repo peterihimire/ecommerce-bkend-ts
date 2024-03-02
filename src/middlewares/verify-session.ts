@@ -9,6 +9,7 @@ import express, {
 
 import BaseError from "../utils/base-error";
 import { httpStatusCodes } from "../utils/http-status-codes";
+import { foundAdmin, createAdmin } from "../repositories/admin-auth-repository";
 
 // VALIDATE USER SESSION
 export const verifySession: RequestHandler = (req, res, next) => {
@@ -30,7 +31,8 @@ export const verifySession: RequestHandler = (req, res, next) => {
 };
 
 const verifyAdmin: RequestHandler = (req, res, next) => {
-  const { admin } = req.session; // works with the app.ts admin type
+  console.log("Request dot session", req?.session);
+  const { admin } = req?.session; // works with the app.ts admin type
   console.log("This is the session ADMIN...", admin);
 
   if (!admin) {
@@ -85,16 +87,11 @@ export const verifySessionAdmin: RequestHandler = (req, res, next) => {
 
     if (!admin?.email) {
       return next(
-        new BaseError(
-          "Session invalid or expired!",
-          httpStatusCodes.UNAUTHORIZED
-        )
+        new BaseError("Session invalid!", httpStatusCodes.UNAUTHORIZED)
       );
     }
 
-    const found_admin = await admin.findOne({
-      where: { email: admin.email },
-    });
+    const found_admin = await foundAdmin(admin.email);
     console.log("This is found ADMIN...", found_admin);
 
     const admin_roles = await found_admin.getRoles();
