@@ -26,6 +26,20 @@ module.exports = (sequelize: any, DataTypes: any) => {
         onDelete: "CASCADE",
         hooks: true,
       });
+
+      User.hasOne(models.Cart, {
+        as: "cart",
+        foreignKey: "userId",
+        onDelete: "CASCADE",
+        hooks: true,
+      });
+
+      User.hasMany(models.Order, {
+        as: "orders",
+        foreignKey: "userId",
+        onDelete: "CASCADE",
+        hooks: true,
+      });
     }
   }
   User.init(

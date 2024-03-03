@@ -40,6 +40,24 @@ module.exports = (sequelize: any, DataTypes: any) => {
      */
     static associate(models: any) {
       // define association here
+
+      Product.belongsToMany(models.Cart, {
+        as: "carts",
+        foreignKey: "productId",
+        through: "cart_products",
+        onDelete: "CASCADE",
+        // through: "cart_products",
+        // onDelete: "CASCADE",
+        // foreignKey: "ProductId",
+        // as: "Product",
+      });
+
+      Product.belongsToMany(models.Order, {
+        through: "order_products",
+        onDelete: "CASCADE",
+        // foreignKey: "OrderId",
+        // as: "Order",
+      });
     }
   }
   Product.init(
