@@ -15,6 +15,12 @@ module.exports = (sequelize, DataTypes) => {
                 foreignKey: "userId",
                 hooks: true,
             });
+            Cart.belongsToMany(models.Product, {
+                as: "products",
+                foreignKey: "cartId",
+                through: "cart_products",
+                onDelete: "CASCADE",
+            });
         }
     }
     Cart.init({

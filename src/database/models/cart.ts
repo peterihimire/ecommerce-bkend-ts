@@ -21,6 +21,13 @@ module.exports = (sequelize: any, DataTypes: any) => {
         foreignKey: "userId",
         hooks: true,
       });
+
+      Cart.belongsToMany(models.Product, {
+        as: "products",
+        foreignKey: "cartId",
+        through: "cart_products",
+        onDelete: "CASCADE",
+      });
     }
   }
   Cart.init(
@@ -40,27 +47,3 @@ module.exports = (sequelize: any, DataTypes: any) => {
   );
   return Cart;
 };
-
-// 'use strict';
-// const {
-//   Model
-// } = require('sequelize');
-// module.exports = (sequelize, DataTypes) => {
-//   class Cart extends Model {
-//     /**
-//      * Helper method for defining associations.
-//      * This method is not a part of Sequelize lifecycle.
-//      * The `models/index` file will call this method automatically.
-//      */
-//     static associate(models) {
-//       // define association here
-//     }
-//   }
-//   Cart.init({
-//     uuid: DataTypes.STRING
-//   }, {
-//     sequelize,
-//     modelName: 'Cart',
-//   });
-//   return Cart;
-// };

@@ -18,6 +18,30 @@ module.exports = {
         { transaction }
       );
 
+      await queryInterface.addColumn(
+        "carts",
+        "userId",
+        {
+          type: DataTypes.INTEGER,
+          references: { model: "users", key: "id" },
+          onUpdate: "CASCADE",
+          onDelete: "CASCADE",
+        },
+        { transaction }
+      );
+
+      await queryInterface.addColumn(
+        "orders",
+        "userId",
+        {
+          type: DataTypes.INTEGER,
+          references: { model: "users", key: "id" },
+          onUpdate: "CASCADE",
+          onDelete: "CASCADE",
+        },
+        { transaction }
+      );
+
       await transaction.commit();
     } catch (error) {
       await transaction.rollback();
@@ -29,6 +53,14 @@ module.exports = {
     const transaction = await queryInterface.sequelize.transaction();
     try {
       await queryInterface.removeColumn("profiles", "userId", {
+        transaction,
+      });
+
+      await queryInterface.removeColumn("carts", "userId", {
+        transaction,
+      });
+      
+      await queryInterface.removeColumn("orders", "userId", {
         transaction,
       });
 
