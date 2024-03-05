@@ -16,6 +16,7 @@ const dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config();
 const User = models_1.default.User;
 const user_repository_1 = require("../repositories/user-repository");
+const profile_repository_1 = require("../repositories/profile-repository");
 // @route POST api/auth/login
 // @desc Login into account
 // @access Private
@@ -66,7 +67,7 @@ const register = async (req, res, next) => {
             acct_id: created_user.acct_id,
             userId: created_user.id,
         };
-        const created_profile = await (0, user_repository_1.createProfile)(data);
+        const created_profile = await (0, profile_repository_1.createProfile)(data);
         console.log("Created profile yes...", created_profile);
         res.status(http_status_codes_1.httpStatusCodes.OK).json({
             status: "success",

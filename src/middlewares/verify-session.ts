@@ -60,7 +60,7 @@ export const verifySessionAndAuthorization: RequestHandler = (
     if (!user?.email) {
       return next(
         new BaseError(
-          "Session invalid or expired!",
+          "Not authorised to access resource, invalid or expired session!",
           httpStatusCodes.UNAUTHORIZED
         )
       );
@@ -87,7 +87,10 @@ export const verifySessionAdmin: RequestHandler = (req, res, next) => {
 
     if (!admin?.email) {
       return next(
-        new BaseError("Session invalid!", httpStatusCodes.UNAUTHORIZED)
+        new BaseError(
+          "Not authorised to access resource, session invalid or expired!",
+          httpStatusCodes.UNAUTHORIZED
+        )
       );
     }
 

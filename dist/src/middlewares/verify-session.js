@@ -37,7 +37,7 @@ const verifySessionAndAuthorization = (req, res, next) => {
         const user = req.user;
         const user_id = ((_a = req.body) === null || _a === void 0 ? void 0 : _a.id) || ((_b = req.params) === null || _b === void 0 ? void 0 : _b.id);
         if (!(user === null || user === void 0 ? void 0 : user.email)) {
-            return next(new base_error_1.default("Session invalid or expired!", http_status_codes_1.httpStatusCodes.UNAUTHORIZED));
+            return next(new base_error_1.default("Not authorised to access resource, invalid or expired session!", http_status_codes_1.httpStatusCodes.UNAUTHORIZED));
         }
         if ((user === null || user === void 0 ? void 0 : user.id) === user_id || (user === null || user === void 0 ? void 0 : user.id)) {
             next();
@@ -52,7 +52,7 @@ const verifySessionAdmin = (req, res, next) => {
     verifyAdmin(req, res, async () => {
         const admin = req.admin;
         if (!(admin === null || admin === void 0 ? void 0 : admin.email)) {
-            return next(new base_error_1.default("Session invalid!", http_status_codes_1.httpStatusCodes.UNAUTHORIZED));
+            return next(new base_error_1.default("Not authorised to access resource, session invalid or expired!", http_status_codes_1.httpStatusCodes.UNAUTHORIZED));
         }
         const found_admin = await (0, admin_auth_repository_1.foundAdmin)(admin.email);
         console.log("This is found ADMIN...", found_admin);

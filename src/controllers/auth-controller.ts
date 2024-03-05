@@ -15,8 +15,8 @@ import {
   foundUser,
   existingAcctId,
   createUser,
-  createProfile,
 } from "../repositories/user-repository";
+import { createProfile } from "../repositories/profile-repository";
 
 // @route POST api/auth/login
 // @desc Login into account
