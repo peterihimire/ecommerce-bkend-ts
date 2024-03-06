@@ -14,6 +14,7 @@ const redis_client_1 = require("./src/utils/redis-client");
 const auth_route_1 = __importDefault(require("./src/routes/auth-route"));
 const admin_auth_route_1 = __importDefault(require("./src/routes/admin-auth-route"));
 const product_route_1 = __importDefault(require("./src/routes/product-route"));
+const cart_route_1 = __importDefault(require("./src/routes/cart-route"));
 const test_route_1 = __importDefault(require("./src/routes/test-route"));
 const error_handler_1 = require("./src/middlewares/error-handler");
 const connect_redis_1 = __importDefault(require("connect-redis"));
@@ -68,7 +69,7 @@ const corsOptions = {
 };
 let redisStoreOne = new connect_redis_1.default({
     client: redis_client_1.redisclient,
-    prefix: "ecommerce_store",
+    prefix: "ecommerce_user",
 });
 let redisStoreTwo = new connect_redis_1.default({
     client: redis_client_1.redisclient,
@@ -83,7 +84,7 @@ const sessionOptions = {
     cookie: {
         secure: false,
         httpOnly: true,
-        maxAge: 1000 * 60 * 60, // session max age in miliseconds
+        maxAge: 1000 * 60 * 60 * 12, // session max age in miliseconds
         // sameSite: "none",
     },
 };
@@ -96,7 +97,7 @@ const sessionOptionsTwo = {
     cookie: {
         secure: false,
         httpOnly: true,
-        maxAge: 1000 * 60 * 60, // session max age in miliseconds
+        maxAge: 1000 * 60 * 60 * 12, // session max age in miliseconds
         // sameSite: "none",
     },
 };
@@ -109,6 +110,7 @@ app.use(express_1.default.json());
 app.use("/api/ecommerce/v1/admins/auth", (0, express_session_1.default)(sessionOptionsTwo), admin_auth_route_1.default);
 app.use("/api/ecommerce/v1/auth", (0, express_session_1.default)(sessionOptions), auth_route_1.default);
 app.use("/api/ecommerce/v1/products", (0, express_session_1.default)(sessionOptionsTwo), product_route_1.default);
+app.use("/api/ecommerce/v1/carts", (0, express_session_1.default)(sessionOptions), cart_route_1.default);
 app.use("/api/ecommerce/v1/test", test_route_1.default);
 app.use(error_handler_1.unknownRoute);
 app.use(error_handler_1.logErrorMiddleware);

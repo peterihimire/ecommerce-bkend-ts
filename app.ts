@@ -13,6 +13,7 @@ import { redisclient } from "./src/utils/redis-client";
 import authRoute from "./src/routes/auth-route";
 import adminAuthRoute from "./src/routes/admin-auth-route";
 import productRoute from "./src/routes/product-route";
+import cartRoute from "./src/routes/cart-route";
 import testRoute from "./src/routes/test-route";
 import {
   logErrorMiddleware,
@@ -108,7 +109,7 @@ const corsOptions = {
 
 let redisStoreOne = new (RedisStore as any)({
   client: redisclient,
-  prefix: "ecommerce_store",
+  prefix: "ecommerce_user",
 });
 
 let redisStoreTwo = new (RedisStore as any)({
@@ -125,7 +126,7 @@ const sessionOptions = {
   cookie: {
     secure: false, // if true only transmit cookie over https
     httpOnly: true, // if true prevent client side JS from reading the cookie
-    maxAge: 1000 * 60 * 60, // session max age in miliseconds
+    maxAge: 1000 * 60 * 60 * 12, // session max age in miliseconds
     // sameSite: "none",
   },
 };
@@ -139,7 +140,7 @@ const sessionOptionsTwo = {
   cookie: {
     secure: false, // if true only transmit cookie over https
     httpOnly: true, // if true prevent client side JS from reading the cookie
-    maxAge: 1000 * 60 * 60, // session max age in miliseconds
+    maxAge: 1000 * 60 * 60 * 12, // session max age in miliseconds
     // sameSite: "none",
   },
 };
@@ -159,6 +160,7 @@ app.use(
 );
 app.use("/api/ecommerce/v1/auth", session(sessionOptions), authRoute);
 app.use("/api/ecommerce/v1/products", session(sessionOptionsTwo), productRoute);
+app.use("/api/ecommerce/v1/carts", session(sessionOptions), cartRoute);
 app.use("/api/ecommerce/v1/test", testRoute);
 
 app.use(unknownRoute);

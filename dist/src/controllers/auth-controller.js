@@ -28,18 +28,11 @@ const register = async (req, res, next) => {
     console.log("thia is ...", User);
     try {
         console.log("This is ...", User);
-        // const foundUser = await User.findOne({
-        //   attributes: ["email"],
-        //   where: { email: email },
-        // });
         const found_user = await (0, user_repository_1.foundUser)(email);
         console.log("This is found user....", found_user);
         if (found_user) {
             return next(new base_error_1.default("Account already exist, login instead!", http_status_codes_1.httpStatusCodes.CONFLICT));
         }
-        // const existing_acct_id = await User.findOne({
-        //   where: { acct_id: acctnum },
-        // });
         const existing_acct_id = await (0, user_repository_1.existingAcctId)(acctnum);
         console.log("this is existing account identity...", existing_acct_id);
         if (existing_acct_id) {
@@ -49,24 +42,20 @@ const register = async (req, res, next) => {
         }
         const salt = await bcrypt_1.default.genSalt();
         const hashed_password = await bcrypt_1.default.hash(original_password, salt);
-        // CREATE NEW ACCOUNT
-        // const createdUser = await User.create({
-        //   email: email,
-        //   password: hashed_password,
-        //   acct_id: acctnum,
-        // });
         const payload = {
             email: email,
             password: hashed_password,
             acct_id: acctnum,
         };
+        console.log("This is user payload...", payload);
         const created_user = await (0, user_repository_1.createUser)(payload);
         console.log("Created user yes...", created_user);
-        const { id, password, ...others } = created_user.dataValues;
+        const { id, password, ...others } = await (created_user === null || created_user === void 0 ? void 0 : created_user.dataValues);
         const data = {
-            acct_id: created_user.acct_id,
-            userId: created_user.id,
+            acct_id: created_user === null || created_user === void 0 ? void 0 : created_user.acct_id,
+            userId: created_user === null || created_user === void 0 ? void 0 : created_user.id,
         };
+        console.log("This is profile data...", data);
         const created_profile = await (0, profile_repository_1.createProfile)(data);
         console.log("Created profile yes...", created_profile);
         res.status(http_status_codes_1.httpStatusCodes.OK).json({
