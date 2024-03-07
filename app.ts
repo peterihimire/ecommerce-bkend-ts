@@ -33,11 +33,25 @@ type Admin = {
   email: string;
 };
 
+type Cart = {
+  userId: string | null;
+  cartId: string;
+  products: {
+    productId: string;
+    name: string;
+    price: number;
+    quantity: number;
+  }[];
+  totalQty: number;
+  totalPrice: number;
+};
+
 // Augment express-session with a custom SessionData object
 declare module "express-session" {
   interface SessionData {
     user: User;
     admin: Admin;
+    cart: Cart;
   }
 }
 

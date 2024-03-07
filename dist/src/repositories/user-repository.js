@@ -7,9 +7,53 @@ exports.createUser = exports.existingAcctId = exports.foundUser = void 0;
 const models_1 = __importDefault(require("../database/models"));
 const User = models_1.default.User;
 const Profile = models_1.default.Profile;
+const Cart = models_1.default.Cart;
+const CartProduct = models_1.default.CartProduct;
 const foundUser = async (email) => {
     return User.findOne({
         where: { email: email },
+        include: [
+            {
+                attributes: {
+                    exclude: ["id", "createdAt", "updatedAt", "userId"],
+                },
+                model: Profile,
+                as: "profile",
+                // include: [
+                //   {
+                //     attributes: {
+                //       exclude: ["id", "createdAt", "updatedAt", "profileId", "acct_id"],
+                //     },
+                //     model: Business,
+                //     as: "business",
+                //   },
+                //   {
+                //     attributes: {
+                //       exclude: ["id", "createdAt", "updatedAt", "profileId"],
+                //     },
+                //     model: Instance,
+                //     as: "instances",
+                //   },
+                //   {
+                //     attributes: {
+                //       exclude: ["id", "createdAt", "updatedAt", "profileId"],
+                //     },
+                //     model: Channel,
+                //     as: "channels",
+                //   },
+                // ],
+            },
+            {
+                attributes: {
+                    exclude: ["id", "createdAt", "updatedAt", "userId"],
+                },
+                model: Cart,
+                as: "cart",
+                // through: {
+                //   attributes: [],
+                // },
+            },
+        ],
     });
 };
 exports.foundUser = foundUser;

@@ -37,7 +37,11 @@ module.exports = (sequelize: any, DataTypes: any) => {
   }
   CartProduct.init(
     {
-      quantity: DataTypes.INTEGER,
+      quantity: {
+        type: DataTypes.INTEGER,
+        defaultValue: 1,
+        allowNull: false,
+      },
       addedBy: DataTypes.STRING,
       addedAt: {
         allowNull: false,

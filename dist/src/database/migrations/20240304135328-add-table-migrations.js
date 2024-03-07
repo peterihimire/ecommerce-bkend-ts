@@ -51,14 +51,14 @@ module.exports = {
             //     uuid: {
             //       type: DataTypes.STRING,
             //     },
-            // cartId: {
-            //   type: DataTypes.INTEGER,
-            //   primaryKey: true,
-            // },
-            // productId: {
-            //   type: DataTypes.INTEGER,
-            //   primaryKey: true,
-            // },
+            //     cartId: {
+            //       type: DataTypes.INTEGER,
+            //       primaryKey: true,
+            //     },
+            //     productId: {
+            //       type: DataTypes.INTEGER,
+            //       primaryKey: true,
+            //     },
             //   },
             //   { transaction }
             // );
