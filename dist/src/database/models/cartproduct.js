@@ -21,6 +21,17 @@ module.exports = (sequelize, DataTypes) => {
         }
     }
     CartProduct.init({
+        title: DataTypes.STRING,
+        price: {
+            type: DataTypes.DECIMAL(10, 2),
+            get() {
+                // Workaround until sequelize issue #8019 is fixed
+                const value = this.getDataValue("price");
+                return value === null ? null : parseFloat(value.toString());
+            },
+            defaultValue: 0,
+            allowNull: false,
+        },
         quantity: {
             type: DataTypes.INTEGER,
             defaultValue: 1,

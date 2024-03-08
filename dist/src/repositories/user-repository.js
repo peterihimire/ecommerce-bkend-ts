@@ -7,6 +7,7 @@ exports.createUser = exports.existingAcctId = exports.foundUser = void 0;
 const models_1 = __importDefault(require("../database/models"));
 const User = models_1.default.User;
 const Profile = models_1.default.Profile;
+const Product = models_1.default.Product;
 const Cart = models_1.default.Cart;
 const CartProduct = models_1.default.CartProduct;
 const foundUser = async (email) => {
@@ -19,36 +20,30 @@ const foundUser = async (email) => {
                 },
                 model: Profile,
                 as: "profile",
-                // include: [
-                //   {
-                //     attributes: {
-                //       exclude: ["id", "createdAt", "updatedAt", "profileId", "acct_id"],
-                //     },
-                //     model: Business,
-                //     as: "business",
-                //   },
-                //   {
-                //     attributes: {
-                //       exclude: ["id", "createdAt", "updatedAt", "profileId"],
-                //     },
-                //     model: Instance,
-                //     as: "instances",
-                //   },
-                //   {
-                //     attributes: {
-                //       exclude: ["id", "createdAt", "updatedAt", "profileId"],
-                //     },
-                //     model: Channel,
-                //     as: "channels",
-                //   },
-                // ],
             },
             {
                 attributes: {
-                    exclude: ["id", "createdAt", "updatedAt", "userId"],
+                    exclude: ["createdAt", "updatedAt", "userId"],
                 },
                 model: Cart,
                 as: "cart",
+                // include: [
+                //   {
+                //     attributes: { exclude: ["createdAt", "updatedAt"] },
+                //     model: CartProduct,
+                //     as: "cart_products",
+                //     through: {
+                //       attributes: [],
+                //     },
+                //     include: [
+                //       {
+                //         attributes: { exclude: ["createdAt", "updatedAt"] },
+                //         model: Product,
+                //         as: "products",
+                //       },
+                //     ],
+                //   },
+                // ],
                 // through: {
                 //   attributes: [],
                 // },

@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.verifySessionAdmin = exports.verifySessionAndAuthorization = exports.verifySession = void 0;
+exports.verifySessionAdmin = exports.verifySessionAndCart = exports.verifySessionAndAuthorization = exports.verifySession = void 0;
 const base_error_1 = __importDefault(require("../utils/base-error"));
 const http_status_codes_1 = require("../utils/http-status-codes");
 const admin_auth_repository_1 = require("../repositories/admin-auth-repository");
@@ -47,6 +47,21 @@ const verifySessionAndAuthorization = (req, res, next) => {
     });
 };
 exports.verifySessionAndAuthorization = verifySessionAndAuthorization;
+// USER & CART ONLY
+const verifySessionAndCart = (req, res, next) => {
+    var _a, _b;
+    const user = req.user;
+    const user_id = ((_a = req.body) === null || _a === void 0 ? void 0 : _a.id) || ((_b = req.params) === null || _b === void 0 ? void 0 : _b.id);
+    if (!user) {
+        next();
+        return;
+    }
+    if ((user === null || user === void 0 ? void 0 : user.id) === user_id || (user === null || user === void 0 ? void 0 : user.id)) {
+        next();
+        return;
+    }
+};
+exports.verifySessionAndCart = verifySessionAndCart;
 // ADMIN ONLY
 const verifySessionAdmin = (req, res, next) => {
     verifyAdmin(req, res, async () => {

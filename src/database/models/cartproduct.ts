@@ -2,6 +2,8 @@
 import { BuildOptions, DataTypes, Model, Sequelize } from "sequelize";
 
 interface CartProductAttributes {
+  title: string;
+  price: number;
   quantity: number;
   addedBy: string;
   addedAt: Date;
@@ -13,6 +15,8 @@ module.exports = (sequelize: any, DataTypes: any) => {
     extends Model<CartProductAttributes>
     implements CartProductAttributes
   {
+    title!: string;
+    price!: number;
     quantity!: number;
     addedBy!: string;
     addedAt!: Date;
@@ -37,6 +41,17 @@ module.exports = (sequelize: any, DataTypes: any) => {
   }
   CartProduct.init(
     {
+      title: DataTypes.STRING,
+      price: {
+        type: DataTypes.DECIMAL(10, 2),
+        get() {
+          // Workaround until sequelize issue #8019 is fixed
+          const value = this.getDataValue("price");
+          return value === null ? null : parseFloat(value.toString());
+        },
+        defaultValue: 0,
+        allowNull: false,
+      },
       quantity: {
         type: DataTypes.INTEGER,
         defaultValue: 1,

@@ -80,6 +80,22 @@ export const verifySessionAndAuthorization: RequestHandler = (
   });
 };
 
+// USER & CART ONLY
+export const verifySessionAndCart: RequestHandler = (req, res, next) => {
+  const user = req.user;
+  const user_id = req.body?.id || req.params?.id;
+
+  if (!user) {
+    next();
+    return;
+  }
+
+  if (user?.id === user_id || user?.id) {
+    next();
+    return;
+  }
+};
+
 // ADMIN ONLY
 export const verifySessionAdmin: RequestHandler = (req, res, next) => {
   verifyAdmin(req, res, async () => {

@@ -11,6 +11,12 @@ module.exports = {
                 primaryKey: true,
                 type: sequelize_1.DataTypes.INTEGER,
             },
+            title: {
+                type: sequelize_1.DataTypes.STRING,
+            },
+            price: {
+                type: sequelize_1.DataTypes.DECIMAL(10, 2),
+            },
             quantity: {
                 type: sequelize_1.DataTypes.INTEGER,
             },

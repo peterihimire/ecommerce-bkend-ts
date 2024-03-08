@@ -13,6 +13,12 @@ module.exports = {
           primaryKey: true,
           type: DataTypes.INTEGER,
         },
+        title: {
+          type: DataTypes.STRING,
+        },
+        price: {
+          type: DataTypes.DECIMAL(10, 2),
+        },
         quantity: {
           type: DataTypes.INTEGER,
         },

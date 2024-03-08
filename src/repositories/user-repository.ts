@@ -2,6 +2,7 @@ import db from "../database/models";
 import { createProfile } from "../repositories/profile-repository";
 const User = db.User;
 const Profile = db.Profile;
+const Product = db.Product;
 const Cart = db.Cart;
 const CartProduct = db.CartProduct;
 
@@ -15,36 +16,30 @@ export const foundUser = async (email: string) => {
         },
         model: Profile,
         as: "profile",
-        // include: [
-        //   {
-        //     attributes: {
-        //       exclude: ["id", "createdAt", "updatedAt", "profileId", "acct_id"],
-        //     },
-        //     model: Business,
-        //     as: "business",
-        //   },
-        //   {
-        //     attributes: {
-        //       exclude: ["id", "createdAt", "updatedAt", "profileId"],
-        //     },
-        //     model: Instance,
-        //     as: "instances",
-        //   },
-        //   {
-        //     attributes: {
-        //       exclude: ["id", "createdAt", "updatedAt", "profileId"],
-        //     },
-        //     model: Channel,
-        //     as: "channels",
-        //   },
-        // ],
       },
       {
         attributes: {
-          exclude: ["id", "createdAt", "updatedAt", "userId"],
+          exclude: ["createdAt", "updatedAt", "userId"],
         },
         model: Cart,
         as: "cart",
+        // include: [
+        //   {
+        //     attributes: { exclude: ["createdAt", "updatedAt"] },
+        //     model: CartProduct,
+        //     as: "cart_products",
+        //     through: {
+        //       attributes: [],
+        //     },
+        //     include: [
+        //       {
+        //         attributes: { exclude: ["createdAt", "updatedAt"] },
+        //         model: Product,
+        //         as: "products",
+        //       },
+        //     ],
+        //   },
+        // ],
         // through: {
         //   attributes: [],
         // },

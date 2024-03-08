@@ -131,6 +131,11 @@ let redisStoreTwo = new (RedisStore as any)({
   prefix: "ecommerce_admin",
 });
 
+let redisStoreCart = new (RedisStore as any)({
+  client: redisclient,
+  prefix: "ecommerce_cart",
+});
+
 const sessionOptions = {
   // store: new RedisStore({ client: redisClient }),
   store: redisStoreOne,
@@ -149,6 +154,20 @@ const sessionOptionsTwo = {
   // store: new RedisStore({ client: redisClient }),
   store: redisStoreTwo,
   secret: String(process.env.ADMIN_SESSION_SECRET),
+  resave: false,
+  saveUninitialized: false,
+  cookie: {
+    secure: false, // if true only transmit cookie over https
+    httpOnly: true, // if true prevent client side JS from reading the cookie
+    maxAge: 1000 * 60 * 60 * 12, // session max age in miliseconds
+    // sameSite: "none",
+  },
+};
+
+const sessionOptionsThree = {
+  // store: new RedisStore({ client: redisClient }),
+  store: redisStoreCart,
+  secret: String(process.env.SESSION_SECRET),
   resave: false,
   saveUninitialized: false,
   cookie: {
