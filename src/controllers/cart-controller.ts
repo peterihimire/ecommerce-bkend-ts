@@ -2,13 +2,8 @@ import { RequestHandler } from "express";
 import { httpStatusCodes } from "../utils/http-status-codes";
 import BaseError from "../utils/base-error";
 import db from "../database/models";
-// import bcrypt from "bcryptjs";
-// import { default as bcrypt } from "bcryptjs";
-import bcrypt from "bcrypt";
-import randomString from "../utils/acc-generator";
-import { NUMLIST } from "../utils/list-data";
-import { sign, verify } from "jsonwebtoken";
 import dotenv from "dotenv";
+
 dotenv.config();
 const User = db.User;
 const Cart = db.Cart;
@@ -197,6 +192,74 @@ export const addCart: RequestHandler = async (req, res, next) => {
 // @desc Login into account
 // @access Private
 export const getCart: RequestHandler = async (req, res, next) => {
+  const { user } = req?.session;
+  const email: string | undefined = user?.email;
+
+  try {
+    if (email === undefined) {
+      return next(
+        new BaseError("Account does not exist!", httpStatusCodes.CONFLICT)
+      );
+    }
+    const existing_user = await foundUser(email);
+    const existing_cart = await existing_user.getCart();
+    console.log("This is found user & cart....", existing_user, existing_cart);
+    console.log("cartId....", existing_user.cart.id);
+    if (!existing_cart) {
+      return next(
+        new BaseError("Account does not exist!", httpStatusCodes.CONFLICT)
+      );
+    }
+    const cart_prods = await foundCartId(existing_user.cart.id);
+
+    const totalCartPrice = cart_prods.products.reduce(
+      (total: any, item: any) => {
+        return (
+          total + Number(item.cart_products.price) * item.cart_products.quantity
+        );
+      },
+      0
+    );
+
+    const totalCartQty = cart_prods.products.reduce((total: any, item: any) => {
+      console.log("itme....", item.cart_products.quantity);
+      return total + item.cart_products.quantity;
+    }, 0);
+    console.log("TOTAL QTY:", totalCartQty);
+
+    const products_arr = cart_prods.products.map((item: any) => {
+      return {
+        prod_uuid: item.uuid,
+        title: item.cart_products.title,
+        price: item.cart_products.price,
+        quantity: item.cart_products.quantity,
+      };
+    });
+
+    const cart_response = {
+      cart_uuid: cart_prods.uuid,
+      products: products_arr,
+      total_qty: totalCartQty,
+      total_price: totalCartPrice,
+    };
+
+    res.status(httpStatusCodes.OK).json({
+      status: "success",
+      msg: "Cart info.",
+      data: cart_response,
+    });
+  } catch (error: any) {
+    if (!error.statusCode) {
+      error.statusCode = httpStatusCodes.INTERNAL_SERVER;
+    }
+    next(error);
+  }
+};
+
+// @route POST api/auth/login
+// @desc Login into account
+// @access Private
+export const updateCart: RequestHandler = async (req, res, next) => {
   const { user } = req?.session;
   const email: string | undefined = user?.email;
 
