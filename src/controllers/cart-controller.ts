@@ -259,11 +259,15 @@ export const getCart: RequestHandler = async (req, res, next) => {
 // @route POST api/auth/login
 // @desc Login into account
 // @access Private
-export const updateCart: RequestHandler = async (req, res, next) => {
+export const updateCartProduct: RequestHandler = async (req, res, next) => {
   const { user } = req?.session;
+  const { type } = req.body;
+  const { prod_id } = req.params;
   const email: string | undefined = user?.email;
 
   try {
+    let updatedQty;
+
     if (email === undefined) {
       return next(
         new BaseError("Account does not exist!", httpStatusCodes.CONFLICT)

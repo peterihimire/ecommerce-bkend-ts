@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.adddCart = exports.updateCart = exports.getCart = exports.addCart = void 0;
+exports.adddCart = exports.updateCartProduct = exports.getCart = exports.addCart = void 0;
 const http_status_codes_1 = require("../utils/http-status-codes");
 const base_error_1 = __importDefault(require("../utils/base-error"));
 const models_1 = __importDefault(require("../database/models"));
@@ -205,10 +205,13 @@ exports.getCart = getCart;
 // @route POST api/auth/login
 // @desc Login into account
 // @access Private
-const updateCart = async (req, res, next) => {
+const updateCartProduct = async (req, res, next) => {
     const { user } = req === null || req === void 0 ? void 0 : req.session;
+    const { type } = req.body;
+    const { prod_id } = req.params;
     const email = user === null || user === void 0 ? void 0 : user.email;
     try {
+        let updatedQty;
         if (email === undefined) {
             return next(new base_error_1.default("Account does not exist!", http_status_codes_1.httpStatusCodes.CONFLICT));
         }
@@ -255,7 +258,7 @@ const updateCart = async (req, res, next) => {
         next(error);
     }
 };
-exports.updateCart = updateCart;
+exports.updateCartProduct = updateCartProduct;
 // interface SessionUser {
 //   id: string;
 // }
