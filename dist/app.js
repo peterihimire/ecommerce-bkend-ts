@@ -86,8 +86,8 @@ const sessionOptions = {
     resave: false,
     saveUninitialized: false,
     cookie: {
-        secure: false,
-        httpOnly: true,
+        secure: false, // if true only transmit cookie over https
+        httpOnly: true, // if true prevent client side JS from reading the cookie
         maxAge: 1000 * 60 * 60 * 12, // session max age in miliseconds
         // sameSite: "none",
     },
@@ -99,8 +99,8 @@ const sessionOptionsTwo = {
     resave: false,
     saveUninitialized: false,
     cookie: {
-        secure: false,
-        httpOnly: true,
+        secure: false, // if true only transmit cookie over https
+        httpOnly: true, // if true prevent client side JS from reading the cookie
         maxAge: 1000 * 60 * 60 * 12, // session max age in miliseconds
         // sameSite: "none",
     },
@@ -112,8 +112,8 @@ const sessionOptionsThree = {
     resave: false,
     saveUninitialized: false,
     cookie: {
-        secure: false,
-        httpOnly: true,
+        secure: false, // if true only transmit cookie over https
+        httpOnly: true, // if true prevent client side JS from reading the cookie
         maxAge: 1000 * 60 * 60 * 12, // session max age in miliseconds
         // sameSite: "none",
     },
@@ -133,3 +133,12 @@ app.use(error_handler_1.unknownRoute);
 app.use(error_handler_1.logErrorMiddleware);
 app.use(error_handler_1.returnError);
 exports.default = app;
+// "scripts": {
+//   "test": "jest",
+//   "dev": "nodemon dist/index.js",
+//   "migr": "sequelize db:migrate && nodemon dist/index.js",
+//   "seed": "sequelize db:migrate && sequelize db:seed:all && nodemon dist/index.js",
+//   "start": "node dist/index.js",
+//   "migrate": "sequelize db:migrate && node dist/index.js",
+//   "seeder": "sequelize db:migrate && sequelize db:seed:all && node dist/index.js"
+// },

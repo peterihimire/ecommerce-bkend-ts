@@ -1,7 +1,10 @@
+import dotenv from "dotenv";
 import db from "./src/database/models/index";
 import app from "./app";
 
-const PORT = 4040;
+dotenv.config();
+
+const PORT = process.env.PORT || 4040;
 const HOST = "0.0.0.0";
 
 app.listen(PORT, () => {

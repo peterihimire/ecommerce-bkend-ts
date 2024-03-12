@@ -33,7 +33,7 @@ module.exports = {
                 type: sequelize_1.DataTypes.INTEGER,
                 allowNull: false,
                 references: {
-                    model: "carts",
+                    model: "carts", // This should be the name of the Cart model/table
                     key: "id",
                 },
                 onDelete: "CASCADE",
@@ -42,7 +42,7 @@ module.exports = {
                 type: sequelize_1.DataTypes.INTEGER,
                 allowNull: false,
                 references: {
-                    model: "products",
+                    model: "products", // This should be the name of the Product model/table
                     key: "id",
                 },
                 onDelete: "CASCADE",

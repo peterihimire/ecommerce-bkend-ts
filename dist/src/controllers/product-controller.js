@@ -31,13 +31,13 @@ const addProduct = async (req, res, next) => {
         const payload = {
             title: title,
             slug: slug,
-            images: images,
+            images: images, // Assuming images is an array of strings
             colors: colors,
             categories: categories,
-            price: parseFloat(price),
+            price: parseFloat(price), // Convert price to number
             brand: brand,
-            countInStock: parseInt(countInStock),
-            rating: parseFloat(rating),
+            countInStock: parseInt(countInStock), // Convert countInStock to number
+            rating: parseFloat(rating), // Convert rating to number
             desc: desc,
             sizes: sizes,
             numReviews: numReviews,
@@ -121,13 +121,13 @@ const editProduct = async (req, res, next) => {
         const payload = {
             title: title,
             slug: slug,
-            images: images,
+            images: images, // Assuming images is an array of strings
             colors: colors,
             categories: categories,
-            price: parseFloat(price),
+            price: parseFloat(price), // Convert price to number
             brand: brand,
-            countInStock: parseInt(countInStock),
-            rating: parseFloat(rating),
+            countInStock: parseInt(countInStock), // Convert countInStock to number
+            rating: parseFloat(rating), // Convert rating to number
             desc: desc,
             sizes: sizes,
             numReviews: numReviews,

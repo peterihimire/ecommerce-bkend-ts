@@ -200,3 +200,12 @@ app.use(unknownRoute);
 app.use(logErrorMiddleware);
 app.use(returnError);
 export default app;
+  // "scripts": {
+  //   "test": "jest",
+  //   "dev": "nodemon dist/index.js",
+  //   "migr": "sequelize db:migrate && nodemon dist/index.js",
+  //   "seed": "sequelize db:migrate && sequelize db:seed:all && nodemon dist/index.js",
+  //   "start": "node dist/index.js",
+  //   "migrate": "sequelize db:migrate && node dist/index.js",
+  //   "seeder": "sequelize db:migrate && sequelize db:seed:all && node dist/index.js"
+  // },

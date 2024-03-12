@@ -38,7 +38,7 @@ const addCart = async (req, res, next) => {
                 // If no cart data in session, initialize it
                 sessionCart = {
                     userId: (0, uuid_1.v4)(),
-                    cartId: (0, uuid_1.v4)(),
+                    cartId: (0, uuid_1.v4)(), // Generate a new UUID for unauthenticated user's cart
                     products: [],
                     totalQty: 0,
                     totalPrice: 0,
@@ -79,9 +79,9 @@ const addCart = async (req, res, next) => {
             newCart = {
                 cartId: sessionCart.cartId,
                 productId,
-                uuid: (0, uuid_1.v4)(),
-                addedBy: "Unauthenticated User",
-                addedAt: new Date(),
+                uuid: (0, uuid_1.v4)(), // Generate a new UUID for cart product
+                addedBy: "Unauthenticated User", // Placeholder value
+                addedAt: new Date(), // Current date and time
                 quantity: newQty,
                 title: prod_info.title,
                 price: prod_info.price,
@@ -222,16 +222,16 @@ const updateCartProduct = async (req, res, next) => {
         if (!existing_cart) {
             return next(new base_error_1.default("Account does not exist!", http_status_codes_1.httpStatusCodes.CONFLICT));
         }
-        const cart_prods = await (0, cart_repository_1.foundCartId)(existing_user.cart.id);
-        const totalCartPrice = cart_prods.products.reduce((total, item) => {
+        const cart_info = await (0, cart_repository_1.foundCartId)(existing_user.cart.id);
+        const totalCartPrice = cart_info.products.reduce((total, item) => {
             return (total + Number(item.cart_products.price) * item.cart_products.quantity);
         }, 0);
-        const totalCartQty = cart_prods.products.reduce((total, item) => {
+        const totalCartQty = cart_info.products.reduce((total, item) => {
             console.log("itme....", item.cart_products.quantity);
             return total + item.cart_products.quantity;
         }, 0);
         console.log("TOTAL QTY:", totalCartQty);
-        const products_arr = cart_prods.products.map((item) => {
+        const products_arr = cart_info.products.map((item) => {
             return {
                 prod_uuid: item.uuid,
                 title: item.cart_products.title,
@@ -240,7 +240,7 @@ const updateCartProduct = async (req, res, next) => {
             };
         });
         const cart_response = {
-            cart_uuid: cart_prods.uuid,
+            cart_uuid: cart_info.uuid,
             products: products_arr,
             total_qty: totalCartQty,
             total_price: totalCartPrice,

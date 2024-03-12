@@ -282,9 +282,9 @@ export const updateCartProduct: RequestHandler = async (req, res, next) => {
         new BaseError("Account does not exist!", httpStatusCodes.CONFLICT)
       );
     }
-    const cart_prods = await foundCartId(existing_user.cart.id);
+    const cart_info = await foundCartId(existing_user.cart.id);
 
-    const totalCartPrice = cart_prods.products.reduce(
+    const totalCartPrice = cart_info.products.reduce(
       (total: any, item: any) => {
         return (
           total + Number(item.cart_products.price) * item.cart_products.quantity
@@ -293,13 +293,13 @@ export const updateCartProduct: RequestHandler = async (req, res, next) => {
       0
     );
 
-    const totalCartQty = cart_prods.products.reduce((total: any, item: any) => {
+    const totalCartQty = cart_info.products.reduce((total: any, item: any) => {
       console.log("itme....", item.cart_products.quantity);
       return total + item.cart_products.quantity;
     }, 0);
     console.log("TOTAL QTY:", totalCartQty);
 
-    const products_arr = cart_prods.products.map((item: any) => {
+    const products_arr = cart_info.products.map((item: any) => {
       return {
         prod_uuid: item.uuid,
         title: item.cart_products.title,
@@ -309,7 +309,7 @@ export const updateCartProduct: RequestHandler = async (req, res, next) => {
     });
 
     const cart_response = {
-      cart_uuid: cart_prods.uuid,
+      cart_uuid: cart_info.uuid,
       products: products_arr,
       total_qty: totalCartQty,
       total_price: totalCartPrice,

@@ -39,7 +39,7 @@ const foundCartId = async (id) => {
                 as: "products",
                 through: {
                     model: CartProduct,
-                    as: "cart_products",
+                    as: "cart_products", // Alias for the through model
                     attributes: ["quantity", "title", "price"], // Include additional attributes from CartProduct
                 },
             },
