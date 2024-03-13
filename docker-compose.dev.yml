@@ -1,13 +1,53 @@
+# version: "3.8"
+
+# services:
+#   api:
+#     build:
+#       context: .
+#       target: development
+#     volumes:
+#       - ./:/app
+#       - /app/node_modules
+#     ports:
+#       - 4040:4040
+#     command: npm run dev
 version: "3.8"
 
 services:
+  redis:
+    image: redis
+    networks:
+      - webnet
+  db:
+    image: postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: testing123
+      POSTGRES_DB: ecommerce_dev
+    volumes:
+      - ./pgdata:/var/lib/postgresql/data
+    networks:
+      - webnet
+    ports:
+      - 5433:5432
   api:
     build:
       context: .
       target: development
     volumes:
-      - ./:usr/app/
-      - /usr/app/node_modules
+      - ./:/app
+      - /app/node_modules
     ports:
-      - 3000:3000
+      - 4040:4040
+    env_file: .env
+    depends_on:
+      - db
+      - redis
+    networks:
+      - webnet
+    environment:
+      DB_HOST: db
+      REDIS_HOST: redis
     command: npm run dev
+networks:
+  webnet:

@@ -3,11 +3,14 @@
 import * as fs from "fs";
 import * as path from "path";
 import { Sequelize, DataTypes, Model } from "sequelize";
+import dotenv from "dotenv";
+
+dotenv.config();
 // import { ProcessEnv } from "process";
 
 const basename: string = path.basename(__filename);
 const env: string = (process.env.NODE_ENV as string) || "development";
-const config: any = require(__dirname + "/../config/config.js")[env];
+const config: any = require(__dirname + "/../config/config.ts")[env];
 const db: any = {};
 
 let sequelize: Sequelize;
@@ -30,8 +33,8 @@ fs.readdirSync(__dirname)
     return (
       file.indexOf(".") !== 0 &&
       file !== basename &&
-      file.slice(-3) === ".js" &&
-      file.indexOf(".test.js") === -1
+      file.slice(-3) === ".ts" &&
+      file.indexOf(".test.ts") === -1
     );
   })
   .forEach((file: string) => {
