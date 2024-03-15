@@ -44,7 +44,6 @@ ENV NODE_ENV development
 WORKDIR /app
 COPY package*.json .
 RUN npm install
-# RUN npx sequelize-cli init
 COPY . .
 EXPOSE 4040
 RUN npm run build
@@ -56,9 +55,5 @@ ENV NODE_ENV=${NODE_ENV}
 WORKDIR /app
 COPY package*.json .
 RUN npm install --only=production
-# RUN npm install -g sequelize-cli
-# RUN npx sequelize-cli init
-COPY --from=development /app/dist ./dist
-
-# Run migrations and seeders
-CMD ["npm", "run", "seed"]
+COPY --from=development /app ./
+CMD ["node", "dist/index.js"]

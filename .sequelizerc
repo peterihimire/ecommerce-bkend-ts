@@ -8,8 +8,11 @@
 //   "seeders-path": path.resolve("./src/database/seeders"),
 //   "migrations-path": path.resolve("./src/database/migrations"),
 // };
-
+const dotenv = require("dotenv");
 const path = require("path");
+
+
+dotenv.config();
 // import { resolve } from "path";
 
 module.exports = {

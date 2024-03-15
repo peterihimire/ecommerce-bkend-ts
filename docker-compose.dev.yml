@@ -17,7 +17,7 @@ services:
   redis:
     image: redis
     networks:
-      - webnet
+      - appnet
   db:
     image: postgres
     environment:
@@ -27,9 +27,20 @@ services:
     volumes:
       - ./pgdata:/var/lib/postgresql/data
     networks:
-      - webnet
+      - appnet
     ports:
       - 5433:5432
+  pgadmin:
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: root@root.com
+      PGADMIN_DEFAULT_PASSWORD: testing123
+    volumes:
+      - ./pgadmindata:/var/lib/pgadmin/data
+    networks:
+      - appnet
+    ports:
+      - 4050:80
   api:
     build:
       context: .
@@ -43,11 +54,12 @@ services:
     depends_on:
       - db
       - redis
+      - pgadmin
     networks:
-      - webnet
+      - appnet
     environment:
       DB_HOST: db
       REDIS_HOST: redis
     command: npm run dev
 networks:
-  webnet:
+  appnet:

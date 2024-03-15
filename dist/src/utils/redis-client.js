@@ -31,7 +31,7 @@ const redisclient = createClient({
     legacyMode: false,
     socket: {
         port: Number(process.env.REDIS_PORT),
-        host: process.env.REDIS_URL,
+        host: process.env.REDIS_HOST,
     },
 });
 exports.redisclient = redisclient;

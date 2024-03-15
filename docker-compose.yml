@@ -7,8 +7,6 @@
 #       target: production
 #     ports:
 #       - 4040:4040
- 
-
 
 version: "3.8"
 
@@ -16,7 +14,8 @@ services:
   redis:
     image: redis
     networks:
-      - webnet
+      webnet:
+        ipv4_address: 192.168.0.2
   db:
     image: postgres
     environment:
@@ -24,11 +23,24 @@ services:
       POSTGRES_PASSWORD: testing123
       POSTGRES_DB: ecommerce_dev
     volumes:
-      - ./pgdata:/var/lib/postgresql/data
+      - ./data/pgdata:/var/lib/postgresql/data
     networks:
-      - webnet
+      webnet:
+        ipv4_address: 192.168.0.3
     ports:
-      - 5433:5432
+      - 5434:5432
+  pgadmin:
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: root@root.com
+      PGADMIN_DEFAULT_PASSWORD: testing123
+    volumes:
+      - ./data/pgadmindata:/var/lib/pgadmin/data
+    networks:
+      webnet:
+        ipv4_address: 192.168.0.4
+    ports:
+      - 4050:80
   api:
     build:
       context: .
@@ -39,11 +51,18 @@ services:
     depends_on:
       - db
       - redis
+      - pgadmin
     networks:
-      - webnet
+      webnet:
+        ipv4_address: 192.168.0.5
     environment:
       DB_HOST: db
       REDIS_HOST: redis
     # command: npm run dev
 networks:
   webnet:
+    ipam:
+      driver: default
+      config:
+        - subnet: "192.168.0.0/24"
+          gateway: 192.168.0.1
