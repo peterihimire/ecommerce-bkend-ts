@@ -99,8 +99,8 @@ services:
   pgadmin:
     image: dpage/pgadmin4
     environment:
-      PGADMIN_DEFAULT_EMAIL: root@root.com
-      PGADMIN_DEFAULT_PASSWORD: testing123
+      - PGADMIN_DEFAULT_EMAIL={PGADMIN_DEFAULT_EMAIL}
+      - PGADMIN_DEFAULT_PASSWORD=${PGADMIN_DEFAULT_PASSWORD}
     volumes:
       - ./data/pgadmindata:/var/lib/pgadmin/data
     networks:
@@ -121,8 +121,8 @@ services:
     networks:
       - webnet
     environment:
-      - DB_HOST=${db}
-      - REDIS_HOST=${redis}
+      - DB_HOST=db
+      - REDIS_HOST=redis
       - PORT=${PORT}
       - DB_NAME=${DB_NAME}
       - DB_USER=${DB_USER}
