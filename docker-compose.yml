@@ -95,7 +95,7 @@ services:
     networks:
       - webnet
     ports:
-      - 5434:5432
+      - 5432:5432
   pgadmin:
     image: dpage/pgadmin4
     environment:
