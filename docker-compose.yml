@@ -67,7 +67,6 @@
 #         - subnet: "192.168.0.0/24"
 #           gateway: 192.168.0.1
 
-
 # version: "3.8"
 
 # services:
@@ -84,8 +83,7 @@ services:
   redis:
     image: redis
     networks:
-      webnet:
-        ipv4_address: 142.93.42.140
+      - webnet
   db:
     image: postgres
     environment:
@@ -95,8 +93,7 @@ services:
     volumes:
       - ./data/pgdata:/var/lib/postgresql/data
     networks:
-      webnet:
-        ipv4_address: 142.93.42.141
+      - webnet
     ports:
       - 5434:5432
   pgadmin:
@@ -107,8 +104,7 @@ services:
     volumes:
       - ./data/pgadmindata:/var/lib/pgadmin/data
     networks:
-      webnet:
-        ipv4_address: 142.93.42.142
+      - webnet
     ports:
       - 4050:80
   api:
@@ -123,16 +119,10 @@ services:
       - redis
       - pgadmin
     networks:
-      webnet:
-        ipv4_address: 142.93.42.143
+      - webnet
     environment:
       DB_HOST: db
       REDIS_HOST: redis
     # command: npm run dev
 networks:
   webnet:
-    ipam:
-      driver: default
-      config:
-        - subnet: "142.93.42.138/24"
-          gateway: 142.93.42.139
