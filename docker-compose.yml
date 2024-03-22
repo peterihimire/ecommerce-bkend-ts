@@ -87,9 +87,9 @@ services:
   db:
     image: postgres
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: testing123
-      POSTGRES_DB: ecommerce_dev
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
     volumes:
       - ./data/pgdata:/var/lib/postgresql/data
     networks:
@@ -113,7 +113,7 @@ services:
       target: production
     ports:
       - 4040:4040
-    env_file: .env
+    # env_file: .env
     depends_on:
       - db
       - redis
@@ -121,8 +121,16 @@ services:
     networks:
       - webnet
     environment:
-      DB_HOST: db
-      REDIS_HOST: redis
+      - DB_HOST=${db}
+      - REDIS_HOST=${redis}
+      - PORT=${PORT}
+      - DB_NAME=${DB_NAME}
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - REDIS_PORT=${REDIS_PORT}
+      - SESSION_SECRET=${SESSION_SECRET}
+      - ADMIN_SESSION_SECRET=${ADMIN_SESSION_SECRET}
+      - CART_SESSION_SECRET=${CART_SESSION_SECRET}  
     # command: npm run dev
 networks:
   webnet:
