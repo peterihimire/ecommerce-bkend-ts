@@ -80,6 +80,12 @@
 version: "3.8"
 
 services:
+  nginx:
+    image: nginx:stable-alpine
+    ports:
+      - 80:80
+    volumes:
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
   redis:
     image: redis
     networks:
@@ -111,8 +117,8 @@ services:
     build:
       context: .
       target: production
-    ports:
-      - 4040:4040
+    # ports:
+    #   - 4040:4040
     # env_file: .env
     depends_on:
       - db
