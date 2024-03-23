@@ -5,21 +5,21 @@ import cookieParser from "cookie-parser";
 import multer from "multer";
 import path from "path";
 
-import BaseError from "./src/utils/base-error";
-import { httpStatusCodes } from "./src/utils/http-status-codes";
+import BaseError from "./utils/base-error";
+import { httpStatusCodes } from "./utils/http-status-codes";
 
-import { redisclient } from "./src/utils/redis-client";
+import { redisclient } from "./utils/redis-client";
 
-import authRoute from "./src/routes/auth-route";
-import adminAuthRoute from "./src/routes/admin-auth-route";
-import productRoute from "./src/routes/product-route";
-import cartRoute from "./src/routes/cart-route";
-import testRoute from "./src/routes/test-route";
+import authRoute from "./routes/auth-route";
+import adminAuthRoute from "./routes/admin-auth-route";
+import productRoute from "./routes/product-route";
+import cartRoute from "./routes/cart-route";
+import testRoute from "./routes/test-route";
 import {
   logErrorMiddleware,
   returnError,
   unknownRoute,
-} from "./src/middlewares/error-handler";
+} from "./middlewares/error-handler";
 import RedisStore from "connect-redis";
 
 // This works with the verify-session file
@@ -200,12 +200,12 @@ app.use(unknownRoute);
 app.use(logErrorMiddleware);
 app.use(returnError);
 export default app;
-  // "scripts": {
-  //   "test": "jest",
-  //   "dev": "nodemon dist/index.js",
-  //   "migr": "sequelize db:migrate && nodemon dist/index.js",
-  //   "seed": "sequelize db:migrate && sequelize db:seed:all && nodemon dist/index.js",
-  //   "start": "node dist/index.js",
-  //   "migrate": "sequelize db:migrate && node dist/index.js",
-  //   "seeder": "sequelize db:migrate && sequelize db:seed:all && node dist/index.js"
-  // },
+// "scripts": {
+//   "test": "jest",
+//   "dev": "nodemon dist/index.js",
+//   "migr": "sequelize db:migrate && nodemon dist/index.js",
+//   "seed": "sequelize db:migrate && sequelize db:seed:all && nodemon dist/index.js",
+//   "start": "node dist/index.js",
+//   "migrate": "sequelize db:migrate && node dist/index.js",
+//   "seeder": "sequelize db:migrate && sequelize db:seed:all && node dist/index.js"
+// },

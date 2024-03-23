@@ -1,5 +1,5 @@
 import dotenv from "dotenv";
-import db from "./src/database/models/index";
+import db from "./database/models/index";
 import app from "./app";
 
 dotenv.config();
