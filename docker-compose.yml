@@ -116,6 +116,7 @@ services:
     ports:
       - 4050:80
   api:
+    image: peterihimire/ecommerce-bkend-ts
     build:
       context: .
       target: production
