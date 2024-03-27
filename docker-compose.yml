@@ -129,7 +129,6 @@ services:
       target: production
     # ports:
     #   - 4040:4040
-    # env_file: .env
     depends_on:
       - db
       - redis
@@ -147,6 +146,5 @@ services:
       - SESSION_SECRET=${SESSION_SECRET}
       - ADMIN_SESSION_SECRET=${ADMIN_SESSION_SECRET}
       - CART_SESSION_SECRET=${CART_SESSION_SECRET}
-    # command: npm run dev
 networks:
   webnet:
