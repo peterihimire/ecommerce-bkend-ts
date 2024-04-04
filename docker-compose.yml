@@ -122,6 +122,7 @@ services:
       - webnet
     ports:
       - 4050:80
+      - 4050:443
   api:
     image: peterihimire/ecommerce-bkend-ts
     build:

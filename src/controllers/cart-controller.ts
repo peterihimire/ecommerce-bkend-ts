@@ -259,15 +259,12 @@ export const getCart: RequestHandler = async (req, res, next) => {
 // @route POST api/auth/login
 // @desc Login into account
 // @access Private
-export const updateCartProduct: RequestHandler = async (req, res, next) => {
+export const updateProductQty: RequestHandler = async (req, res, next) => {
   const { user } = req?.session;
-  const { type } = req.body;
-  const { prod_id } = req.params;
+  const { type, prod_id } = req.body;
   const email: string | undefined = user?.email;
 
   try {
-    let updatedQty;
-
     if (email === undefined) {
       return next(
         new BaseError("Account does not exist!", httpStatusCodes.CONFLICT)
@@ -278,47 +275,50 @@ export const updateCartProduct: RequestHandler = async (req, res, next) => {
     console.log("This is found user & cart....", existing_user, existing_cart);
     console.log("cartId....", existing_user.cart.id);
     if (!existing_cart) {
-      return next(
-        new BaseError("Account does not exist!", httpStatusCodes.CONFLICT)
-      );
+      return next(new BaseError("Cart not found!", httpStatusCodes.CONFLICT));
     }
-    const cart_info = await foundCartId(existing_user.cart.id);
 
-    const totalCartPrice = cart_info.products.reduce(
-      (total: any, item: any) => {
-        return (
-          total + Number(item.cart_products.price) * item.cart_products.quantity
-        );
+    let cart = await foundUserCartId(existing_user.id);
+
+    const prod_info = await foundProductId(prod_id);
+    let cartProduct = await CartProduct.findOne({
+      where: {
+        cartId: cart.id,
+        productId: prod_info.id,
       },
-      0
-    );
-
-    const totalCartQty = cart_info.products.reduce((total: any, item: any) => {
-      console.log("itme....", item.cart_products.quantity);
-      return total + item.cart_products.quantity;
-    }, 0);
-    console.log("TOTAL QTY:", totalCartQty);
-
-    const products_arr = cart_info.products.map((item: any) => {
-      return {
-        prod_uuid: item.uuid,
-        title: item.cart_products.title,
-        price: item.cart_products.price,
-        quantity: item.cart_products.quantity,
-      };
     });
 
-    const cart_response = {
-      cart_uuid: cart_info.uuid,
-      products: products_arr,
-      total_qty: totalCartQty,
-      total_price: totalCartPrice,
-    };
+    if (!cartProduct) {
+      return next(
+        new BaseError(`Product not found in cart.`, httpStatusCodes.NOT_FOUND)
+      );
+    }
+
+    console.log("This is cart product...", cartProduct);
+
+    if (cartProduct && type) {
+      cartProduct.quantity += type;
+      await cartProduct.save();
+    }
+
+    if (cartProduct?.quantity === 0) {
+      await CartProduct.destroy({
+        where: {
+          cartId: cart.id,
+          productId: prod_info.id,
+        },
+      });
+
+      return res.status(httpStatusCodes.OK).json({
+        status: "success",
+        msg: `Product ${prod_info?.title} removed from cart.`,
+      });
+    }
 
     res.status(httpStatusCodes.OK).json({
       status: "success",
-      msg: "Cart info.",
-      data: cart_response,
+      msg: "Cart product updated.",
+      data: cartProduct,
     });
   } catch (error: any) {
     if (!error.statusCode) {
@@ -328,26 +328,65 @@ export const updateCartProduct: RequestHandler = async (req, res, next) => {
   }
 };
 
-// interface SessionUser {
-//   id: string;
-// }
+// @route POST api/auth/login
+// @desc Login into account
+// @access Private
+export const deleteCartProd: RequestHandler = async (req, res, next) => {
+  const { user } = req?.session;
+  const { prod_id } = req.body;
+  const email: string | undefined = user?.email;
 
-// interface SessionCart {
-//   userId: string | null;
-//   cartId: string;
-//   products: {
-//     productId: string;
-//     name: string;
-//     price: number;
-//     quantity: number;
-//   }[];
-//   totalQty: number;
-//   totalPrice: number;
-// }
-// {
-//   // where: { id: prod_info.id },
-//   // through: { attributes: ["quantity", "addedBy", "addedAt", "uuid"] }, // Include additional fields her
-// }
+  try {
+    if (email === undefined) {
+      return next(
+        new BaseError("Account does not exist!", httpStatusCodes.CONFLICT)
+      );
+    }
+    const existing_user = await foundUser(email);
+    const existing_cart = await existing_user.getCart();
+    console.log("This is found user & cart....", existing_user, existing_cart);
+    console.log("cartId....", existing_user.cart.id);
+    if (!existing_cart) {
+      return next(new BaseError("Cart not found!", httpStatusCodes.CONFLICT));
+    }
+
+    let cart = await foundUserCartId(existing_user.id);
+
+    const prod_info = await foundProductId(prod_id);
+    let cartProduct = await CartProduct.findOne({
+      where: {
+        cartId: cart.id,
+        productId: prod_info.id,
+      },
+    });
+
+    if (!cartProduct) {
+      return next(
+        new BaseError(`Product not found in cart.`, httpStatusCodes.NOT_FOUND)
+      );
+    }
+
+    console.log("This is cart product...", cartProduct);
+
+    await CartProduct.destroy({
+      where: {
+        cartId: cart.id,
+        productId: prod_info.id,
+      },
+    });
+
+    res.status(httpStatusCodes.OK).json({
+      status: "success",
+      msg: "Cart product deleted.",
+    });
+  } catch (error: any) {
+    if (!error.statusCode) {
+      error.statusCode = httpStatusCodes.INTERNAL_SERVER;
+    }
+    next(error);
+  }
+};
+
 // @route POST api/auth/login
 // @desc Login into account
 // @access Private
@@ -418,3 +457,24 @@ export const adddCart: RequestHandler = async (req, res, next) => {
     next(error);
   }
 };
+
+// interface SessionUser {
+//   id: string;
+// }
+
+// interface SessionCart {
+//   userId: string | null;
+//   cartId: string;
+//   products: {
+//     productId: string;
+//     name: string;
+//     price: number;
+//     quantity: number;
+//   }[];
+//   totalQty: number;
+//   totalPrice: number;
+// }
+// {
+//   // where: { id: prod_info.id },
+//   // through: { attributes: ["quantity", "addedBy", "addedAt", "uuid"] }, // Include additional fields her
+// }
