@@ -81,6 +81,13 @@ export const foundUserCart = async (id: string) => {
   });
 };
 
+export const foundCartProd = async (cartId: number, prodId: number) => {
+  return CartProduct.findOne({
+    cartId: cartId,
+    productId: prodId,
+  });
+};
+
 export const addToCart = async () => {
   return Cart.findOne({
     // where: { uuid: id },

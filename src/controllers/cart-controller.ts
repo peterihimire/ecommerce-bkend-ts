@@ -19,6 +19,7 @@ import {
   foundCartId,
   foundUserCart,
   foundUserCartId,
+  foundCartProd,
 } from "../repositories/cart-repository";
 
 // @route POST api/auth/login
@@ -281,12 +282,14 @@ export const updateProductQty: RequestHandler = async (req, res, next) => {
     let cart = await foundUserCartId(existing_user.id);
 
     const prod_info = await foundProductId(prod_id);
-    let cartProduct = await CartProduct.findOne({
-      where: {
-        cartId: cart.id,
-        productId: prod_info.id,
-      },
-    });
+    // let cartProduct = await CartProduct.findOne({
+    //   where: {
+    //     cartId: cart.id,
+    //     productId: prod_info.id,
+    //   },
+    // });
+
+    let cartProduct = await foundCartProd(cart.id, prod_info.id);
 
     if (!cartProduct) {
       return next(
