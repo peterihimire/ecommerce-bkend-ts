@@ -3,11 +3,19 @@ import { BuildOptions, DataTypes, Model, Sequelize } from "sequelize";
 
 interface OrderAttributes {
   uuid: string;
+  address: string;
+  totalQty: number;
+  totalPrice: number;
+  status: string;
 }
 
 module.exports = (sequelize: any, DataTypes: any) => {
   class Order extends Model<OrderAttributes> implements OrderAttributes {
     uuid!: string;
+    address!: string;
+    totalQty!: number;
+    totalPrice!: number;
+    status!: string;
 
     /**
      * Helper method for defining associations.
@@ -38,6 +46,28 @@ module.exports = (sequelize: any, DataTypes: any) => {
         defaultValue: DataTypes.UUIDV4,
         allowNull: false,
         unique: true,
+      },
+      address: {
+        type: DataTypes.STRING,
+      },
+      totalQty: {
+        type: DataTypes.INTEGER,
+        defaultValue: 1,
+        allowNull: false,
+      },
+      totalPrice: {
+        type: DataTypes.DECIMAL(10, 2),
+        get() {
+          // Workaround until sequelize issue #8019 is fixed
+          const value = this.getDataValue("totalPrice");
+          return value === null ? null : parseFloat(value.toString());
+        },
+        defaultValue: 0,
+        allowNull: false,
+      },
+      status: {
+        type: DataTypes.STRING,
+        defaultValue: "pend",
       },
     },
     {

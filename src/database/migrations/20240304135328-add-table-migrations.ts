@@ -69,46 +69,46 @@ module.exports = {
       //   { transaction }
       // );
 
-      await queryInterface.createTable(
-        "order_products",
-        {
-          createdAt: {
-            allowNull: false,
-            defaultValue: new Date(),
-            type: DataTypes.DATE,
-          },
-          updatedAt: {
-            allowNull: false,
-            defaultValue: new Date(),
-            type: DataTypes.DATE,
-          },
-          quantity: {
-            type: DataTypes.INTEGER,
-          },
-          amount: {
-            type: DataTypes.DECIMAL(10, 2),
-          },
-          address: {
-            type: DataTypes.STRING,
-          },
-          status: {
-            defaultValue: "pending",
-            type: DataTypes.STRING,
-          },
-          uuid: {
-            type: DataTypes.STRING,
-          },
-          orderId: {
-            type: DataTypes.INTEGER,
-            primaryKey: true,
-          },
-          productId: {
-            type: DataTypes.INTEGER,
-            primaryKey: true,
-          },
-        },
-        { transaction }
-      );
+      // await queryInterface.createTable(
+      //   "order_products",
+      //   {
+      //     createdAt: {
+      //       allowNull: false,
+      //       defaultValue: new Date(),
+      //       type: DataTypes.DATE,
+      //     },
+      //     updatedAt: {
+      //       allowNull: false,
+      //       defaultValue: new Date(),
+      //       type: DataTypes.DATE,
+      //     },
+      //     quantity: {
+      //       type: DataTypes.INTEGER,
+      //     },
+      //     amount: {
+      //       type: DataTypes.DECIMAL(10, 2),
+      //     },
+      //     address: {
+      //       type: DataTypes.STRING,
+      //     },
+      //     status: {
+      //       defaultValue: "pending",
+      //       type: DataTypes.STRING,
+      //     },
+      //     uuid: {
+      //       type: DataTypes.STRING,
+      //     },
+      //     orderId: {
+      //       type: DataTypes.INTEGER,
+      //       primaryKey: true,
+      //     },
+      //     productId: {
+      //       type: DataTypes.INTEGER,
+      //       primaryKey: true,
+      //     },
+      //   },
+      //   { transaction }
+      // );
 
       await transaction.commit();
     } catch (error) {
@@ -122,7 +122,7 @@ module.exports = {
     try {
       await queryInterface.dropTable("admin_roles", { transaction });
       // await queryInterface.dropTable("cart_products", { transaction });
-      await queryInterface.dropTable("order_products", { transaction });
+      // await queryInterface.dropTable("order_products", { transaction });
 
       await transaction.commit();
     } catch (error) {

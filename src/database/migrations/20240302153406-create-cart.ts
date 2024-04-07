@@ -16,6 +16,12 @@ module.exports = {
         uuid: {
           type: DataTypes.STRING,
         },
+        totalQty: {
+          type: DataTypes.INTEGER,
+        },
+        totalPrice: {
+          type: DataTypes.DECIMAL(10, 2),
+        },
         createdAt: {
           allowNull: false,
           defaultValue: new Date(),

@@ -3,11 +3,15 @@ import { BuildOptions, DataTypes, Model, Sequelize } from "sequelize";
 
 interface CartAttributes {
   uuid: string;
+  totalQty: number;
+  totalPrice: number;
 }
 
 module.exports = (sequelize: any, DataTypes: any) => {
   class Cart extends Model<CartAttributes> implements CartAttributes {
     uuid!: string;
+    totalQty!: number;
+    totalPrice!: number;
 
     /**
      * Helper method for defining associations.
@@ -37,6 +41,21 @@ module.exports = (sequelize: any, DataTypes: any) => {
         defaultValue: DataTypes.UUIDV4,
         allowNull: false,
         unique: true,
+      },
+      totalQty: {
+        type: DataTypes.INTEGER,
+        defaultValue: 1,
+        allowNull: false,
+      },
+      totalPrice: {
+        type: DataTypes.DECIMAL(10, 2),
+        get() {
+          // Workaround until sequelize issue #8019 is fixed
+          const value = this.getDataValue("totalPrice");
+          return value === null ? null : parseFloat(value.toString());
+        },
+        defaultValue: 0,
+        allowNull: false,
       },
     },
     {

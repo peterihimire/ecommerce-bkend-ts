@@ -7,11 +7,21 @@ module.exports = {
     queryInterface.sequelize.transaction(async (transaction) => {
       // here go all migration changes
       await queryInterface.createTable("cart_products", {
-        id: {
+        // id: {
+        //   allowNull: false,
+        //   autoIncrement: true,
+        //   primaryKey: true,
+        //   type: DataTypes.INTEGER,
+        // },
+        createdAt: {
           allowNull: false,
-          autoIncrement: true,
-          primaryKey: true,
-          type: DataTypes.INTEGER,
+          defaultValue: new Date(),
+          type: DataTypes.DATE,
+        },
+        updatedAt: {
+          allowNull: false,
+          defaultValue: new Date(),
+          type: DataTypes.DATE,
         },
         title: {
           type: DataTypes.STRING,
@@ -48,16 +58,6 @@ module.exports = {
             key: "id",
           },
           onDelete: "CASCADE",
-        },
-        createdAt: {
-          allowNull: false,
-          defaultValue: new Date(),
-          type: DataTypes.DATE,
-        },
-        updatedAt: {
-          allowNull: false,
-          defaultValue: new Date(),
-          type: DataTypes.DATE,
         },
       });
     }),

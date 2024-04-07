@@ -83,8 +83,41 @@ export const foundUserCart = async (id: string) => {
 
 export const foundCartProd = async (cartId: number, prodId: number) => {
   return CartProduct.findOne({
-    cartId: cartId,
-    productId: prodId,
+    where: {
+      cartId: cartId,
+      productId: prodId,
+    },
+  });
+};
+
+export const addCartProd = async (data: {
+  cartId: number;
+  prodId: number;
+  quantity: number;
+  addedBy: string;
+  uuid: string;
+  addedAt: Date;
+  title: string;
+  price: number;
+}) => {
+  return CartProduct.create({
+    cartId: data.cartId,
+    productId: data.prodId,
+    quantity: data.quantity,
+    addedBy: data.addedBy,
+    uuid: data.uuid,
+    addedAt: data.addedAt,
+    title: data.title,
+    price: data.price,
+  });
+};
+
+export const removeCartProd = async (cartId: number, prodId: number) => {
+  return CartProduct.destroy({
+    where: {
+      cartId: cartId,
+      productId: prodId,
+    },
   });
 };
 

@@ -20,6 +20,8 @@ import {
   foundUserCart,
   foundUserCartId,
   foundCartProd,
+  addCartProd,
+  removeCartProd,
 } from "../repositories/cart-repository";
 
 // @route POST api/auth/login
@@ -138,7 +140,7 @@ export const addCart: RequestHandler = async (req, res, next) => {
       cart = await Cart.create({ userId: existing_user.id });
     }
 
-    const productId = req.body.prod_id;
+    // const productId = req.body.prod_id;
     // const product = await Product.findByPk(productId);
     const prod_info = await foundProductId(prod_id);
     console.log("Prod_Info...", prod_info);
@@ -152,36 +154,31 @@ export const addCart: RequestHandler = async (req, res, next) => {
       existingCartProd?.cart_products.dataValues
     );
 
-    // const cart = await Cart.findByPk(cartId, { include: Product });
+    let cartProduct = await foundCartProd(cart.id, prod_info.id);
 
-    let cartProduct = await CartProduct.findOne({
-      where: {
-        cartId: cart.id,
-        productId: prod_info.id,
-      },
-    });
+    const payload = {
+      cartId: cart.id as number,
+      prodId: prod_info.id as number,
+      quantity: newQty as number,
+      addedBy: email as string,
+      // uuid: uuidv4() as string,
+      uuid: cart.uuid as string,
+      addedAt: new Date() as Date,
+      title: prod_info.title as string,
+      price: parseFloat(prod_info.price),
+    };
 
     if (cartProduct) {
       // If product already exists in cart, update quantity
       cartProduct.quantity += newQty;
       await cartProduct.save();
     } else {
-      // If product doesn't exist in cart, add it
-      cartProduct = await CartProduct.create({
-        cartId: cart.id,
-        productId: prod_info.id,
-        quantity: newQty,
-        addedBy: email,
-        uuid: uuidv4(),
-        addedAt: new Date(),
-        title: prod_info.title,
-        price: prod_info.price,
-      });
+      cartProduct = await addCartProd(payload);
     }
 
     res.status(200).json({
       status: "success",
-      msg: "Added to cart",
+      msg: "Product added to cart",
       data: cartProduct,
     });
   } catch (error) {
@@ -282,12 +279,6 @@ export const updateProductQty: RequestHandler = async (req, res, next) => {
     let cart = await foundUserCartId(existing_user.id);
 
     const prod_info = await foundProductId(prod_id);
-    // let cartProduct = await CartProduct.findOne({
-    //   where: {
-    //     cartId: cart.id,
-    //     productId: prod_info.id,
-    //   },
-    // });
 
     let cartProduct = await foundCartProd(cart.id, prod_info.id);
 
@@ -305,12 +296,7 @@ export const updateProductQty: RequestHandler = async (req, res, next) => {
     }
 
     if (cartProduct?.quantity === 0) {
-      await CartProduct.destroy({
-        where: {
-          cartId: cart.id,
-          productId: prod_info.id,
-        },
-      });
+      await removeCartProd(cart.id, prod_info.id);
 
       return res.status(httpStatusCodes.OK).json({
         status: "success",
@@ -356,12 +342,8 @@ export const deleteCartProd: RequestHandler = async (req, res, next) => {
     let cart = await foundUserCartId(existing_user.id);
 
     const prod_info = await foundProductId(prod_id);
-    let cartProduct = await CartProduct.findOne({
-      where: {
-        cartId: cart.id,
-        productId: prod_info.id,
-      },
-    });
+
+    let cartProduct = await foundCartProd(cart.id, prod_info.id);
 
     if (!cartProduct) {
       return next(
@@ -371,12 +353,7 @@ export const deleteCartProd: RequestHandler = async (req, res, next) => {
 
     console.log("This is cart product...", cartProduct);
 
-    await CartProduct.destroy({
-      where: {
-        cartId: cart.id,
-        productId: prod_info.id,
-      },
-    });
+    await removeCartProd(cart.id, prod_info.id);
 
     res.status(httpStatusCodes.OK).json({
       status: "success",
@@ -481,3 +458,47 @@ export const adddCart: RequestHandler = async (req, res, next) => {
 //   // where: { id: prod_info.id },
 //   // through: { attributes: ["quantity", "addedBy", "addedAt", "uuid"] }, // Include additional fields her
 // }
+// If product doesn't exist in cart, add it
+// cartProduct = await CartProduct.create({
+//   cartId: cart.id,
+//   productId: prod_info.id,
+//   quantity: newQty,
+//   addedBy: email,
+//   uuid: uuidv4(),
+//   addedAt: new Date(),
+//   title: prod_info.title,
+//   price: prod_info.price,
+// });
+
+// const cart = await Cart.findByPk(cartId, { include: Product });
+
+// let cartProduct = await CartProduct.findOne({
+//   where: {
+//     cartId: cart.id,
+//     productId: prod_info.id,
+//   },
+// });
+// let cartProduct = await CartProduct.findOne({
+//   where: {
+//     cartId: cart.id,
+//     productId: prod_info.id,
+//   },
+// });
+// await CartProduct.destroy({
+//   where: {
+//     cartId: cart.id,
+//     productId: prod_info.id,
+//   },
+// });
+// await CartProduct.destroy({
+//   where: {
+//     cartId: cart.id,
+//     productId: prod_info.id,
+//   },
+// });
+// let cartProduct = await CartProduct.findOne({
+//   where: {
+//     cartId: cart.id,
+//     productId: prod_info.id,
+//   },
+// });

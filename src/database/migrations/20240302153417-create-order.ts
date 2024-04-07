@@ -16,6 +16,19 @@ module.exports = {
         uuid: {
           type: DataTypes.STRING,
         },
+        totalQty: {
+          type: DataTypes.INTEGER,
+        },
+        totalPrice: {
+          type: DataTypes.DECIMAL(10, 2),
+        },
+        address: {
+          type: DataTypes.STRING,
+        },
+        status: {
+          defaultValue: "pending",
+          type: DataTypes.STRING,
+        },
         createdAt: {
           allowNull: false,
           defaultValue: new Date(),
