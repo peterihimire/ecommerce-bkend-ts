@@ -32,93 +32,93 @@ export const addCart: RequestHandler = async (req, res, next) => {
   const { user } = req?.session;
   const email: string | undefined = user?.email;
   try {
-    let newCart: {
-      cartId: string;
-      productId: string;
-      uuid: string;
-      addedBy: string;
-      addedAt: Date;
-      quantity: number;
-      title: string;
-      price: number;
-    };
+    // let newCart: {
+    //   cartId: string;
+    //   productId: string;
+    //   uuid: string;
+    //   addedBy: string;
+    //   addedAt: Date;
+    //   quantity: number;
+    //   title: string;
+    //   price: number;
+    // };
     const newQty = 1;
-    const sessionUser = req.session?.user;
-    let sessionCart = req.session?.cart;
-    // const sessionUser = req.session?.user as SessionUser;
-    // let sessionCart = req.session?.cart as SessionCart;
+    // const sessionUser = req.session?.user;
+    // let sessionCart = req.session?.cart;
+    // // const sessionUser = req.session?.user as SessionUser;
+    // // let sessionCart = req.session?.cart as SessionCart;
 
-    // If user is unauthenticated
-    if (!sessionUser) {
-      if (!sessionCart) {
-        // If no cart data in session, initialize it
-        sessionCart = {
-          userId: uuidv4(),
-          cartId: uuidv4(), // Generate a new UUID for unauthenticated user's cart
-          products: [],
-          totalQty: 0,
-          totalPrice: 0,
-        };
-        req.session.cart = sessionCart;
-      }
+    // // If user is unauthenticated
+    // if (!sessionUser) {
+    //   if (!sessionCart) {
+    //     // If no cart data in session, initialize it
+    //     sessionCart = {
+    //       userId: uuidv4(),
+    //       cartId: uuidv4(), // Generate a new UUID for unauthenticated user's cart
+    //       products: [],
+    //       totalQty: 0,
+    //       totalPrice: 0,
+    //     };
+    //     req.session.cart = sessionCart;
+    //   }
 
-      const productId = req.body.prod_id;
-      // const product = await Product.findByPk(productId);
+    //   const productId = req.body.prod_id;
+    //   // const product = await Product.findByPk(productId);
 
-      const prod_info = await foundProductId(prod_id);
+    //   const prod_info = await foundProductId(prod_id);
 
-      if (!prod_info) {
-        return next(
-          new BaseError(`Product does not exist.`, httpStatusCodes.NOT_FOUND)
-        );
-      }
+    //   if (!prod_info) {
+    //     return next(
+    //       new BaseError(`Product does not exist.`, httpStatusCodes.NOT_FOUND)
+    //     );
+    //   }
 
-      const productIndex = sessionCart.products.findIndex((product) => {
-        return product.productId === productId;
-      });
+    //   const productIndex = sessionCart.products.findIndex((product) => {
+    //     return product.productId === productId;
+    //   });
 
-      if (productIndex !== -1) {
-        // If product already exists in cart, increment quantity
-        sessionCart.products[productIndex].quantity += newQty;
-      } else {
-        // If product doesn't exist in cart, add it
-        sessionCart.products.push({
-          productId,
-          name: prod_info.title,
-          price: prod_info.price,
-          quantity: newQty,
-        });
-      }
+    //   if (productIndex !== -1) {
+    //     // If product already exists in cart, increment quantity
+    //     sessionCart.products[productIndex].quantity += newQty;
+    //   } else {
+    //     // If product doesn't exist in cart, add it
+    //     sessionCart.products.push({
+    //       productId,
+    //       name: prod_info.title,
+    //       price: prod_info.price,
+    //       quantity: newQty,
+    //     });
+    //   }
 
-      // Update total cart price and quantity
-      sessionCart.totalPrice = sessionCart.products.reduce((total, item) => {
-        return total + Number(item.price) * item.quantity;
-      }, 0);
+    //   // Update total cart price and quantity
+    //   sessionCart.totalPrice = sessionCart.products.reduce((total, item) => {
+    //     return total + Number(item.price) * item.quantity;
+    //   }, 0);
 
-      sessionCart.totalQty = sessionCart.products.reduce((total, item) => {
-        return total + item.quantity;
-      }, 0);
+    //   sessionCart.totalQty = sessionCart.products.reduce((total, item) => {
+    //     return total + item.quantity;
+    //   }, 0);
 
-      req.session.cart = sessionCart;
+    //   req.session.cart = sessionCart;
 
-      // Prepare response data
-      newCart = {
-        cartId: sessionCart.cartId,
-        productId,
-        uuid: uuidv4(), // Generate a new UUID for cart product
-        addedBy: "Unauthenticated User", // Placeholder value
-        addedAt: new Date(), // Current date and time
-        quantity: newQty,
-        title: prod_info.title,
-        price: prod_info.price,
-      };
+    //   // Prepare response data
+    //   newCart = {
+    //     cartId: sessionCart.cartId,
+    //     productId,
+    //     uuid: uuidv4(), // Generate a new UUID for cart product
+    //     addedBy: "Unauthenticated User", // Placeholder value
+    //     addedAt: new Date(), // Current date and time
+    //     quantity: newQty,
+    //     title: prod_info.title,
+    //     price: prod_info.price,
+    //   };
 
-      return res.status(200).json({
-        status: "success",
-        msg: "Added to cart session",
-        data: newCart,
-      });
-    }
+    //   return res.status(200).json({
+    //     status: "success",
+    //     msg: "Added to cart session",
+    //     data: newCart,
+    //   });
+    // }
 
     // If user is authenticated
 
@@ -154,7 +154,7 @@ export const addCart: RequestHandler = async (req, res, next) => {
       existingCartProd?.cart_products.dataValues
     );
 
-    let cartProduct = await foundCartProd(cart.id, prod_info.id);
+    let cartProduct = await foundCartProd(cart?.id, prod_info?.id);
 
     const payload = {
       cartId: cart.id as number,
@@ -176,10 +176,34 @@ export const addCart: RequestHandler = async (req, res, next) => {
       cartProduct = await addCartProd(payload);
     }
 
+    const cart_prods = await foundCartId(existing_user.cart.id);
+    const totalCartPrice = cart_prods.products.reduce(
+      (total: any, item: any) => {
+        return (
+          total +
+          Number(item?.cart_products?.price) * item.cart_products?.quantity
+        );
+      },
+      0
+    );
+
+    const totalCartQty = cart_prods.products.reduce((total: any, item: any) => {
+      console.log("itme....", item?.cart_products?.quantity);
+      return total + item.cart_products.quantity;
+    }, 0);
+
+    // Update total quantity and price of the cart
+    cart.totalQty = totalCartQty;
+    cart.totalPrice = totalCartPrice;
+    await cart.save();
+
     res.status(200).json({
       status: "success",
       msg: "Product added to cart",
-      data: cartProduct,
+      data: {
+        product: cartProduct,
+        cart: cart,
+      },
     });
   } catch (error) {
     next(error);
@@ -304,10 +328,35 @@ export const updateProductQty: RequestHandler = async (req, res, next) => {
       });
     }
 
+    // starts from here
+    const cart_prods = await foundCartId(existing_user.cart.id);
+
+    const totalCartPrice = cart_prods.products.reduce(
+      (total: any, item: any) => {
+        return (
+          total + Number(item.cart_products.price) * item.cart_products.quantity
+        );
+      },
+      0
+    );
+
+    const totalCartQty = cart_prods.products.reduce((total: any, item: any) => {
+      console.log("itme....", item.cart_products.quantity);
+      return total + item.cart_products.quantity;
+    }, 0);
+
+    // Update total quantity and price of the cart
+    cart.totalQty = totalCartQty;
+    cart.totalPrice = totalCartPrice;
+    await cart.save();
+
     res.status(httpStatusCodes.OK).json({
       status: "success",
       msg: "Cart product updated.",
-      data: cartProduct,
+      data: {
+        products: cartProduct,
+        cart: cart,
+      },
     });
   } catch (error: any) {
     if (!error.statusCode) {

@@ -52,7 +52,7 @@ module.exports = (sequelize: any, DataTypes: any) => {
       },
       totalQty: {
         type: DataTypes.INTEGER,
-        defaultValue: 1,
+        defaultValue: 0,
         allowNull: false,
       },
       totalPrice: {

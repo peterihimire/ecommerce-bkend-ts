@@ -14,6 +14,7 @@ import authRoute from "./routes/auth-route";
 import adminAuthRoute from "./routes/admin-auth-route";
 import productRoute from "./routes/product-route";
 import cartRoute from "./routes/cart-route";
+import orderRoute from "./routes/order-route";
 import testRoute from "./routes/test-route";
 import {
   logErrorMiddleware,
@@ -194,6 +195,7 @@ app.use(
 app.use("/api/ecommerce/v1/auth", session(sessionOptions), authRoute);
 app.use("/api/ecommerce/v1/products", session(sessionOptionsTwo), productRoute);
 app.use("/api/ecommerce/v1/carts", session(sessionOptions), cartRoute);
+app.use("/api/ecommerce/v1/orders", session(sessionOptions), orderRoute);
 app.use("/api/ecommerce/v1/test", testRoute);
 
 app.use(unknownRoute);
