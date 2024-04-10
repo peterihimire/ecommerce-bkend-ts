@@ -35,7 +35,7 @@ export const foundCartId = async (id: number) => {
         through: {
           model: CartProduct,
           as: "cart_products", // Alias for the through model
-          attributes: ["quantity", "title", "price"], // Include additional attributes from CartProduct
+          attributes: ["id", "quantity", "title", "price"], // Include additional attributes from CartProduct
         },
       },
     ],

@@ -67,7 +67,7 @@ module.exports = (sequelize: any, DataTypes: any) => {
       },
       status: {
         type: DataTypes.STRING,
-        defaultValue: "pend",
+        defaultValue: "pending",// Used for the model
       },
     },
     {

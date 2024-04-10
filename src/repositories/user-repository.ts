@@ -4,7 +4,9 @@ const User = db.User;
 const Profile = db.Profile;
 const Product = db.Product;
 const Cart = db.Cart;
+const Order = db.Order;
 const CartProduct = db.CartProduct;
+const OrderProduct = db.OrderProduct;
 
 export const foundUser = async (email: string) => {
   return User.findOne({
@@ -23,26 +25,33 @@ export const foundUser = async (email: string) => {
         },
         model: Cart,
         as: "cart",
-        // include: [
-        //   {
-        //     attributes: { exclude: ["createdAt", "updatedAt"] },
-        //     model: CartProduct,
-        //     as: "cart_products",
-        //     through: {
-        //       attributes: [],
-        //     },
-        //     include: [
-        //       {
-        //         attributes: { exclude: ["createdAt", "updatedAt"] },
-        //         model: Product,
-        //         as: "products",
-        //       },
-        //     ],
-        //   },
-        // ],
-        // through: {
-        //   attributes: [],
-        // },
+        include: [
+          {
+            attributes: { exclude: ["createdAt", "updatedAt"] },
+            model: CartProduct,
+            as: "products",
+            through: {
+              attributes: [],
+            },
+          },
+        ],
+      },
+      {
+        attributes: {
+          exclude: ["createdAt", "updatedAt", "userId"],
+        },
+        model: Order,
+        as: "orders",
+        include: [
+          {
+            attributes: { exclude: ["createdAt", "updatedAt"] },
+            model: Product,
+            as: "products",
+            through: {
+              attributes: [],
+            },
+          },
+        ],
       },
     ],
   });

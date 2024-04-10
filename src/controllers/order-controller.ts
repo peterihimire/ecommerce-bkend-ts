@@ -24,6 +24,7 @@ import {
   addCartProd,
   removeCartProd,
 } from "../repositories/cart-repository";
+import { addCartProds } from "../repositories/order-repository";
 
 // @route POST api/auth/login
 // @desc Login into account
@@ -53,37 +54,45 @@ export const addOrder: RequestHandler = async (req, res, next) => {
       );
     }
 
+    const created_order = await Order.create({
+      userId: existing_user.id,
+      address: address,
+      totalQty: cart?.totalQty,
+      totalPrice: cart?.totalPrice,
+    });
+    console.log(
+      "Created order, id and uuid...",
+      created_order,
+      created_order.id,
+      created_order.uuid
+    );
     const cart_prods = await foundCartId(existing_user.cart.id);
+    console.log("This is cart_prods...", cart_prods);
     const products_arr = cart_prods.products.map((item: any) => {
+      console.log("Single item..", item);
       return {
-        prod_uuid: item.uuid,
+        orderId: created_order?.id,
+        prodId: item.cart_products.id,
+        uuid: created_order?.uuid,
         title: item.cart_products.title,
         price: item.cart_products.price,
         quantity: item.cart_products.quantity,
       };
     });
 
-    const created_order = Order.create({
-      userId: existing_user.id,
-      address: address,
-      totalQty: cart?.totalQty,
-      totalPrice: cart?.totalPrice,
-    });
+    console.log("Product arrays shit...", products_arr);
 
-    const newOrder = await created_order.addProducts(products_arr);
+    const order_products = await addCartProds(products_arr);
 
     res.status(201).json({
       status: "Successful",
       msg: "Available Cart Order!",
-      data: newOrder,
+      data: {
+        order: created_order,
+        products: order_products,
+      },
     });
   } catch (error) {
     next(error);
   }
 };
-// const existingCartProds = cart?.products;
-// console.log("Existing cart product...", existingCartProds);
-// console.log(
-//   "Existing cart product datavalues...",
-//   existingCartProds?.cart_products.dataValues
-// );
