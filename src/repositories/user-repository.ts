@@ -28,7 +28,7 @@ export const foundUser = async (email: string) => {
         include: [
           {
             attributes: { exclude: ["createdAt", "updatedAt"] },
-            model: CartProduct,
+            model: Product,
             as: "products",
             through: {
               attributes: [],

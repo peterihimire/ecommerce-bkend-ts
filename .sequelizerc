@@ -17,7 +17,8 @@ dotenv.config();
 
 module.exports = {
   env: process.env.NODE_ENV || "development",
-  config: path.resolve("./dist/src/database/config", "config.js"),
+  // config: path.resolve("./dist/src/database/config", "config.js"),
+  config: path.resolve("./sequelize.config.js"),
   "models-path": path.resolve("./dist/src/database/models"),
   "seeders-path": path.resolve("./dist/src/database/seeders"),
   "migrations-path": path.resolve("./dist/src/database/migrations"),
