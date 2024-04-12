@@ -1,0 +1,22 @@
+export type User = {
+  id: string;
+  email: string;
+};
+
+export type Admin = {
+  id: string;
+  email: string;
+};
+
+export type Cart = {
+  userId: string | null;
+  cartId: string;
+  products: {
+    productId: string;
+    name: string;
+    price: number;
+    quantity: number;
+  }[];
+  totalQty: number;
+  totalPrice: number;
+};

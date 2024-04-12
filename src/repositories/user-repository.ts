@@ -27,11 +27,32 @@ export const foundUser = async (email: string) => {
         as: "cart",
         include: [
           {
-            attributes: { exclude: ["createdAt", "updatedAt"] },
+            // attributes: { exclude: ["id", "createdAt", "updatedAt"] },
+            attributes: {
+              exclude: [
+                "id",
+                "createdAt",
+                "updatedAt",
+                "colors",
+                "categories",
+                "brand",
+                "countInStock",
+                "rating",
+                "desc",
+                "sizes",
+                "numReviews",
+                "images",
+                "slug",
+                "price",
+                "title",
+              ],
+            },
             model: Product,
             as: "products",
             through: {
-              attributes: [],
+              model: CartProduct,
+              as: "cart_products", // Alias for the through model
+              attributes: ["id", "quantity", "title", "price"], // Include additional attributes from CartProduct
             },
           },
         ],
@@ -44,12 +65,36 @@ export const foundUser = async (email: string) => {
         as: "orders",
         include: [
           {
-            attributes: { exclude: ["createdAt", "updatedAt"] },
+            // attributes: { exclude: ["createdAt", "updatedAt"] },
+            attributes: {
+              exclude: [
+                "id",
+                "createdAt",
+                "updatedAt",
+                "colors",
+                "categories",
+                "brand",
+                "countInStock",
+                "rating",
+                "desc",
+                "sizes",
+                "numReviews",
+                "images",
+                "slug",
+                "price",
+                "title",
+              ],
+            },
             model: Product,
             as: "products",
             through: {
-              attributes: [],
+              model: OrderProduct,
+              as: "order_products", // Alias for the through model
+              attributes: ["id", "quantity", "title", "price"], // Include additional attributes from CartProduct
             },
+            // through: {
+            //   attributes: [],
+            // },
           },
         ],
       },

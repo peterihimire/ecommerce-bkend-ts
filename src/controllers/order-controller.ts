@@ -69,10 +69,10 @@ export const addOrder: RequestHandler = async (req, res, next) => {
     const cart_prods = await foundCartId(existing_user.cart.id);
     console.log("This is cart_prods...", cart_prods);
     const products_arr = cart_prods.products.map((item: any) => {
-      console.log("Single item..", item);
+      console.log("Single item..", item.cart_products);
       return {
         orderId: created_order?.id,
-        prodId: item.cart_products.id,
+        prodId: item.cart_products.productId,
         uuid: created_order?.uuid,
         title: item.cart_products.title,
         price: item.cart_products.price,
@@ -93,6 +93,74 @@ export const addOrder: RequestHandler = async (req, res, next) => {
       },
     });
   } catch (error) {
+    next(error);
+  }
+};
+
+// @route POST api/auth/login
+// @desc Login into account
+// @access Private
+export const getOrder: RequestHandler = async (req, res, next) => {
+  const { user } = req?.session;
+  const email: string | undefined = user?.email;
+
+  try {
+    if (email === undefined) {
+      return next(
+        new BaseError("Account does not exist!", httpStatusCodes.CONFLICT)
+      );
+    }
+    const existing_user = await foundUser(email);
+    const existing_cart = await existing_user.getCart();
+    console.log("This is found user & cart....", existing_user, existing_cart);
+    console.log("cartId....", existing_user.cart.id);
+    if (!existing_cart) {
+      return next(
+        new BaseError("Account does not exist!", httpStatusCodes.CONFLICT)
+      );
+    }
+    const cart_prods = await foundCartId(existing_user.cart.id);
+
+    const totalCartPrice = cart_prods.products.reduce(
+      (total: any, item: any) => {
+        return (
+          total + Number(item.cart_products.price) * item.cart_products.quantity
+        );
+      },
+      0
+    );
+
+    const totalCartQty = cart_prods.products.reduce((total: any, item: any) => {
+      console.log("itme....", item.cart_products.quantity);
+      return total + item.cart_products.quantity;
+    }, 0);
+    console.log("TOTAL QTY:", totalCartQty);
+
+    const products_arr = cart_prods.products.map((item: any) => {
+      return {
+        prod_uuid: item.uuid,
+        title: item.cart_products.title,
+        price: item.cart_products.price,
+        quantity: item.cart_products.quantity,
+      };
+    });
+
+    const cart_response = {
+      cart_uuid: cart_prods.uuid,
+      products: products_arr,
+      total_qty: totalCartQty,
+      total_price: totalCartPrice,
+    };
+
+    res.status(httpStatusCodes.OK).json({
+      status: "success",
+      msg: "Cart info.",
+      data: cart_response,
+    });
+  } catch (error: any) {
+    if (!error.statusCode) {
+      error.statusCode = httpStatusCodes.INTERNAL_SERVER;
+    }
     next(error);
   }
 };

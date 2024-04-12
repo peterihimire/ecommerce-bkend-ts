@@ -19,6 +19,52 @@ export const addCartProds = async (dataArray: any[]) => {
   return orderProducts;
 };
 
+export const foundOrderId = async (id: number) => {
+  return Order.findOne({
+    where: { id: id },
+    attributes: {
+      exclude: ["id", "createdAt", "updatedAt", "userId"],
+    },
+    include: [
+      {
+        attributes: {
+          exclude: [
+            "id",
+            "createdAt",
+            "updatedAt",
+            "colors",
+            "categories",
+            "brand",
+            "countInStock",
+            "rating",
+            "desc",
+            "sizes",
+            "numReviews",
+            "images",
+            "slug",
+            "price",
+            "title",
+          ],
+        },
+        model: Product,
+        as: "products",
+        through: {
+          model: OrderProduct,
+          as: "order_products", // Alias for the through model
+          attributes: [
+            "id",
+            "quantity",
+            "title",
+            "price",
+            "orderId",
+            "productId",
+          ], // Include additional attributes from CartProduct
+        },
+      },
+    ],
+  });
+};
+
 // export const foundCartId = async (id: number) => {
 //   return Cart.findOne({
 //     where: { id: id },
