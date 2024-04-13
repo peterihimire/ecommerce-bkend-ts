@@ -67,9 +67,40 @@ export const foundUserCartId = async (id: number) => {
     where: { userId: id },
     include: [
       {
-        attributes: { exclude: ["createdAt", "updatedAt"] },
+        // attributes: { exclude: ["createdAt", "updatedAt"] },
+        attributes: {
+          exclude: [
+            "id",
+            "createdAt",
+            "updatedAt",
+            "colors",
+            "categories",
+            "brand",
+            "countInStock",
+            "rating",
+            "desc",
+            "sizes",
+            "numReviews",
+            "images",
+            "slug",
+            "price",
+            "title",
+          ],
+        },
         model: Product,
         as: "products",
+        through: {
+          model: CartProduct,
+          as: "cart_products", // Alias for the through model
+          attributes: [
+            "id",
+            "quantity",
+            "title",
+            "price",
+            "cartId",
+            "productId",
+          ],
+        },
       },
     ],
   });

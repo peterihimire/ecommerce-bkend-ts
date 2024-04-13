@@ -202,7 +202,7 @@ export const addCart: RequestHandler = async (req, res, next) => {
       msg: "Product added to cart",
       data: {
         product: cartProduct,
-        cart: cart,
+        // cart: cart,
       },
     });
   } catch (error) {
@@ -247,7 +247,6 @@ export const getCart: RequestHandler = async (req, res, next) => {
       console.log("itme....", item.cart_products.quantity);
       return total + item.cart_products.quantity;
     }, 0);
-    console.log("TOTAL QTY:", totalCartQty);
 
     const products_arr = cart_prods.products.map((item: any) => {
       return {
@@ -259,10 +258,12 @@ export const getCart: RequestHandler = async (req, res, next) => {
     });
 
     const cart_response = {
-      cart_uuid: cart_prods.uuid,
+      cart_uuid: cart_prods?.uuid,
       products: products_arr,
-      total_qty: totalCartQty,
-      total_price: totalCartPrice,
+      total_qty: existing_user?.cart?.totalQty,
+      total_price: existing_user?.cart?.totalPrice,
+      // total_qty: totalCartQty,
+      // total_price: totalCartPrice,
     };
 
     res.status(httpStatusCodes.OK).json({

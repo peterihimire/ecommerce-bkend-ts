@@ -9,7 +9,7 @@ const User = db.User;
 const Cart = db.Cart;
 const Order = db.Order;
 const Product = db.Product;
-const CartProduct = db.CartProduct;
+const OrderProduct = db.OrderProduct;
 
 import { v4 as uuidv4 } from "uuid";
 import { foundProductId } from "../repositories/product-repository";
@@ -102,6 +102,8 @@ export const addOrder: RequestHandler = async (req, res, next) => {
 // @access Private
 export const getOrder: RequestHandler = async (req, res, next) => {
   const { user } = req?.session;
+  const { order_id } = req?.body;
+
   const email: string | undefined = user?.email;
 
   try {
@@ -111,51 +113,227 @@ export const getOrder: RequestHandler = async (req, res, next) => {
       );
     }
     const existing_user = await foundUser(email);
-    const existing_cart = await existing_user.getCart();
-    console.log("This is found user & cart....", existing_user, existing_cart);
-    console.log("cartId....", existing_user.cart.id);
-    if (!existing_cart) {
+    const existing_order = await existing_user.getOrders({
+      where: {
+        uuid: order_id,
+      },
+      attributes: {
+        exclude: ["id", "createdAt", "updatedAt", "userId"],
+      },
+      include: [
+        {
+          attributes: {
+            exclude: [
+              "id",
+              "createdAt",
+              "updatedAt",
+              "colors",
+              "categories",
+              "brand",
+              "countInStock",
+              "rating",
+              "desc",
+              "sizes",
+              "numReviews",
+              "images",
+              "slug",
+              "price",
+              "title",
+            ],
+          },
+          model: Product,
+          as: "products",
+          through: {
+            model: OrderProduct,
+            as: "order_products", // Alias for the through model
+            attributes: [
+              "id",
+              "quantity",
+              "title",
+              "price",
+              // "orderId",
+              // "productId",
+            ],
+          },
+        },
+      ],
+    });
+    console.log(
+      "This is found user & order....",
+      existing_user,
+      existing_order
+    );
+    // console.log("cartId....", existing_user.order.id);
+    if (!existing_order) {
+      return next(
+        new BaseError("Order does not exist!", httpStatusCodes.CONFLICT)
+      );
+    }
+
+    res.status(httpStatusCodes.OK).json({
+      status: "success",
+      msg: "Order info.",
+      data: existing_order,
+      // data: cart_response,
+    });
+  } catch (error: any) {
+    if (!error.statusCode) {
+      error.statusCode = httpStatusCodes.INTERNAL_SERVER;
+    }
+    next(error);
+  }
+};
+
+// @route POST api/auth/login
+// @desc Login into account
+// @access Private
+export const getOrders: RequestHandler = async (req, res, next) => {
+  const { user } = req?.session;
+  const email: string | undefined = user?.email;
+
+  try {
+    if (email === undefined) {
       return next(
         new BaseError("Account does not exist!", httpStatusCodes.CONFLICT)
       );
     }
-    const cart_prods = await foundCartId(existing_user.cart.id);
 
-    const totalCartPrice = cart_prods.products.reduce(
-      (total: any, item: any) => {
-        return (
-          total + Number(item.cart_products.price) * item.cart_products.quantity
-        );
+    const existing_user = await foundUser(email);
+    const existing_orders = await existing_user.getOrders({
+      attributes: {
+        exclude: ["id", "createdAt", "updatedAt", "userId"],
       },
-      0
-    );
-
-    const totalCartQty = cart_prods.products.reduce((total: any, item: any) => {
-      console.log("itme....", item.cart_products.quantity);
-      return total + item.cart_products.quantity;
-    }, 0);
-    console.log("TOTAL QTY:", totalCartQty);
-
-    const products_arr = cart_prods.products.map((item: any) => {
-      return {
-        prod_uuid: item.uuid,
-        title: item.cart_products.title,
-        price: item.cart_products.price,
-        quantity: item.cart_products.quantity,
-      };
+      include: [
+        {
+          attributes: {
+            exclude: [
+              "id",
+              "createdAt",
+              "updatedAt",
+              "colors",
+              "categories",
+              "brand",
+              "countInStock",
+              "rating",
+              "desc",
+              "sizes",
+              "numReviews",
+              "images",
+              "slug",
+              "price",
+              "title",
+            ],
+          },
+          model: Product,
+          as: "products",
+          through: {
+            model: OrderProduct,
+            as: "order_products", // Alias for the through model
+            attributes: ["id", "quantity", "title", "price"],
+          },
+        },
+      ],
     });
-
-    const cart_response = {
-      cart_uuid: cart_prods.uuid,
-      products: products_arr,
-      total_qty: totalCartQty,
-      total_price: totalCartPrice,
-    };
+    console.log(
+      "This is found user & order....",
+      existing_user,
+      existing_orders
+    );
+    // console.log("cartId....", existing_user.order.id);
+    if (!existing_orders) {
+      return next(
+        new BaseError("Order does not exist!", httpStatusCodes.CONFLICT)
+      );
+    }
 
     res.status(httpStatusCodes.OK).json({
       status: "success",
-      msg: "Cart info.",
-      data: cart_response,
+      msg: "Order info.",
+      data: existing_orders,
+    });
+  } catch (error: any) {
+    if (!error.statusCode) {
+      error.statusCode = httpStatusCodes.INTERNAL_SERVER;
+    }
+    next(error);
+  }
+};
+
+// @route POST api/auth/login
+// @desc Login into account
+// @access Private
+export const cancelOrder: RequestHandler = async (req, res, next) => {
+  const { user } = req?.session;
+  const { order_id } = req.body;
+  const status = "cancelled";
+  const email: string | undefined = user?.email;
+
+  try {
+    if (email === undefined) {
+      return next(
+        new BaseError("Account does not exist!", httpStatusCodes.CONFLICT)
+      );
+    }
+    const existing_user = await foundUser(email);
+    const existing_order = await existing_user.getOrders({
+      where: {
+        uuid: order_id,
+      },
+      attributes: {
+        exclude: ["createdAt", "updatedAt"],
+      },
+      include: [
+        {
+          attributes: {
+            exclude: [
+              "createdAt",
+              "updatedAt",
+              "colors",
+              "categories",
+              "brand",
+              "countInStock",
+              "rating",
+              "desc",
+              "sizes",
+              "numReviews",
+              "images",
+              "slug",
+              "price",
+              "title",
+            ],
+          },
+          model: Product,
+          as: "products",
+          through: {
+            model: OrderProduct,
+            as: "order_products", // Alias for the through model
+            attributes: ["quantity", "title", "price", "orderId", "productId"],
+          },
+        },
+      ],
+    });
+    console.log("This is found user & order....", existing_order);
+    if (!existing_order) {
+      return next(
+        new BaseError("Order does not exist!", httpStatusCodes.CONFLICT)
+      );
+    }
+
+    if ((existing_order[0].status = status)) {
+      return next(
+        new BaseError("Order already cancelled!", httpStatusCodes.CONFLICT)
+      );
+    }
+
+    const updated_order = await existing_order[0];
+    console.log("Updated order yesh", updated_order);
+    updated_order.status = status;
+    await updated_order.save();
+
+    res.status(httpStatusCodes.OK).json({
+      status: "success",
+      msg: `Order with id ${order_id} canceled.`,
+      data: updated_order,
     });
   } catch (error: any) {
     if (!error.statusCode) {
