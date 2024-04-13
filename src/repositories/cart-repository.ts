@@ -35,7 +35,14 @@ export const foundCartId = async (id: number) => {
         through: {
           model: CartProduct,
           as: "cart_products", // Alias for the through model
-          attributes: ["id", "quantity", "title", "price"], // Include additional attributes from CartProduct
+          attributes: [
+            "id",
+            "quantity",
+            "title",
+            "price",
+            "cartId",
+            "productId",
+          ], // Include additional attributes from CartProduct
         },
       },
     ],
@@ -60,9 +67,40 @@ export const foundUserCartId = async (id: number) => {
     where: { userId: id },
     include: [
       {
-        attributes: { exclude: ["createdAt", "updatedAt"] },
+        // attributes: { exclude: ["createdAt", "updatedAt"] },
+        attributes: {
+          exclude: [
+            "id",
+            "createdAt",
+            "updatedAt",
+            "colors",
+            "categories",
+            "brand",
+            "countInStock",
+            "rating",
+            "desc",
+            "sizes",
+            "numReviews",
+            "images",
+            "slug",
+            "price",
+            "title",
+          ],
+        },
         model: Product,
         as: "products",
+        through: {
+          model: CartProduct,
+          as: "cart_products", // Alias for the through model
+          attributes: [
+            "id",
+            "quantity",
+            "title",
+            "price",
+            "cartId",
+            "productId",
+          ],
+        },
       },
     ],
   });
