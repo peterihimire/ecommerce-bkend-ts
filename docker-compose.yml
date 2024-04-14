@@ -128,8 +128,8 @@ services:
     build:
       context: .
       target: production
-    # ports:
-    #   - 4040:4040
+    ports:
+      - 4040:4040
     depends_on:
       - db
       - redis

@@ -176,7 +176,11 @@ export const addCart: RequestHandler = async (req, res, next) => {
       cartProduct = await addCartProd(payload);
     }
 
-    const cart_prods = await foundCartId(existing_user.cart.id);
+    console.log("Is this point the case... for the id issue.", cart);
+    const cart_id = await cart?.id;
+    console.log("This is cart_id.", cart_id);
+    const cart_prods = await foundCartId(cart_id);
+
     const totalCartPrice = cart_prods.products.reduce(
       (total: any, item: any) => {
         return (
