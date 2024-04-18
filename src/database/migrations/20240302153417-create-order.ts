@@ -16,13 +16,16 @@ module.exports = {
         uuid: {
           type: DataTypes.STRING,
         },
+        address: {
+          type: DataTypes.STRING,
+        },
         totalQty: {
           type: DataTypes.INTEGER,
         },
         totalPrice: {
           type: DataTypes.DECIMAL(10, 2),
         },
-        address: {
+        pdfLink: {
           type: DataTypes.STRING,
         },
         status: {

@@ -186,6 +186,16 @@ app.set("trust proxy", 1);
 app.use(cors(corsOptions));
 app.use(cookieParser());
 app.use(express.json());
+app.use(
+  "/documents/pdf",
+  express.static(path.join(__dirname, "../documents/pdf"))
+);
+
+// // Define the path to serve static files
+// const staticPath = path.join(__dirname, '../..', 'documents', 'pdf');
+
+// // Serve static files from the specified directory
+// app.use('/documents/pdf', express.static(staticPath));
 
 app.use(
   "/api/ecommerce/v1/admins/auth",

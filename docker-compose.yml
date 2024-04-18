@@ -147,5 +147,7 @@ services:
       - SESSION_SECRET=${SESSION_SECRET}
       - ADMIN_SESSION_SECRET=${ADMIN_SESSION_SECRET}
       - CART_SESSION_SECRET=${CART_SESSION_SECRET}
+    volumes:
+      - ./documents/pdf:/app/documents/pdf # Mapping the static folder
 networks:
   webnet:

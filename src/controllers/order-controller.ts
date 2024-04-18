@@ -310,14 +310,19 @@ export const addOrder: RequestHandler = async (req, res, next) => {
     // Create and open the PDF
     // const pdfDocGenerator = pdfMake.createPdf(docDefinition).open();
     const pdfDocGenerator = pdfMake.createPdf(docDefinition);
-    
+
     // Generate and download the PDF
-    pdfDocGenerator.getBuffer((buffer) => {
+    pdfDocGenerator.getBuffer(async (buffer) => {
       // Save the buffer to a file
       const filePath = `documents/pdf/invoice-${new Date().toISOString()}.pdf`;
       const stream = createWriteStream(filePath);
       stream.write(Buffer.from(buffer));
       stream.end();
+
+      const updated_order = await created_order;
+      console.log("Updated order yesh", updated_order);
+      updated_order.pdfLink = filePath;
+      await updated_order.save();
 
       console.log(`PDF saved to: ${filePath}`);
     });
