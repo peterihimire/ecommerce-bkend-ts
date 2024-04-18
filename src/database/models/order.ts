@@ -6,6 +6,7 @@ interface OrderAttributes {
   address: string;
   totalQty: number;
   totalPrice: number;
+  pdfLink: string;
   status: string;
 }
 
@@ -15,6 +16,7 @@ module.exports = (sequelize: any, DataTypes: any) => {
     address!: string;
     totalQty!: number;
     totalPrice!: number;
+    pdfLink!: string;
     status!: string;
 
     /**
@@ -65,9 +67,12 @@ module.exports = (sequelize: any, DataTypes: any) => {
         defaultValue: 0,
         allowNull: false,
       },
+      pdfLink: {
+        type: DataTypes.STRING,
+      },
       status: {
         type: DataTypes.STRING,
-        defaultValue: "pending",// Used for the model
+        defaultValue: "pending", // Used for the model
       },
     },
     {
