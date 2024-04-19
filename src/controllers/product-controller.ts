@@ -44,10 +44,13 @@ export const addProduct: RequestHandler = async (req, res, next) => {
         new BaseError("Admin does not exist!", httpStatusCodes.CONFLICT)
       );
     }
-    console.log("This is ...", Product);
 
     const found_product = await foundProductTitle(title);
     console.log("This is found product....", found_product);
+
+    const image = req.files;
+    console.log("this is the images", image);
+    const imagesUrlArray = [];
 
     const payload = {
       title: title as string,
