@@ -57,11 +57,11 @@ declare module "express-session" {
 }
 
 const file_storage = multer.diskStorage({
-  destination: (req, file, cb) => {
+  destination: (req: Request, file: any, cb: Function) => {
     // console.log("🚀 ~ file: upload.ts:11 ~ file", process.cwd());
-    cb(null, "images");
+    cb(null, "documents/image");
   },
-  filename: (req, file, cb) => {
+  filename: (req: Request, file: any, cb: Function) => {
     const ext = file.originalname.split(".").pop();
     cb(
       null,
@@ -121,6 +121,12 @@ const corsOptions = {
   optionSuccessStatus: 200,
   preflightContinue: false,
 };
+
+const multerOptions = multer({
+  storage: file_storage,
+  limits: { fileSize: 500000 },
+  fileFilter: file_filter,
+}).array("images", 3);
 
 let redisStoreOne = new (RedisStore as any)({
   client: redisclient,
@@ -186,16 +192,24 @@ app.set("trust proxy", 1);
 app.use(cors(corsOptions));
 app.use(cookieParser());
 app.use(express.json());
+app.use(multerOptions);
+
+// Define the path to serve static files for the TypeScript code
 app.use(
   "/documents/pdf",
   express.static(path.join(__dirname, "../documents/pdf"))
 );
 
-// // Define the path to serve static files
-// const staticPath = path.join(__dirname, '../..', 'documents', 'pdf');
+app.use(
+  "/documents/image",
+  express.static(path.join(__dirname, "../documents/image"))
+);
+
+// // Define the path to serve static files for the compiled JavaScript code
+// const staticPath = path.join(__dirname, "../..", "documents", "pdf");
 
 // // Serve static files from the specified directory
-// app.use('/documents/pdf', express.static(staticPath));
+// app.use("/documents/pdf", express.static(staticPath));
 
 app.use(
   "/api/ecommerce/v1/admins/auth",

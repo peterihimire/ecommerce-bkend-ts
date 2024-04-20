@@ -67,7 +67,7 @@ export const addOrder: RequestHandler = async (req, res, next) => {
         new BaseError("Cart not available!", httpStatusCodes.NOT_FOUND)
       );
     }
-
+    let updated_order;
     const created_order = await Order.create({
       userId: existing_user.id,
       address: address,
@@ -319,35 +319,28 @@ export const addOrder: RequestHandler = async (req, res, next) => {
       stream.write(Buffer.from(buffer));
       stream.end();
 
-      const updated_order = await created_order;
-      console.log("Updated order yesh", updated_order);
+      updated_order = await created_order;
       updated_order.pdfLink = filePath;
       await updated_order.save();
 
+      console.log("Updated order yesh", updated_order);
       console.log(`PDF saved to: ${filePath}`);
+
+      console.log("This is updated order with link...", updated_order);
+
+      // Returned response
+      res.status(201).json({
+        status: "Successful",
+        msg: "Available Cart Order!",
+        data: {
+          // order: created_order,
+          order: updated_order,
+          products: order_products,
+        },
+      });
     });
 
     pdfDocGenerator.download("pdfmake.pdf");
-
-    // pdfDocGenerator.getDataUrl((dataurl) => {
-    //   console.log("This is dataurl", dataurl);
-    //   console.log(
-    //     "This is doc definition stringified",
-    //     JSON.stringify(docDefinition)
-    //   );
-    // });
-    // pdfDocGenerator.open();
-    // pdfDocGenerator.print();
-    // console.log("PDF doc generator...", pdfDocGenerator);
-
-    res.status(201).json({
-      status: "Successful",
-      msg: "Available Cart Order!",
-      data: {
-        order: created_order,
-        products: order_products,
-      },
-    });
   } catch (error) {
     next(error);
   }
@@ -608,3 +601,13 @@ export const cancelOrder: RequestHandler = async (req, res, next) => {
 //   console.log("This is download...",download)
 //   res.end(download);
 // });
+// pdfDocGenerator.getDataUrl((dataurl) => {
+//   console.log("This is dataurl", dataurl);
+//   console.log(
+//     "This is doc definition stringified",
+//     JSON.stringify(docDefinition)
+//   );
+// });
+// pdfDocGenerator.open();
+// pdfDocGenerator.print();
+// console.log("PDF doc generator...", pdfDocGenerator);
