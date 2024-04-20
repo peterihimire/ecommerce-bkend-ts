@@ -24,7 +24,6 @@ export const addProduct: RequestHandler = async (req, res, next) => {
   const {
     title,
     slug,
-    images,
     colors,
     categories,
     price,
@@ -46,16 +45,26 @@ export const addProduct: RequestHandler = async (req, res, next) => {
     }
 
     const found_product = await foundProductTitle(title);
+    if (found_product) {
+      return next(
+        new BaseError("Product title found.", httpStatusCodes.CONFLICT)
+      );
+    }
     console.log("This is found product....", found_product);
 
-    const image = req.files;
-    console.log("this is the images", image);
-    const imagesUrlArray = [];
+    const images = req.files;
+    console.log("this is the images", images);
+
+    const imagesPathArray = (images as Express.Multer.File[]).map((img) => {
+      return img.path;
+    });
+
+    console.log("images url array ...", imagesPathArray);
 
     const payload = {
       title: title as string,
       slug: slug as string,
-      images: images as string[], // Assuming images is an array of strings
+      images: imagesPathArray as string[], // Assuming images is an array of strings
       colors: colors as string[],
       categories: categories as string[],
       price: parseFloat(price), // Convert price to number

@@ -59,7 +59,7 @@ declare module "express-session" {
 const file_storage = multer.diskStorage({
   destination: (req: Request, file: any, cb: Function) => {
     // console.log("🚀 ~ file: upload.ts:11 ~ file", process.cwd());
-    cb(null, "image");
+    cb(null, "documents/image");
   },
   filename: (req: Request, file: any, cb: Function) => {
     const ext = file.originalname.split(".").pop();
@@ -126,7 +126,7 @@ const multerOptions = multer({
   storage: file_storage,
   limits: { fileSize: 500000 },
   fileFilter: file_filter,
-}).array("image", 3);
+}).array("images", 3);
 
 let redisStoreOne = new (RedisStore as any)({
   client: redisclient,
