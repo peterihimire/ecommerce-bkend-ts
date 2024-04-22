@@ -1,26 +1,18 @@
-'use strict';
-const {
-  Model
-} = require('sequelize');
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const sequelize_1 = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
-  class LoginAuth extends Model {
-    /**
-     * Helper method for defining associations.
-     * This method is not a part of Sequelize lifecycle.
-     * The `models/index` file will call this method automatically.
-     */
-    static associate(models) {
-      // define association here
+    class LoginAudit extends sequelize_1.Model {
     }
-  }
-  LoginAuth.init({
-    user: DataTypes.STRING,
-    ip_address: DataTypes.STRING,
-    action: DataTypes.STRING,
-    status: DataTypes.STRING
-  }, {
-    sequelize,
-    modelName: 'LoginAuth',
-  });
-  return LoginAuth;
+    LoginAudit.init({
+        user: DataTypes.STRING,
+        ip_address: DataTypes.STRING,
+        action: DataTypes.STRING,
+        status: DataTypes.STRING,
+    }, {
+        sequelize,
+        modelName: "LoginAudit",
+        tableName: "loginaudits",
+    });
+    return LoginAudit;
 };

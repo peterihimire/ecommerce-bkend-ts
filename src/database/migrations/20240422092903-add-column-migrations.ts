@@ -42,6 +42,18 @@ module.exports = {
         { transaction }
       );
 
+      await queryInterface.addColumn(
+        "transactions",
+        "userId",
+        {
+          type: DataTypes.INTEGER,
+          references: { model: "users", key: "id" },
+          onUpdate: "CASCADE",
+          onDelete: "CASCADE",
+        },
+        { transaction }
+      );
+
       await transaction.commit();
     } catch (error) {
       await transaction.rollback();
@@ -59,8 +71,12 @@ module.exports = {
       await queryInterface.removeColumn("carts", "userId", {
         transaction,
       });
-      
+
       await queryInterface.removeColumn("orders", "userId", {
+        transaction,
+      });
+
+      await queryInterface.removeColumn("transactions", "userId", {
         transaction,
       });
 

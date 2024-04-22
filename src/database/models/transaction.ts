@@ -41,8 +41,9 @@ module.exports = (sequelize: any, DataTypes: any) => {
       // define association here
       Transaction.belongsTo(models.User, {
         as: "users",
-        foreignKey: "transactionId",
+        foreignKey: "userId",
         onDelete: "CASCADE",
+        hooks: true,
       });
     }
   }
@@ -51,14 +52,32 @@ module.exports = (sequelize: any, DataTypes: any) => {
       acct_id: DataTypes.STRING,
       payment_method: DataTypes.STRING,
       transaction_ref: DataTypes.STRING,
-      amount: DataTypes.NUMBER,
+      amount: {
+        type: DataTypes.DECIMAL(10, 2),
+        get() {
+          // Workaround until sequelize issue #8019 is fixed
+          const value = this.getDataValue("amount");
+          return value === null ? null : parseFloat(value.toString());
+        },
+        defaultValue: 0,
+        allowNull: false,
+      },
       currency: DataTypes.STRING,
       payment_status: DataTypes.STRING,
       payment_gateway: DataTypes.STRING,
       is_successful: DataTypes.BOOLEAN,
       is_verified: DataTypes.BOOLEAN,
       transaction_id: DataTypes.STRING,
-      refund: DataTypes.NUMBER,
+      refund: {
+        type: DataTypes.DECIMAL(10, 2),
+        get() {
+          // Workaround until sequelize issue #8019 is fixed
+          const value = this.getDataValue("refund");
+          return value === null ? null : parseFloat(value.toString());
+        },
+        defaultValue: 0,
+        allowNull: false,
+      },
     },
     {
       sequelize,

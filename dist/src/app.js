@@ -23,7 +23,7 @@ const connect_redis_1 = __importDefault(require("connect-redis"));
 const file_storage = multer_1.default.diskStorage({
     destination: (req, file, cb) => {
         // console.log("🚀 ~ file: upload.ts:11 ~ file", process.cwd());
-        cb(null, "images");
+        cb(null, "documents/image");
     },
     filename: (req, file, cb) => {
         const ext = file.originalname.split(".").pop();
@@ -69,6 +69,11 @@ const corsOptions = {
     optionSuccessStatus: 200,
     preflightContinue: false,
 };
+const multerOptions = (0, multer_1.default)({
+    storage: file_storage,
+    limits: { fileSize: 500000 },
+    fileFilter: file_filter,
+}).array("images", 3);
 let redisStoreOne = new connect_redis_1.default({
     client: redis_client_1.redisclient,
     prefix: "ecommerce_user",
@@ -126,14 +131,14 @@ app.set("trust proxy", 1);
 app.use((0, cors_1.default)(corsOptions));
 app.use((0, cookie_parser_1.default)());
 app.use(express_1.default.json());
-// app.use(
-//   "/documents/pdf",
-//   express.static(path.join(__dirname, "../../documents/pdf")) //This works for the compiled javascript code
-// );
-// Define the path to serve static files
-const staticPath = path_1.default.join(__dirname, '../..', 'documents', 'pdf');
-// Serve static files from the specified directory
-app.use('/documents/pdf', express_1.default.static(staticPath));
+app.use(multerOptions);
+// Define the path to serve static files for the TypeScript code
+app.use("/documents/pdf", express_1.default.static(path_1.default.join(__dirname, "../documents/pdf")));
+app.use("/documents/image", express_1.default.static(path_1.default.join(__dirname, "../documents/image")));
+// // Define the path to serve static files for the compiled JavaScript code
+// const staticPath = path.join(__dirname, "../..", "documents", "pdf");
+// // Serve static files from the specified directory
+// app.use("/documents/pdf", express.static(staticPath));
 app.use("/api/ecommerce/v1/admins/auth", (0, express_session_1.default)(sessionOptionsTwo), admin_auth_route_1.default);
 app.use("/api/ecommerce/v1/auth", (0, express_session_1.default)(sessionOptions), auth_route_1.default);
 app.use("/api/ecommerce/v1/products", (0, express_session_1.default)(sessionOptionsTwo), product_route_1.default);
