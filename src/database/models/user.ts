@@ -40,6 +40,13 @@ module.exports = (sequelize: any, DataTypes: any) => {
         onDelete: "CASCADE",
         hooks: true,
       });
+
+      //  User.hasMany(models.Transaction, {
+      //    as: "transactions",
+      //    foreignKey: "userId",
+      //    onDelete: "CASCADE",
+      //    hooks: true,
+      //  });
     }
   }
   User.init(

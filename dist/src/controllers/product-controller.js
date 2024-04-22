@@ -18,20 +18,28 @@ const admin_auth_repository_1 = require("../repositories/admin-auth-repository")
 const addProduct = async (req, res, next) => {
     const { admin } = req.session;
     const email = admin === null || admin === void 0 ? void 0 : admin.email;
-    const { title, slug, images, colors, categories, price, brand, countInStock, rating, desc, sizes, numReviews, } = req.body;
+    const { title, slug, colors, categories, price, brand, countInStock, rating, desc, sizes, numReviews, } = req.body;
     console.log("thia is ...", Product);
     try {
         const found_admin = await (0, admin_auth_repository_1.foundAdmin)(email);
         if (!found_admin) {
             return next(new base_error_1.default("Admin does not exist!", http_status_codes_1.httpStatusCodes.CONFLICT));
         }
-        console.log("This is ...", Product);
         const found_product = await (0, product_repository_1.foundProductTitle)(title);
+        if (found_product) {
+            return next(new base_error_1.default("Product title found.", http_status_codes_1.httpStatusCodes.CONFLICT));
+        }
         console.log("This is found product....", found_product);
+        const images = req.files;
+        console.log("this is the images", images);
+        const imagesPathArray = images.map((img) => {
+            return img.path;
+        });
+        console.log("images url array ...", imagesPathArray);
         const payload = {
             title: title,
             slug: slug,
-            images: images, // Assuming images is an array of strings
+            images: imagesPathArray, // Assuming images is an array of strings
             colors: colors,
             categories: categories,
             price: parseFloat(price), // Convert price to number

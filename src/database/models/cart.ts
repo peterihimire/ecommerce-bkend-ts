@@ -23,6 +23,7 @@ module.exports = (sequelize: any, DataTypes: any) => {
       Cart.belongsTo(models.User, {
         as: "user",
         foreignKey: "userId",
+        onDelete: "CASCADE",
         hooks: true,
       });
 

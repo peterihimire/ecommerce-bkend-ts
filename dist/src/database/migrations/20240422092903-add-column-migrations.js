@@ -23,6 +23,12 @@ module.exports = {
                 onUpdate: "CASCADE",
                 onDelete: "CASCADE",
             }, { transaction });
+            await queryInterface.addColumn("transactions", "userId", {
+                type: sequelize_1.DataTypes.INTEGER,
+                references: { model: "users", key: "id" },
+                onUpdate: "CASCADE",
+                onDelete: "CASCADE",
+            }, { transaction });
             await transaction.commit();
         }
         catch (error) {
@@ -40,6 +46,9 @@ module.exports = {
                 transaction,
             });
             await queryInterface.removeColumn("orders", "userId", {
+                transaction,
+            });
+            await queryInterface.removeColumn("transactions", "userId", {
                 transaction,
             });
             await transaction.commit();
