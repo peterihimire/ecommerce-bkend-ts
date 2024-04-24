@@ -17,6 +17,8 @@ import {
   createUser,
 } from "../repositories/user-repository";
 import { createProfile } from "../repositories/profile-repository";
+const sendinblue_api = require("sib-api-v3-sdk");
+// import sendinblue_api from "sib-api-v3-sdk";
 
 // @route POST api/auth/login
 // @desc Login into account
@@ -62,6 +64,54 @@ export const register: RequestHandler = async (req, res, next) => {
       acct_id: acctnum,
     };
     console.log("This is user payload...", payload);
+
+    //  FOR BREVO
+    let defaultClient = sendinblue_api.ApiClient.instance;
+    // Instantiate the client\
+    let apiKey = defaultClient.authentications["api-key"];
+    apiKey.apiKey = process.env.BREVO_API_KEY;
+    let apiInstance = new sendinblue_api.TransactionalEmailsApi();
+
+    const sender = {
+      email: "support@benkih.com",
+    };
+    const receivers = [
+      {
+        email: email,
+      },
+    ];
+
+    apiInstance
+      .sendTransacEmail({
+        sender,
+        to: receivers,
+        subject: "Email verification",
+        htmlContent: `
+        <h3>Hi,</h3>
+        <p>This is your otp.Its valid for 10 minutes.</p>
+        <p>Sivvar-Communicator.</p>
+      `,
+        textContent: `
+        Hi,
+        This is your otp.
+        It expires in 10 minutes.
+        Sivvar-Communicator.
+        `,
+      })
+      .then(async () => {
+        res.status(httpStatusCodes.OK).json({
+          status: "success",
+          msg: `OTP sent to ${email}, to verify your email!`,
+        });
+      })
+      .catch((error: any) => {
+        return next(
+          new BaseError(
+            error.response.body.message,
+            httpStatusCodes.INTERNAL_SERVER
+          )
+        );
+      });
 
     const created_user = await createUser(payload);
     console.log("Created user yes...", created_user);
