@@ -22,8 +22,8 @@ module.exports = {
         images: {
           type: DataTypes.ARRAY(DataTypes.TEXT), // Change to ARRAY type
         },
-        colors: {
-          type: DataTypes.ARRAY(DataTypes.STRING), // Change to ARRAY type
+        color: {
+          type: DataTypes.STRING,
         },
         categories: {
           type: DataTypes.ARRAY(DataTypes.STRING), // Change to ARRAY type
@@ -43,8 +43,8 @@ module.exports = {
         desc: {
           type: DataTypes.STRING,
         },
-        sizes: {
-          type: DataTypes.ARRAY(DataTypes.STRING), // Change to ARRAY type
+        size: {
+          type: DataTypes.STRING,
         },
         numReviews: {
           type: DataTypes.STRING,

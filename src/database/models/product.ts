@@ -5,14 +5,14 @@ interface ProductAttributes {
   title: string;
   slug: string;
   images: string[];
-  colors: string[];
+  color: string;
   categories: string[];
   price: number;
   brand: string;
   countInStock: number;
   rating: number;
   desc: string;
-  sizes: string[];
+  size: string;
   numReviews: string;
   uuid: string;
 }
@@ -22,14 +22,14 @@ module.exports = (sequelize: any, DataTypes: any) => {
     title!: string;
     slug!: string;
     images!: string[];
-    colors!: string[];
+    color!: string;
     categories!: string[];
     price!: number;
     brand!: string;
     countInStock!: number;
     rating!: number;
     desc!: string;
-    sizes!: string[];
+    size!: string;
     numReviews!: string;
     uuid!: string;
 
@@ -65,11 +65,7 @@ module.exports = (sequelize: any, DataTypes: any) => {
         allowNull: true,
         defaultValue: [],
       },
-      colors: {
-        type: DataTypes.ARRAY(DataTypes.STRING),
-        allowNull: true,
-        defaultValue: [],
-      },
+      color: DataTypes.STRING,
       categories: {
         type: DataTypes.ARRAY(DataTypes.STRING),
         allowNull: true,
@@ -89,11 +85,7 @@ module.exports = (sequelize: any, DataTypes: any) => {
       countInStock: DataTypes.INTEGER,
       rating: DataTypes.FLOAT,
       desc: DataTypes.STRING,
-      sizes: {
-        type: DataTypes.ARRAY(DataTypes.STRING),
-        allowNull: true,
-        defaultValue: [],
-      },
+      size: DataTypes.STRING,
       numReviews: DataTypes.STRING,
       uuid: {
         type: DataTypes.UUID,

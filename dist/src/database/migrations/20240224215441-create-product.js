@@ -20,8 +20,8 @@ module.exports = {
             images: {
                 type: sequelize_1.DataTypes.ARRAY(sequelize_1.DataTypes.TEXT), // Change to ARRAY type
             },
-            colors: {
-                type: sequelize_1.DataTypes.ARRAY(sequelize_1.DataTypes.STRING), // Change to ARRAY type
+            color: {
+                type: sequelize_1.DataTypes.STRING,
             },
             categories: {
                 type: sequelize_1.DataTypes.ARRAY(sequelize_1.DataTypes.STRING), // Change to ARRAY type
@@ -41,8 +41,8 @@ module.exports = {
             desc: {
                 type: sequelize_1.DataTypes.STRING,
             },
-            sizes: {
-                type: sequelize_1.DataTypes.ARRAY(sequelize_1.DataTypes.STRING), // Change to ARRAY type
+            size: {
+                type: sequelize_1.DataTypes.STRING,
             },
             numReviews: {
                 type: sequelize_1.DataTypes.STRING,

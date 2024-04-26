@@ -67,13 +67,6 @@ export const register: RequestHandler = async (req, res, next) => {
     const salt = await bcrypt.genSalt();
     const hashed_password = await bcrypt.hash(original_password, salt);
 
-    // const payload = {
-    //   email: email,
-    //   password: hashed_password,
-    //   acct_id: acctnum,
-    // };
-    // console.log("This is user payload...", payload);
-
     // NEW CLIENT SESSION
     req.session.client = {
       email: email,
@@ -145,24 +138,6 @@ export const register: RequestHandler = async (req, res, next) => {
           )
         );
       });
-
-    // const created_user = await createUser(payload);
-    // console.log("Created user yes...", created_user);
-    // const { id, password, ...others } = await created_user?.dataValues;
-
-    // const data = {
-    //   acct_id: created_user?.acct_id,
-    //   userId: created_user?.id,
-    // };
-    // console.log("This is profile data...", data);
-    // const created_profile = await createProfile(data);
-    // console.log("Created profile yes...", created_profile);
-
-    // res.status(httpStatusCodes.OK).json({
-    //   status: "success",
-    //   msg: "Account created!.",
-    //   data: { ...others },
-    // });
   } catch (error: any) {
     if (!error.statusCode) {
       error.statusCode = httpStatusCodes.INTERNAL_SERVER;
@@ -177,7 +152,7 @@ export const register: RequestHandler = async (req, res, next) => {
 export const verify_otp: RequestHandler = async (req, res, next) => {
   const { client } = req?.session;
   const original_hash = client?.hashes;
-  const email = client?.email
+  const email = client?.email;
   const { otp } = req.body;
   const now = Date.now();
 
