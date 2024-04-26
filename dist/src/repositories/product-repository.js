@@ -31,14 +31,14 @@ const createProduct = async (data) => {
         title: data.title,
         slug: data.slug,
         images: data.images,
-        colors: data.colors,
+        color: data.color,
         categories: data.categories,
         price: data.price,
         brand: data.brand,
         countInStock: data.countInStock,
         rating: data.rating,
         desc: data.desc,
-        sizes: data.sizes,
+        size: data.size,
         numReviews: data.numReviews,
         // adminId: data.adminId,
     });
@@ -58,8 +58,8 @@ const updateProductId = async (id, data) => {
     if (data.images !== undefined) {
         updated_product.images = data.images;
     }
-    if (data.colors !== undefined) {
-        updated_product.colors = data.colors;
+    if (data.color !== undefined) {
+        updated_product.color = data.color;
     }
     if (data.categories !== undefined) {
         updated_product.categories = data.categories;
@@ -79,8 +79,8 @@ const updateProductId = async (id, data) => {
     if (data.desc !== undefined) {
         updated_product.desc = data.desc;
     }
-    if (data.sizes !== undefined) {
-        updated_product.sizes = data.sizes;
+    if (data.size !== undefined) {
+        updated_product.size = data.size;
     }
     if (data.numReviews !== undefined) {
         // Convert numReviews to a number if provided as a string
@@ -99,38 +99,3 @@ const deleteProductId = async (id) => {
     return deleted_product;
 };
 exports.deleteProductId = deleteProductId;
-// // Iterate over the properties of the data object
-// for (const key in data) {
-//   if (data.hasOwnProperty(key)) {
-//     // Update only if the property is not undefined
-//     if (data[key as keyof Product] !== undefined) {
-//       updated_product[key as keyof Product] = data[key as keyof Product];
-//     }
-//   }
-// }
-// updated_product.title = data.title;
-// updated_product.slug = data.slug;
-// updated_product.images = data.images;
-// updated_product.colors = data.colors;
-// updated_product.categories = data.categories;
-// updated_product.price = data.price;
-// updated_product.brand = data.brand;
-// updated_product.countInStock = data.countInStock;
-// updated_product.rating = data.rating;
-// updated_product.desc = data.desc;
-// updated_product.sizes = data.sizes;
-// updated_product.numReviews = data.numReviews;
-// const found_product = await foundProductId(id);
-// const deleted_product = await found_product.destroy();
-// Iterate over the properties of the data object
-// for (const key in data) {
-//   if (data.hasOwnProperty(key)) {
-//     // Update only if the property is not undefined
-//     if (
-//       data[key as keyof Product] !== undefined ||
-//       !Number.isNaN(data[key as keyof Product])
-//     ) {
-//       updated_product[key as keyof Product] = data[key as keyof Product];
-//     }
-//   }
-// }

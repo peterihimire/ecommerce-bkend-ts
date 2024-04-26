@@ -1,13 +1,20 @@
 "use strict";
 import { BuildOptions, DataTypes, Model, Sequelize } from "sequelize";
 
-interface RoleAttributes {
+interface CategoryAttributes {
   name: string;
+  desc: string;
+  uuid: string;
 }
 
 module.exports = (sequelize: any, DataTypes: any) => {
-  class Role extends Model<RoleAttributes> implements RoleAttributes {
+  class Category
+    extends Model<CategoryAttributes>
+    implements CategoryAttributes
+  {
     name!: string;
+    desc!: string;
+    uuid!: string;
 
     /**
      * Helper method for defining associations.
@@ -16,23 +23,24 @@ module.exports = (sequelize: any, DataTypes: any) => {
      */
     static associate(models: any) {
       // define association here
-      Role.belongsToMany(models.Admin, {
-        as: "admins",
-        foreignKey: "roleId",
-        through: "admin_roles",
-        onDelete: "CASCADE",
-      });
     }
   }
-  Role.init(
+  Category.init(
     {
       name: DataTypes.STRING,
+      desc: DataTypes.STRING,
+      uuid: {
+        type: DataTypes.UUID,
+        defaultValue: DataTypes.UUIDV4,
+        allowNull: false,
+        unique: true,
+      },
     },
     {
       sequelize,
-      modelName: "Role",
-      tableName: "roles",
+      modelName: "Category",
+      tableName: "categories",
     }
   );
-  return Role;
+  return Category;
 };

@@ -18,7 +18,7 @@ const admin_auth_repository_1 = require("../repositories/admin-auth-repository")
 const addProduct = async (req, res, next) => {
     const { admin } = req.session;
     const email = admin === null || admin === void 0 ? void 0 : admin.email;
-    const { title, slug, colors, categories, price, brand, countInStock, rating, desc, sizes, numReviews, } = req.body;
+    const { title, slug, color, categories, price, brand, countInStock, rating, desc, size, numReviews, } = req.body;
     console.log("thia is ...", Product);
     try {
         const found_admin = await (0, admin_auth_repository_1.foundAdmin)(email);
@@ -40,14 +40,14 @@ const addProduct = async (req, res, next) => {
             title: title,
             slug: slug,
             images: imagesPathArray, // Assuming images is an array of strings
-            colors: colors,
+            color: color,
             categories: categories,
             price: parseFloat(price), // Convert price to number
             brand: brand,
             countInStock: parseInt(countInStock), // Convert countInStock to number
             rating: parseFloat(rating), // Convert rating to number
             desc: desc,
-            sizes: sizes,
+            size: size,
             numReviews: numReviews,
             // adminId: admin?.id as number,
         };
@@ -118,7 +118,7 @@ const editProduct = async (req, res, next) => {
     const { admin } = req.session;
     const { prod_id } = req.params;
     const email = admin === null || admin === void 0 ? void 0 : admin.email;
-    const { title, slug, images, colors, categories, price, brand, countInStock, rating, desc, sizes, numReviews, } = req.body;
+    const { title, slug, images, color, categories, price, brand, countInStock, rating, desc, size, numReviews, } = req.body;
     try {
         const found_admin = await (0, admin_auth_repository_1.foundAdmin)(email);
         if (!found_admin) {
@@ -130,14 +130,14 @@ const editProduct = async (req, res, next) => {
             title: title,
             slug: slug,
             images: images, // Assuming images is an array of strings
-            colors: colors,
+            color: color,
             categories: categories,
             price: parseFloat(price), // Convert price to number
             brand: brand,
             countInStock: parseInt(countInStock), // Convert countInStock to number
             rating: parseFloat(rating), // Convert rating to number
             desc: desc,
-            sizes: sizes,
+            size: size,
             numReviews: numReviews,
             // adminId: admin?.id as number,
         };
