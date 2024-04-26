@@ -20,3 +20,10 @@ export type Cart = {
   totalQty: number;
   totalPrice: number;
 };
+
+
+export type Client = {
+  email: string;
+  password: string;
+  hashes: string;
+};

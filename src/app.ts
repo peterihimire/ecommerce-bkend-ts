@@ -4,12 +4,11 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 import multer from "multer";
 import path from "path";
-
+import { User, Admin, Client } from "./types/types";
 import BaseError from "./utils/base-error";
 import { httpStatusCodes } from "./utils/http-status-codes";
-
 import { redisclient } from "./utils/redis-client";
-
+import onboardRoute from "./routes/onboard-route";
 import authRoute from "./routes/auth-route";
 import adminAuthRoute from "./routes/admin-auth-route";
 import productRoute from "./routes/product-route";
@@ -22,17 +21,6 @@ import {
   unknownRoute,
 } from "./middlewares/error-handler";
 import RedisStore from "connect-redis";
-
-// This works with the verify-session file
-type User = {
-  id: string;
-  email: string;
-};
-
-type Admin = {
-  id: string;
-  email: string;
-};
 
 type Cart = {
   userId: string | null;
@@ -50,9 +38,11 @@ type Cart = {
 // Augment express-session with a custom SessionData object
 declare module "express-session" {
   interface SessionData {
+    //For User and Admin I used the imported types
     user: User;
     admin: Admin;
     cart: Cart;
+    client: Client;
   }
 }
 
@@ -143,6 +133,11 @@ let redisStoreCart = new (RedisStore as any)({
   prefix: "ecommerce_cart",
 });
 
+let redisStoreOnboard = new (RedisStore as any)({
+  client: redisclient,
+  prefix: "ecommerce_onboard",
+});
+
 const sessionOptions = {
   // store: new RedisStore({ client: redisClient }),
   store: redisStoreOne,
@@ -184,6 +179,19 @@ const sessionOptionsThree = {
     // sameSite: "none",
   },
 };
+const sessionOptionsFour = {
+  // store: new RedisStore({ client: redisClient }),
+  store: redisStoreOnboard,
+  secret: String(process.env.SESSION_SECRET),
+  resave: false,
+  saveUninitialized: false,
+  cookie: {
+    secure: false, // if true only transmit cookie over https
+    httpOnly: true, // if true prevent client side JS from reading the cookie
+    maxAge: 1000 * 60 * 60 * 12, // session max age in miliseconds
+    // sameSite: "none",
+  },
+};
 
 const app: Application = express();
 app.set("trust proxy", 1);
@@ -205,12 +213,26 @@ app.use(
   express.static(path.join(__dirname, "../documents/image"))
 );
 
+// // Serve frontend
+// if (process.env.NODE_ENV === 'production') {
+//   app.use(express.static(path.join(__dirname, '../frontend/build')));
+
+//   app.get('*', (req, res) =>
+//     res.sendFile(
+//       path.resolve(__dirname, '../', 'frontend', 'build', 'index.html')
+//     )
+//   );
+// } else {
+//   app.get('/', (req, res) => res.send('Please set to production'));
+// }
+
 // // Define the path to serve static files for the compiled JavaScript code
 // const staticPath = path.join(__dirname, "../..", "documents", "pdf");
 
 // // Serve static files from the specified directory
 // app.use("/documents/pdf", express.static(staticPath));
 
+app.use("/api/ecommerce/v1/onboard", session(sessionOptionsFour), onboardRoute);
 app.use(
   "/api/ecommerce/v1/admins/auth",
   session(sessionOptionsTwo),

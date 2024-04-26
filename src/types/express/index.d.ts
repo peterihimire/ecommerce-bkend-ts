@@ -1,5 +1,5 @@
 import express from "express";
-import { User, Admin, Cart } from "../types";
+import { User, Admin, Cart, Client } from "../types";
 
 // This works with the verify-session file
 declare global {
@@ -9,6 +9,7 @@ declare global {
       // admin?: Record<string, any>;
       user?: User;
       admin?: Admin;
+      client?: Client;
     }
   }
 }
