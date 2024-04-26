@@ -12,6 +12,7 @@ const path_1 = __importDefault(require("path"));
 const base_error_1 = __importDefault(require("./utils/base-error"));
 const http_status_codes_1 = require("./utils/http-status-codes");
 const redis_client_1 = require("./utils/redis-client");
+const onboard_route_1 = __importDefault(require("./routes/onboard-route"));
 const auth_route_1 = __importDefault(require("./routes/auth-route"));
 const admin_auth_route_1 = __importDefault(require("./routes/admin-auth-route"));
 const product_route_1 = __importDefault(require("./routes/product-route"));
@@ -86,6 +87,10 @@ let redisStoreCart = new connect_redis_1.default({
     client: redis_client_1.redisclient,
     prefix: "ecommerce_cart",
 });
+let redisStoreOnboard = new connect_redis_1.default({
+    client: redis_client_1.redisclient,
+    prefix: "ecommerce_onboard",
+});
 const sessionOptions = {
     // store: new RedisStore({ client: redisClient }),
     store: redisStoreOne,
@@ -125,6 +130,19 @@ const sessionOptionsThree = {
         // sameSite: "none",
     },
 };
+const sessionOptionsFour = {
+    // store: new RedisStore({ client: redisClient }),
+    store: redisStoreOnboard,
+    secret: String(process.env.SESSION_SECRET),
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+        secure: false, // if true only transmit cookie over https
+        httpOnly: true, // if true prevent client side JS from reading the cookie
+        maxAge: 1000 * 60 * 60 * 12, // session max age in miliseconds
+        // sameSite: "none",
+    },
+};
 const app = (0, express_1.default)();
 app.set("trust proxy", 1);
 // MIDDLEWARES
@@ -135,10 +153,22 @@ app.use(multerOptions);
 // Define the path to serve static files for the TypeScript code
 app.use("/documents/pdf", express_1.default.static(path_1.default.join(__dirname, "../documents/pdf")));
 app.use("/documents/image", express_1.default.static(path_1.default.join(__dirname, "../documents/image")));
+// // Serve frontend
+// if (process.env.NODE_ENV === 'production') {
+//   app.use(express.static(path.join(__dirname, '../frontend/build')));
+//   app.get('*', (req, res) =>
+//     res.sendFile(
+//       path.resolve(__dirname, '../', 'frontend', 'build', 'index.html')
+//     )
+//   );
+// } else {
+//   app.get('/', (req, res) => res.send('Please set to production'));
+// }
 // // Define the path to serve static files for the compiled JavaScript code
 // const staticPath = path.join(__dirname, "../..", "documents", "pdf");
 // // Serve static files from the specified directory
 // app.use("/documents/pdf", express.static(staticPath));
+app.use("/api/ecommerce/v1/onboard", (0, express_session_1.default)(sessionOptionsFour), onboard_route_1.default);
 app.use("/api/ecommerce/v1/admins/auth", (0, express_session_1.default)(sessionOptionsTwo), admin_auth_route_1.default);
 app.use("/api/ecommerce/v1/auth", (0, express_session_1.default)(sessionOptions), auth_route_1.default);
 app.use("/api/ecommerce/v1/products", (0, express_session_1.default)(sessionOptionsTwo), product_route_1.default);

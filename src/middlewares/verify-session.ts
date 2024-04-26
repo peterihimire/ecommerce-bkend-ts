@@ -11,6 +11,23 @@ import BaseError from "../utils/base-error";
 import { httpStatusCodes } from "../utils/http-status-codes";
 import { foundAdmin, createAdmin } from "../repositories/admin-auth-repository";
 
+// VALIDATE REGISTRATION SESSION
+export const verifyClient: RequestHandler = (req, res, next) => {
+  const { client } = req?.session;
+  console.log("This is the session client...", client);
+
+  if (!client) {
+    return next(
+      new BaseError(
+        "Invalid or expired session, restart onboarding process!",
+        httpStatusCodes.UNAUTHORIZED
+      )
+    );
+  }
+  req.client = client;
+  next();
+};
+
 // VALIDATE USER SESSION
 export const verifySession: RequestHandler = (req, res, next) => {
   const { user } = req.session;

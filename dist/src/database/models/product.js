@@ -32,11 +32,7 @@ module.exports = (sequelize, DataTypes) => {
             allowNull: true,
             defaultValue: [],
         },
-        colors: {
-            type: DataTypes.ARRAY(DataTypes.STRING),
-            allowNull: true,
-            defaultValue: [],
-        },
+        color: DataTypes.STRING,
         categories: {
             type: DataTypes.ARRAY(DataTypes.STRING),
             allowNull: true,
@@ -56,11 +52,7 @@ module.exports = (sequelize, DataTypes) => {
         countInStock: DataTypes.INTEGER,
         rating: DataTypes.FLOAT,
         desc: DataTypes.STRING,
-        sizes: {
-            type: DataTypes.ARRAY(DataTypes.STRING),
-            allowNull: true,
-            defaultValue: [],
-        },
+        size: DataTypes.STRING,
         numReviews: DataTypes.STRING,
         uuid: {
             type: DataTypes.UUID,

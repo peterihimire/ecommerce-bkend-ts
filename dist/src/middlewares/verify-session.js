@@ -3,10 +3,21 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.verifySessionAdmin = exports.verifySessionAndCart = exports.verifySessionAndAuthorization = exports.verifySession = void 0;
+exports.verifySessionAdmin = exports.verifySessionAndCart = exports.verifySessionAndAuthorization = exports.verifySession = exports.verifyClient = void 0;
 const base_error_1 = __importDefault(require("../utils/base-error"));
 const http_status_codes_1 = require("../utils/http-status-codes");
 const admin_auth_repository_1 = require("../repositories/admin-auth-repository");
+// VALIDATE REGISTRATION SESSION
+const verifyClient = (req, res, next) => {
+    const { client } = req === null || req === void 0 ? void 0 : req.session;
+    console.log("This is the session client...", client);
+    if (!client) {
+        return next(new base_error_1.default("Invalid or expired session, restart onboarding process!", http_status_codes_1.httpStatusCodes.UNAUTHORIZED));
+    }
+    req.client = client;
+    next();
+};
+exports.verifyClient = verifyClient;
 // VALIDATE USER SESSION
 const verifySession = (req, res, next) => {
     const { user } = req.session;

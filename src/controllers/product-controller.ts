@@ -24,14 +24,14 @@ export const addProduct: RequestHandler = async (req, res, next) => {
   const {
     title,
     slug,
-    colors,
+    color,
     categories,
     price,
     brand,
     countInStock,
     rating,
     desc,
-    sizes,
+    size,
     numReviews,
   } = req.body;
 
@@ -65,14 +65,14 @@ export const addProduct: RequestHandler = async (req, res, next) => {
       title: title as string,
       slug: slug as string,
       images: imagesPathArray as string[], // Assuming images is an array of strings
-      colors: colors as string[],
+      color: color as string,
       categories: categories as string[],
       price: parseFloat(price), // Convert price to number
       brand: brand as string,
       countInStock: parseInt(countInStock), // Convert countInStock to number
       rating: parseFloat(rating), // Convert rating to number
       desc: desc as string,
-      sizes: sizes as string[],
+      size: size as string,
       numReviews: numReviews as string,
       // adminId: admin?.id as number,
     };
@@ -150,14 +150,14 @@ export const editProduct: RequestHandler = async (req, res, next) => {
     title,
     slug,
     images,
-    colors,
+    color,
     categories,
     price,
     brand,
     countInStock,
     rating,
     desc,
-    sizes,
+    size,
     numReviews,
   } = req.body;
 
@@ -176,14 +176,14 @@ export const editProduct: RequestHandler = async (req, res, next) => {
       title: title as string,
       slug: slug as string,
       images: images as string[], // Assuming images is an array of strings
-      colors: colors as string[],
+      color: color as string,
       categories: categories as string[],
       price: parseFloat(price), // Convert price to number
       brand: brand as string,
       countInStock: parseInt(countInStock), // Convert countInStock to number
       rating: parseFloat(rating), // Convert rating to number
       desc: desc as string,
-      sizes: sizes as string[],
+      size: size as string,
       numReviews: numReviews as string,
       // adminId: admin?.id as number,
     };

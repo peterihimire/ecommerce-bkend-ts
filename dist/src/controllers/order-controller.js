@@ -30,6 +30,7 @@ exports.cancelOrder = exports.getOrders = exports.getOrder = exports.addOrder = 
 const http_status_codes_1 = require("../utils/http-status-codes");
 const base_error_1 = __importDefault(require("../utils/base-error"));
 const models_1 = __importDefault(require("../database/models"));
+const stripe_1 = __importDefault(require("stripe"));
 const dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config();
 const User = models_1.default.User;
@@ -58,6 +59,7 @@ const addOrder = async (req, res, next) => {
     const { address } = req.body;
     const { user } = req === null || req === void 0 ? void 0 : req.session;
     const email = user === null || user === void 0 ? void 0 : user.email;
+    let session;
     try {
         if (email === undefined) {
             return next(new base_error_1.default("Account does not exist!", http_status_codes_1.httpStatusCodes.CONFLICT));
@@ -91,6 +93,27 @@ const addOrder = async (req, res, next) => {
                 quantity: item.cart_products.quantity,
             };
         });
+        const paystack_arr = cart_prods.products.map((item) => {
+            console.log("Single item..", item.cart_products);
+            return {
+                name: item.cart_products.title,
+                price: item.cart_products.price,
+                quantity: item.cart_products.quantity,
+            };
+        });
+        const stripe_arr = cart_prods.products.map((item) => {
+            console.log("Single item..", item.cart_products);
+            return {
+                price_data: {
+                    currency: "usd",
+                    product_data: {
+                        name: item.cart_products.title,
+                    },
+                    unit_amount: item.cart_products.price * 100,
+                },
+                quantity: item.cart_products.quantity,
+            };
+        });
         console.log("Product arrays shit...", products_arr);
         const order_products = await (0, order_repository_1.addCartProds)(products_arr);
         // const file = await generatePDFFile("invoice", created_order);
@@ -99,6 +122,32 @@ const addOrder = async (req, res, next) => {
         console.log("This is it , okay...", docDefinition);
         // Create and open the PDF
         // const pdfDocGenerator = pdfMake.createPdf(docDefinition).open();
+        // Retrieve the secret key from the environment variable
+        const secretKey = process.env.PAYSTACK_SECRET_KEY;
+        // // Configure the paystack module with the secret key
+        // const paystackInstance = paystack(secretKey);
+        // session = await paystackInstance.transaction.initialize({
+        //   email: email,
+        //   amount: created_order.totalPrice * 100,
+        //   currency: "NGN",
+        //   channels: ["card"],
+        //   reference: "",
+        //   name: "",
+        //   metadata: {
+        //     products: paystack_arr,
+        //   },
+        // });
+        // console.log("This is my paystack session...", session);
+        // Configure the stripe module with the secret key
+        const stripe = new stripe_1.default(process.env.STRIPE_SECRET_KEY);
+        session = await stripe.checkout.sessions.create({
+            payment_method_types: ["card"],
+            line_items: stripe_arr,
+            mode: "payment",
+            customer_email: email,
+            success_url: "http://localhost:3000/success",
+            cancel_url: "http://localhost:3000/cancel",
+        });
         const pdfDocGenerator = pdfMake.createPdf(docDefinition);
         // Generate and download the PDF
         pdfDocGenerator.getBuffer(async (buffer) => {
@@ -115,12 +164,13 @@ const addOrder = async (req, res, next) => {
             console.log("This is updated order with link...", updated_order);
             // Returned response
             res.status(201).json({
-                status: "Successful",
+                status: "success",
                 msg: "Available Cart Order!",
                 data: {
                     // order: created_order,
                     order: updated_order,
                     products: order_products,
+                    session: session,
                 },
             });
         });
