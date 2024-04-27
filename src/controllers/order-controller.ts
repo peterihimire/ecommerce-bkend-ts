@@ -199,44 +199,57 @@ export const addOrder: RequestHandler = async (req, res, next) => {
         `${req.protocol}://${req.get("host")}/${updated_order?.pdfLink}`
       );
 
-      // NEW BREVO
-      let apiInstance = new SibApiV3Sdk.TransactionalEmailsApi();
+      // BREVO TYPESCRIPT
+      // Initialize the TransactionalEmailsApi instance
+      const apiInstance = new SibApiV3Sdk.TransactionalEmailsApi();
 
-      let apiKey = apiInstance.authentications["apiKey"];
-      apiKey.apiKey = process.env.BREVO_API_KEY;
+      // Set your Sendinblue API key
+      const apiKey = apiInstance.authentications["apiKey"];
+      apiKey.apiKey = process.env.BREVO_API_KEY; // Replace with your API key
 
-      let smtpTemplate = new SibApiV3Sdk.CreateSmtpTemplate();
+      // Create a new instance of SendSmtpEmail to specify email details
+      const sendSmtpEmail = new SibApiV3Sdk.SendSmtpEmail();
 
-      smtpTemplate.sender = { name: "Peter Ihimire", email: "support@benkih.com" };
-      smtpTemplate.templateName = "BENKIH EMAIL";
-      smtpTemplate.htmlContent = `   <h3>Hi,</h3>
-        <p>This is your order with attached file.Its a pdf file.</p>
+      // Set the sender details
+      sendSmtpEmail.sender = {
+        name: "Benkih",
+        email: "support@benkih.com",
+      };
+
+      // Set the recipient email address
+      sendSmtpEmail.to = [{ email }];
+
+      // Set the subject and content of the email
+      sendSmtpEmail.subject = "Your order";
+      sendSmtpEmail.htmlContent = `
+        <h3>Hi,</h3>
+        <p>This is your order with an attached file. It's a PDF file.</p>
         <p>Benkih.</p>
       `;
-      smtpTemplate.subject = "Your order";
-      // smtpTemplate.replyTo = email;
-      smtpTemplate.toField = email;
-      smtpTemplate.isActive = true;
-      // smtpTemplate.attachmentUrl = `${req.protocol}://${req.get("host")}/${
+
+      // If you want to attach a file, set the attachment URL
+      // sendSmtpEmail.attachmentUrl = `${req.protocol}://${req.get("host")}/${
       //   updated_order?.pdfLink
       // }`;
+      sendSmtpEmail.attachmentUrl = `https://res.cloudinary.com/dymhdpka1/image/upload/v1714244037/peterihimire-logo_whf5lr.png`;
 
-      apiInstance.createSmtpTemplate(smtpTemplate).then(
-        function (data: any) {
-          console.log(
-            "API called successfully. Returned data: " + JSON.stringify(data)
-          );
-        },
-        function (error: any) {
-          // console.error(error);
+      // Send the email
+      apiInstance
+        .sendTransacEmail(sendSmtpEmail)
+        .then((data: any) => {
+          console.log("Email sent successfully. Response:", data);
+          // Handle success
+        })
+        .catch((error: any) => {
+          console.error("Error sending email:", error);
+          // Handle error
           return next(
             new BaseError(
               error.response.body.message,
               httpStatusCodes.INTERNAL_SERVER
             )
           );
-        }
-      );
+        });
 
       // //  FOR BREVO
       // let defaultClient = sendinblue_api.ApiClient.instance;
@@ -258,28 +271,28 @@ export const addOrder: RequestHandler = async (req, res, next) => {
       //   .sendTransacEmail({
       //     sender,
       //     to: receivers,
-      //     subject: "Your Order",
-      //     attachmentUrl: `${req.protocol}://${req.get("host")}/${updated_order?.pdfLink}`,
+      //     subject: "Order",
+      //     attachmentUrl: `https://res.cloudinary.com/dymhdpka1/image/upload/v1714244037/peterihimire-logo_whf5lr.png`,
       //     htmlContent: `
       //   <h3>Hi,</h3>
       //   <p>This is your order with attached file.Its a pdf file.</p>
       //   <p>Benkih.</p>
       // `,
       //     textContent: `
-      //   Hi,
-      //   This is your order with attached file, yes!
-      //   It a pdf file.
-      //   Benkih.
-      //   `,
+      // Hi,
+      // This is your order with attached file, yes!
+      // It a pdf file.
+      // Benkih.
+      // `,
       //   })
       //   .catch((error: any) => {
       //     console.log("This is error: ", error);
-      // return next(
-      //   new BaseError(
-      //     error.response.body.message,
-      //     httpStatusCodes.INTERNAL_SERVER
-      //   )
-      // );
+      //     return next(
+      //       new BaseError(
+      //         error.response.body.message,
+      //         httpStatusCodes.INTERNAL_SERVER
+      //       )
+      //     );
       //   });
 
       // Returned response
