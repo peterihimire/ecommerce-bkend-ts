@@ -11,7 +11,7 @@ import { updateProfile } from "../repositories/profile-repository";
 // @route POST api/auth/send-otp
 // @desc To send SMS OTP to user
 // @access Public
-export const get_user_info: RequestHandler = async (req, res, next) => {
+export const getUserInfo: RequestHandler = async (req, res, next) => {
   const { user } = req.session;
   const email = user?.email;
   console.log("This is the user session...", user);

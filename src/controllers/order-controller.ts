@@ -4,6 +4,8 @@ import BaseError from "../utils/base-error";
 import db from "../database/models";
 import paystack from "paystack";
 import Stripe from "stripe";
+const sendinblue_api = require("sib-api-v3-sdk");
+const SibApiV3Sdk = require("sib-api-v3-typescript");
 
 import dotenv from "dotenv";
 
@@ -161,7 +163,7 @@ export const addOrder: RequestHandler = async (req, res, next) => {
     //   },
     // });
     // console.log("This is my paystack session...", session);
-    
+
     // Configure the stripe module with the secret key
     const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
     session = await stripe.checkout.sessions.create({
@@ -191,6 +193,94 @@ export const addOrder: RequestHandler = async (req, res, next) => {
       console.log(`PDF saved to: ${filePath}`);
 
       console.log("This is updated order with link...", updated_order);
+      console.log(
+        "This should be url link",
+        // `${req?.hostname}/${updated_order?.pdfLink}`
+        `${req.protocol}://${req.get("host")}/${updated_order?.pdfLink}`
+      );
+
+      // NEW BREVO
+      let apiInstance = new SibApiV3Sdk.TransactionalEmailsApi();
+
+      let apiKey = apiInstance.authentications["apiKey"];
+      apiKey.apiKey = process.env.BREVO_API_KEY;
+
+      let smtpTemplate = new SibApiV3Sdk.CreateSmtpTemplate();
+
+      smtpTemplate.sender = { name: "Peter Ihimire", email: "support@benkih.com" };
+      smtpTemplate.templateName = "BENKIH EMAIL";
+      smtpTemplate.htmlContent = `   <h3>Hi,</h3>
+        <p>This is your order with attached file.Its a pdf file.</p>
+        <p>Benkih.</p>
+      `;
+      smtpTemplate.subject = "Your order";
+      // smtpTemplate.replyTo = email;
+      smtpTemplate.toField = email;
+      smtpTemplate.isActive = true;
+      // smtpTemplate.attachmentUrl = `${req.protocol}://${req.get("host")}/${
+      //   updated_order?.pdfLink
+      // }`;
+
+      apiInstance.createSmtpTemplate(smtpTemplate).then(
+        function (data: any) {
+          console.log(
+            "API called successfully. Returned data: " + JSON.stringify(data)
+          );
+        },
+        function (error: any) {
+          // console.error(error);
+          return next(
+            new BaseError(
+              error.response.body.message,
+              httpStatusCodes.INTERNAL_SERVER
+            )
+          );
+        }
+      );
+
+      // //  FOR BREVO
+      // let defaultClient = sendinblue_api.ApiClient.instance;
+      // // Instantiate the client\
+      // let apiKey = defaultClient.authentications["api-key"];
+      // apiKey.apiKey = process.env.BREVO_API_KEY;
+      // let apiInstance = new sendinblue_api.TransactionalEmailsApi();
+
+      // const sender = {
+      //   email: "noreply@benkih.com",
+      // };
+      // const receivers = [
+      //   {
+      //     email: email,
+      //   },
+      // ];
+
+      // apiInstance
+      //   .sendTransacEmail({
+      //     sender,
+      //     to: receivers,
+      //     subject: "Your Order",
+      //     attachmentUrl: `${req.protocol}://${req.get("host")}/${updated_order?.pdfLink}`,
+      //     htmlContent: `
+      //   <h3>Hi,</h3>
+      //   <p>This is your order with attached file.Its a pdf file.</p>
+      //   <p>Benkih.</p>
+      // `,
+      //     textContent: `
+      //   Hi,
+      //   This is your order with attached file, yes!
+      //   It a pdf file.
+      //   Benkih.
+      //   `,
+      //   })
+      //   .catch((error: any) => {
+      //     console.log("This is error: ", error);
+      // return next(
+      //   new BaseError(
+      //     error.response.body.message,
+      //     httpStatusCodes.INTERNAL_SERVER
+      //   )
+      // );
+      //   });
 
       // Returned response
       res.status(201).json({

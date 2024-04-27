@@ -52,8 +52,10 @@ export const unknownRoute: RequestHandler = (req, res, next) => {
     return next(
       new BaseError(
         // `Could not find this route: ${req.originalUrl}, make sure the URL is correct!`,
-        `Could not find this route: ${req.hostname}${req.url}, make sure the URL is correct!`,
-        // "Could not find this route, make sure the URL is correct!",
+        // `Could not find this route: ${req.hostname}${req.url}, make sure the URL is correct!`,
+        `Could not find this route: ${req.protocol}://${req.get("host")}${
+          req.url
+        }, make sure the URL is correct!`,
         httpStatusCodes.NOT_FOUND
       )
     );
