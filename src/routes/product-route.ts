@@ -7,9 +7,10 @@ import {
   getProduct,
 } from "../controllers/product-controller";
 import { verifySessionAdmin } from "../middlewares/verify-session";
+import { productImages } from "../middlewares/file-upload";
 const router = Router();
 
-router.post("/add", verifySessionAdmin, addProduct);
+router.post("/add", productImages, verifySessionAdmin, addProduct);
 router.get("/get_products", getProducts);
 router.get("/get_product/:prod_id", getProduct);
 router.patch("/update/:prod_id", verifySessionAdmin, editProduct);

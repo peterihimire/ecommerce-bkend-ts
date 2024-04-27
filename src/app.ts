@@ -2,15 +2,13 @@ import express, { Application, Request } from "express";
 import session from "express-session";
 import cors from "cors";
 import cookieParser from "cookie-parser";
-import multer from "multer";
 import path from "path";
 import { User, Admin, Client } from "./types/types";
-import BaseError from "./utils/base-error";
-import { httpStatusCodes } from "./utils/http-status-codes";
 import { redisclient } from "./utils/redis-client";
 import onboardRoute from "./routes/onboard-route";
 import authRoute from "./routes/auth-route";
 import adminAuthRoute from "./routes/admin-auth-route";
+import userRoute from "./routes/user-route";
 import productRoute from "./routes/product-route";
 import cartRoute from "./routes/cart-route";
 import orderRoute from "./routes/order-route";
@@ -47,50 +45,6 @@ declare module "express-session" {
   }
 }
 
-const file_storage = multer.diskStorage({
-  destination: (req: Request, file: any, cb: Function) => {
-    // console.log("🚀 ~ file: upload.ts:11 ~ file", process.cwd());
-    cb(null, "documents/image");
-  },
-  filename: (req: Request, file: any, cb: Function) => {
-    const ext = file.originalname.split(".").pop();
-    cb(
-      null,
-      file.originalname.split(".")[0] +
-        "-" +
-        new Date().toISOString() +
-        "." +
-        ext
-    );
-    // cb(null, new Date().toISOString() + "-" + file.originalname);
-  },
-});
-
-const file_filter = (req: Request, file: any, cb: Function) => {
-  const fileSize = parseInt(req.headers["content-length"] as string);
-  console.log("This si req file size", fileSize);
-  if (fileSize > 500000) {
-    cb(
-      new BaseError(
-        "Images must be under 500kb!",
-        httpStatusCodes.UNPROCESSABLE_ENTITY
-      ),
-      false
-    );
-  }
-  if (file.mimetype.startsWith("image")) {
-    cb(null, true);
-  } else {
-    cb(
-      new BaseError(
-        "Only images are allowed!",
-        httpStatusCodes.UNPROCESSABLE_ENTITY
-      ),
-      false
-    );
-  }
-};
-
 const corsOptions = {
   origin: [
     // process.env.CORS_ORIGIN as string,
@@ -112,12 +66,6 @@ const corsOptions = {
   optionSuccessStatus: 200,
   preflightContinue: false,
 };
-
-const multerOptions = multer({
-  storage: file_storage,
-  limits: { fileSize: 500000 },
-  fileFilter: file_filter,
-}).array("images", 3);
 
 let redisStoreOne = new (RedisStore as any)({
   client: redisclient,
@@ -201,7 +149,8 @@ app.set("trust proxy", 1);
 app.use(cors(corsOptions));
 app.use(cookieParser());
 app.use(express.json());
-app.use(multerOptions);
+// app.use(multerOptions);
+// app.use(picOptions);
 
 // Define the path to serve static files for the TypeScript code
 app.use(
@@ -212,6 +161,11 @@ app.use(
 app.use(
   "/documents/image",
   express.static(path.join(__dirname, "../documents/image"))
+);
+
+app.use(
+  "/documents/picture",
+  express.static(path.join(__dirname, "../documents/picture"))
 );
 
 // // Serve frontend
@@ -240,6 +194,7 @@ app.use(
   adminAuthRoute
 );
 app.use("/api/ecommerce/v1/auth", session(sessionOptions), authRoute);
+app.use("/api/ecommerce/v1/users", session(sessionOptions), userRoute);
 app.use("/api/ecommerce/v1/products", session(sessionOptionsTwo), productRoute);
 app.use("/api/ecommerce/v1/carts", session(sessionOptions), cartRoute);
 app.use("/api/ecommerce/v1/orders", session(sessionOptions), orderRoute);
