@@ -1,5 +1,4 @@
 import db from "../database/models";
-import { createProfile } from "../repositories/profile-repository";
 const User = db.User;
 const Profile = db.Profile;
 const Product = db.Product;
@@ -7,6 +6,10 @@ const Cart = db.Cart;
 const Order = db.Order;
 const CartProduct = db.CartProduct;
 const OrderProduct = db.OrderProduct;
+
+interface User {
+  email?: string;
+}
 
 export const foundUser = async (email: string) => {
   return User.findOne({
@@ -119,6 +122,19 @@ export const createUser = async (data: {
     acct_id: data.acct_id,
   });
 };
+
+// export const updateUserId = async (id: string, data: Partial<User>) => {
+//   console.log("This is data putu...", data);
+//   const updated_user = await foundProfile(id);
+//   console.log("This is the update product...", updated_user);
+
+//   // Update the product fields if they are provided in the data
+//   if (data.title !== undefined) {
+//     updated_user.email = data.email;
+//   }
+
+//   return updated_user.save();
+// };
 
 // export const createProfile = async (data: {
 //   // first_name: string;

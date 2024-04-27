@@ -111,6 +111,7 @@ export const register: RequestHandler = async (req, res, next) => {
         sender,
         to: receivers,
         subject: "Email verification",
+        attachmentUrl:'',
         htmlContent: `
         <h3>Hi,</h3>
         <p>This is your otp ${otp}.Its valid for 10 minutes.</p>
