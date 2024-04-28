@@ -119,8 +119,6 @@ export const uploadPicture: RequestHandler = async (req, res, next) => {
   const { user } = req.session;
   const email = user?.email;
 
-  const picture = req?.file?.path;
-
   try {
     // FOR USER
     const found_user = await foundUser(email!);
@@ -135,6 +133,8 @@ export const uploadPicture: RequestHandler = async (req, res, next) => {
     const existing_profile = await found_user.getProfile({
       attributes: { exclude: ["createdAt", "updatedAt"] },
     });
+
+    const picture: string = req?.file?.path!;
 
     // PICTURE REQUIRED
     if (!req.file) {

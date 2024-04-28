@@ -130,8 +130,40 @@ export const productImages = (
   });
 };
 
-export const profileImage = multer({
-  storage: pic_storage,
-  limits: { fileSize: 300000 },
-  fileFilter: pic_filter,
-}).single("picture");
+// export const profileImage = multer({
+//   storage: pic_storage,
+//   limits: { fileSize: 300000 },
+//   fileFilter: pic_filter,
+// }).single("picture");
+
+export const profileImage = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const upload = multer({
+    storage: pic_storage,
+    limits: { fileSize: 300000 },
+    fileFilter: pic_filter,
+  }).single("picture");
+
+  // Custom middleware to check the number of files
+  upload(req, res, (err: any) => {
+    if (err instanceof multer.MulterError) {
+      // A Multer error occurred (e.g. exceeding file limit)
+      if (err.code === "LIMIT_UNEXPECTED_FILE") {
+        return next(
+          new BaseError(
+            "Cannot upload more than a single picture.",
+            httpStatusCodes.CONFLICT
+          )
+        );
+      }
+    } else if (err) {
+      // An unexpected error occurred
+      return next(err);
+    }
+    // No error occurred, continue to the next middleware
+    next();
+  });
+};
