@@ -11,7 +11,7 @@ import { updateProfile } from "../repositories/profile-repository";
 // @route POST api/auth/send-otp
 // @desc To send SMS OTP to user
 // @access Public
-export const get_user_info: RequestHandler = async (req, res, next) => {
+export const getUserInfo: RequestHandler = async (req, res, next) => {
   const { user } = req.session;
   const email = user?.email;
   console.log("This is the user session...", user);
@@ -119,8 +119,6 @@ export const uploadPicture: RequestHandler = async (req, res, next) => {
   const { user } = req.session;
   const email = user?.email;
 
-  const picture = req?.file?.path;
-
   try {
     // FOR USER
     const found_user = await foundUser(email!);
@@ -135,6 +133,8 @@ export const uploadPicture: RequestHandler = async (req, res, next) => {
     const existing_profile = await found_user.getProfile({
       attributes: { exclude: ["createdAt", "updatedAt"] },
     });
+
+    const picture: string = req?.file?.path!;
 
     // PICTURE REQUIRED
     if (!req.file) {

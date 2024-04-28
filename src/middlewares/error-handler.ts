@@ -33,9 +33,21 @@ export const returnError: ErrorRequestHandler = (err, req, res, next) => {
     return next(err);
   }
 
-  if (req.file) {
-    fs.unlink(req.file.path, (err) => {
-      console.log("File upload error, reverting...", err);
+  // if (req.file) {
+  //   fs.unlink(req.file.path, (err) => {
+  //     console.log("File upload error, reverting...", err);
+  //     return next(err);
+  //   });
+  // }
+
+  // Check if req.file exists and has a path property
+  if (req.file && req.file.path) {
+    // Unlink the file
+    fs.unlink(req.file.path, (unlinkErr) => {
+      if (unlinkErr) {
+        console.error("File upload error, failed to unlink:", unlinkErr);
+      }
+      // Call next with the original error
       return next(err);
     });
   }
@@ -52,8 +64,10 @@ export const unknownRoute: RequestHandler = (req, res, next) => {
     return next(
       new BaseError(
         // `Could not find this route: ${req.originalUrl}, make sure the URL is correct!`,
-        `Could not find this route: ${req.hostname}${req.url}, make sure the URL is correct!`,
-        // "Could not find this route, make sure the URL is correct!",
+        // `Could not find this route: ${req.hostname}${req.url}, make sure the URL is correct!`,
+        `Could not find this route: ${req.protocol}://${req.get("host")}${
+          req.url
+        }, make sure the URL is correct!`,
         httpStatusCodes.NOT_FOUND
       )
     );

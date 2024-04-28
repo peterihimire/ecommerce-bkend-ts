@@ -1,5 +1,9 @@
 import { Router } from "express";
-import { uploadPicture } from "../controllers/user-controller";
+import {
+  uploadPicture,
+  updateUser,
+  getUserInfo,
+} from "../controllers/user-controller";
 import { profileImage } from "../middlewares/file-upload";
 import {
   verifySessionAdmin,
@@ -13,9 +17,8 @@ router.post(
   verifySessionAndAuthorization,
   uploadPicture
 );
-// router.get("/get_products", getProducts);
-// router.get("/get_product/:prod_id", getProduct);
-// router.patch("/update/:prod_id", verifySessionAdmin, editProduct);
+router.get("/acct_info", getUserInfo);
+router.patch("/update", verifySessionAndAuthorization, updateUser);
 // router.delete("/delete/:prod_id", verifySessionAdmin, deleteProduct);
 
 export default router;
