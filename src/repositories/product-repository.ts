@@ -1,4 +1,5 @@
 import db from "../database/models";
+import { FindAndCountOptions } from "sequelize";
 const Product = db.Product;
 
 interface Product {
@@ -22,6 +23,19 @@ export const foundProducts = async () => {
       exclude: ["id"],
     },
   });
+};
+
+export const foundProductsPag = async (
+  condition: any,
+  limit: number,
+  offset: number
+) => {
+  const options: FindAndCountOptions = {
+    where: condition,
+    limit,
+    offset,
+  };
+  return Product.findAndCountAll(options);
 };
 
 export const foundProductId = async (id: string) => {
