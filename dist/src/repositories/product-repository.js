@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteProductId = exports.updateProductId = exports.createProduct = exports.foundProductTitle = exports.foundProductId = exports.foundProducts = void 0;
+exports.deleteProductId = exports.updateProductId = exports.createProduct = exports.foundProductTitle = exports.foundProductId = exports.foundProductsPag = exports.foundProducts = void 0;
 const models_1 = __importDefault(require("../database/models"));
 const Product = models_1.default.Product;
 const foundProducts = async () => {
@@ -14,6 +14,15 @@ const foundProducts = async () => {
     });
 };
 exports.foundProducts = foundProducts;
+const foundProductsPag = async (condition, limit, offset) => {
+    const options = {
+        where: condition,
+        limit,
+        offset,
+    };
+    return Product.findAndCountAll(options);
+};
+exports.foundProductsPag = foundProductsPag;
 const foundProductId = async (id) => {
     return Product.findOne({
         where: { uuid: id },

@@ -21,6 +21,7 @@ const user_repository_1 = require("../repositories/user-repository");
 const profile_repository_1 = require("../repositories/profile-repository");
 const sendinblue_api = require("sib-api-v3-sdk");
 // import sendinblue_api from "sib-api-v3-sdk";
+const SibApiV3Sdk = require("sib-api-v3-typescript");
 // @route POST api/auth/login
 // @desc Login into account
 // @access Private
@@ -72,47 +73,92 @@ const register = async (req, res, next) => {
         //   email: email,
         //   hash: fullhash,
         // } as UserWithEmailHash; // Annotate req.session.user with UserWithEmailHash
-        //  FOR BREVO
-        let defaultClient = sendinblue_api.ApiClient.instance;
-        // Instantiate the client\
-        let apiKey = defaultClient.authentications["api-key"];
-        apiKey.apiKey = process.env.BREVO_API_KEY;
-        let apiInstance = new sendinblue_api.TransactionalEmailsApi();
-        const sender = {
-            email: "noreply@benkih.com",
+        // BREVO TYPESCRIPT
+        // Initialize the TransactionalEmailsApi instance
+        const apiInstance = new SibApiV3Sdk.TransactionalEmailsApi();
+        // Set your Sendinblue API key
+        const apiKey = apiInstance.authentications["apiKey"];
+        apiKey.apiKey = process.env.BREVO_API_KEY; // Replace with your API key
+        // Create a new instance of SendSmtpEmail to specify email details
+        const sendSmtpEmail = new SibApiV3Sdk.SendSmtpEmail();
+        // Set the sender details
+        sendSmtpEmail.sender = {
+            name: "Benkih",
+            email: "support@benkih.com",
         };
-        const receivers = [
-            {
-                email: email,
-            },
-        ];
-        apiInstance
-            .sendTransacEmail({
-            sender,
-            to: receivers,
-            subject: "Email verification",
-            htmlContent: `
+        // Set the recipient email address
+        sendSmtpEmail.to = [{ email }];
+        // Set the subject and content of the email
+        sendSmtpEmail.subject = "Your order";
+        sendSmtpEmail.htmlContent = `
         <h3>Hi,</h3>
         <p>This is your otp ${otp}.Its valid for 10 minutes.</p>
         <p>Benkih E-commerce.</p>
-      `,
-            textContent: `
-        Hi,
-        This is your otp ${otp}.
-        It expires in 10 minutes.
-        Benkih E-commerce.
-        `,
-        })
-            .then(async () => {
+      `;
+        // Send the email
+        apiInstance
+            .sendTransacEmail(sendSmtpEmail)
+            .then((data) => {
+            console.log("Email sent successfully. Response:", data);
+            // Handle success
             res.status(http_status_codes_1.httpStatusCodes.OK).json({
                 status: "success",
                 msg: `OTP sent to ${email}, to verify your email!`,
             });
         })
             .catch((error) => {
-            console.log("This is error: ", error);
+            console.error("Error sending email:", error);
+            // Handle error
             return next(new base_error_1.default(error.response.body.message, http_status_codes_1.httpStatusCodes.INTERNAL_SERVER));
         });
+        // //  FOR BREVO
+        // let defaultClient = sendinblue_api.ApiClient.instance;
+        // // Instantiate the client\
+        // let apiKey = defaultClient.authentications["api-key"];
+        // apiKey.apiKey = process.env.BREVO_API_KEY;
+        // let apiInstance = new sendinblue_api.TransactionalEmailsApi();
+        // const sender = {
+        //   email: "noreply@benkih.com",
+        // };
+        // const receivers = [
+        //   {
+        //     email: email,
+        //   },
+        // ];
+        // apiInstance
+        //   .sendTransacEmail({
+        //     sender,
+        //     to: receivers,
+        //     subject: "Email verification",
+        //     attachmentUrl: "",
+        //     htmlContent: `
+        // <h3>Hi,</h3>
+        // <p>This is your otp ${otp}.Its valid for 10 minutes.</p>
+        // <p>Benkih E-commerce.</p>
+        //   `,
+        //     textContent: `
+        //     Hi,
+        //     This is your otp ${otp}.
+        //     It expires in 10 minutes.
+        //     Benkih E-commerce.
+        //     `,
+        //   })
+        //   .then(async () => {
+        // res.status(httpStatusCodes.OK).json({
+        //   status: "success",
+        //   msg: `OTP sent to ${email}, to verify your email!`,
+        // });
+        //   })
+        //   .catch((error: any) => {
+        //     console.log("This is error: ", error);
+        //     return next(
+        //       new BaseError(
+        //         // error.response.body.message,
+        //         error,
+        //         httpStatusCodes.INTERNAL_SERVER
+        //       )
+        //     );
+        //   });
     }
     catch (error) {
         if (!error.statusCode) {

@@ -155,7 +155,7 @@ app.use(express.json());
 // Define the path to serve static files for the TypeScript code
 app.use(
   "/documents/pdf",
-  express.static(path.join(__dirname, "../documents/pdf"))
+  express.static(path.join(__dirname, "../../../documents/pdf"))
 );
 
 app.use(

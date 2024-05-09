@@ -31,6 +31,8 @@ const http_status_codes_1 = require("../utils/http-status-codes");
 const base_error_1 = __importDefault(require("../utils/base-error"));
 const models_1 = __importDefault(require("../database/models"));
 const stripe_1 = __importDefault(require("stripe"));
+const sendinblue_api = require("sib-api-v3-sdk");
+const SibApiV3Sdk = require("sib-api-v3-typescript");
 const dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config();
 const User = models_1.default.User;
@@ -162,6 +164,89 @@ const addOrder = async (req, res, next) => {
             console.log("Updated order yesh", updated_order);
             console.log(`PDF saved to: ${filePath}`);
             console.log("This is updated order with link...", updated_order);
+            console.log("This should be url link", 
+            // `${req?.hostname}/${updated_order?.pdfLink}`
+            `${req.protocol}://${req.get("host")}/${updated_order === null || updated_order === void 0 ? void 0 : updated_order.pdfLink}`);
+            // BREVO TYPESCRIPT
+            // Initialize the TransactionalEmailsApi instance
+            const apiInstance = new SibApiV3Sdk.TransactionalEmailsApi();
+            // Set your Sendinblue API key
+            const apiKey = apiInstance.authentications["apiKey"];
+            apiKey.apiKey = process.env.BREVO_API_KEY; // Replace with your API key
+            // Create a new instance of SendSmtpEmail to specify email details
+            const sendSmtpEmail = new SibApiV3Sdk.SendSmtpEmail();
+            // Set the sender details
+            sendSmtpEmail.sender = {
+                name: "Benkih",
+                email: "support@benkih.com",
+            };
+            // Set the recipient email address
+            sendSmtpEmail.to = [{ email }];
+            // Set the subject and content of the email
+            sendSmtpEmail.subject = "Your order";
+            sendSmtpEmail.htmlContent = `
+        <h3>Hi,</h3>
+        <p>This is your order with an attached file. It's a PDF file.</p>
+        <p>Benkih.</p>
+      `;
+            // If you want to attach a file, set the attachment URL
+            // sendSmtpEmail.attachmentUrl = `${req.protocol}://${req.get("host")}/${
+            //   updated_order?.pdfLink
+            // }`;
+            sendSmtpEmail.attachmentUrl = `https://res.cloudinary.com/dymhdpka1/image/upload/v1714244037/peterihimire-logo_whf5lr.png`;
+            // Send the email
+            apiInstance
+                .sendTransacEmail(sendSmtpEmail)
+                .then((data) => {
+                console.log("Email sent successfully. Response:", data);
+                // Handle success
+            })
+                .catch((error) => {
+                console.error("Error sending email:", error);
+                // Handle error
+                return next(new base_error_1.default(error.response.body.message, http_status_codes_1.httpStatusCodes.INTERNAL_SERVER));
+            });
+            // //  FOR BREVO
+            // let defaultClient = sendinblue_api.ApiClient.instance;
+            // // Instantiate the client\
+            // let apiKey = defaultClient.authentications["api-key"];
+            // apiKey.apiKey = process.env.BREVO_API_KEY;
+            // let apiInstance = new sendinblue_api.TransactionalEmailsApi();
+            // const sender = {
+            //   email: "noreply@benkih.com",
+            // };
+            // const receivers = [
+            //   {
+            //     email: email,
+            //   },
+            // ];
+            // apiInstance
+            //   .sendTransacEmail({
+            //     sender,
+            //     to: receivers,
+            //     subject: "Order",
+            //     attachmentUrl: `https://res.cloudinary.com/dymhdpka1/image/upload/v1714244037/peterihimire-logo_whf5lr.png`,
+            //     htmlContent: `
+            //   <h3>Hi,</h3>
+            //   <p>This is your order with attached file.Its a pdf file.</p>
+            //   <p>Benkih.</p>
+            // `,
+            //     textContent: `
+            // Hi,
+            // This is your order with attached file, yes!
+            // It a pdf file.
+            // Benkih.
+            // `,
+            //   })
+            //   .catch((error: any) => {
+            //     console.log("This is error: ", error);
+            //     return next(
+            //       new BaseError(
+            //         error.response.body.message,
+            //         httpStatusCodes.INTERNAL_SERVER
+            //       )
+            //     );
+            //   });
             // Returned response
             res.status(201).json({
                 status: "success",

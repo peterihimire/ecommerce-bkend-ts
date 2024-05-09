@@ -120,6 +120,16 @@ const createUser = async (data) => {
     });
 };
 exports.createUser = createUser;
+// export const updateUserId = async (id: string, data: Partial<User>) => {
+//   console.log("This is data putu...", data);
+//   const updated_user = await foundProfile(id);
+//   console.log("This is the update product...", updated_user);
+//   // Update the product fields if they are provided in the data
+//   if (data.title !== undefined) {
+//     updated_user.email = data.email;
+//   }
+//   return updated_user.save();
+// };
 // export const createProfile = async (data: {
 //   // first_name: string;
 //   // last_name: string;

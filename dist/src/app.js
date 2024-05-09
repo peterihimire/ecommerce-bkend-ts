@@ -7,48 +7,19 @@ const express_1 = __importDefault(require("express"));
 const express_session_1 = __importDefault(require("express-session"));
 const cors_1 = __importDefault(require("cors"));
 const cookie_parser_1 = __importDefault(require("cookie-parser"));
-const multer_1 = __importDefault(require("multer"));
 const path_1 = __importDefault(require("path"));
-const base_error_1 = __importDefault(require("./utils/base-error"));
-const http_status_codes_1 = require("./utils/http-status-codes");
 const redis_client_1 = require("./utils/redis-client");
 const onboard_route_1 = __importDefault(require("./routes/onboard-route"));
 const auth_route_1 = __importDefault(require("./routes/auth-route"));
 const admin_auth_route_1 = __importDefault(require("./routes/admin-auth-route"));
+const user_route_1 = __importDefault(require("./routes/user-route"));
 const product_route_1 = __importDefault(require("./routes/product-route"));
 const cart_route_1 = __importDefault(require("./routes/cart-route"));
 const order_route_1 = __importDefault(require("./routes/order-route"));
+const category_route_1 = __importDefault(require("./routes/category-route"));
 const test_route_1 = __importDefault(require("./routes/test-route"));
 const error_handler_1 = require("./middlewares/error-handler");
 const connect_redis_1 = __importDefault(require("connect-redis"));
-const file_storage = multer_1.default.diskStorage({
-    destination: (req, file, cb) => {
-        // console.log("🚀 ~ file: upload.ts:11 ~ file", process.cwd());
-        cb(null, "documents/image");
-    },
-    filename: (req, file, cb) => {
-        const ext = file.originalname.split(".").pop();
-        cb(null, file.originalname.split(".")[0] +
-            "-" +
-            new Date().toISOString() +
-            "." +
-            ext);
-        // cb(null, new Date().toISOString() + "-" + file.originalname);
-    },
-});
-const file_filter = (req, file, cb) => {
-    const fileSize = parseInt(req.headers["content-length"]);
-    console.log("This si req file size", fileSize);
-    if (fileSize > 500000) {
-        cb(new base_error_1.default("Images must be under 500kb!", http_status_codes_1.httpStatusCodes.UNPROCESSABLE_ENTITY), false);
-    }
-    if (file.mimetype.startsWith("image")) {
-        cb(null, true);
-    }
-    else {
-        cb(new base_error_1.default("Only images are allowed!", http_status_codes_1.httpStatusCodes.UNPROCESSABLE_ENTITY), false);
-    }
-};
 const corsOptions = {
     origin: [
         // process.env.CORS_ORIGIN as string,
@@ -70,11 +41,6 @@ const corsOptions = {
     optionSuccessStatus: 200,
     preflightContinue: false,
 };
-const multerOptions = (0, multer_1.default)({
-    storage: file_storage,
-    limits: { fileSize: 500000 },
-    fileFilter: file_filter,
-}).array("images", 3);
 let redisStoreOne = new connect_redis_1.default({
     client: redis_client_1.redisclient,
     prefix: "ecommerce_user",
@@ -149,10 +115,12 @@ app.set("trust proxy", 1);
 app.use((0, cors_1.default)(corsOptions));
 app.use((0, cookie_parser_1.default)());
 app.use(express_1.default.json());
-app.use(multerOptions);
+// app.use(multerOptions);
+// app.use(picOptions);
 // Define the path to serve static files for the TypeScript code
 app.use("/documents/pdf", express_1.default.static(path_1.default.join(__dirname, "../documents/pdf")));
 app.use("/documents/image", express_1.default.static(path_1.default.join(__dirname, "../documents/image")));
+app.use("/documents/picture", express_1.default.static(path_1.default.join(__dirname, "../documents/picture")));
 // // Serve frontend
 // if (process.env.NODE_ENV === 'production') {
 //   app.use(express.static(path.join(__dirname, '../frontend/build')));
@@ -171,9 +139,11 @@ app.use("/documents/image", express_1.default.static(path_1.default.join(__dirna
 app.use("/api/ecommerce/v1/onboard", (0, express_session_1.default)(sessionOptionsFour), onboard_route_1.default);
 app.use("/api/ecommerce/v1/admins/auth", (0, express_session_1.default)(sessionOptionsTwo), admin_auth_route_1.default);
 app.use("/api/ecommerce/v1/auth", (0, express_session_1.default)(sessionOptions), auth_route_1.default);
+app.use("/api/ecommerce/v1/users", (0, express_session_1.default)(sessionOptions), user_route_1.default);
 app.use("/api/ecommerce/v1/products", (0, express_session_1.default)(sessionOptionsTwo), product_route_1.default);
 app.use("/api/ecommerce/v1/carts", (0, express_session_1.default)(sessionOptions), cart_route_1.default);
 app.use("/api/ecommerce/v1/orders", (0, express_session_1.default)(sessionOptions), order_route_1.default);
+app.use("/api/ecommerce/v1/categories", (0, express_session_1.default)(sessionOptionsTwo), category_route_1.default);
 app.use("/api/ecommerce/v1/test", test_route_1.default);
 app.use(error_handler_1.unknownRoute);
 app.use(error_handler_1.logErrorMiddleware);
