@@ -54,6 +54,13 @@ module.exports = (sequelize: any, DataTypes: any) => {
         through: "order_products",
         onDelete: "CASCADE",
       });
+
+      Product.hasMany(models.Review, {
+        as: "reviews",
+        foreignKey: "productId",
+        onDelete: "CASCADE",
+        hooks: true,
+      });
     }
   }
   Product.init(
