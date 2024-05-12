@@ -205,7 +205,7 @@ export const register: RequestHandler = async (req, res, next) => {
 export const verify_otp: RequestHandler = async (req, res, next) => {
   const { client } = req?.session;
   const original_hash = client?.hashes;
-  const email = client?.email;
+  // const email = client?.email;
   const { otp } = req.body;
   const now = Date.now();
 

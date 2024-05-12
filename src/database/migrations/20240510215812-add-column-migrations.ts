@@ -59,7 +59,7 @@ module.exports = {
         "productId",
         {
           type: DataTypes.INTEGER,
-          references: { model: "users", key: "id" },
+          references: { model: "products", key: "id" },
           onUpdate: "CASCADE",
           onDelete: "CASCADE",
         },
