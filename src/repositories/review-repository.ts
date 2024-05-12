@@ -33,6 +33,7 @@ export const createReview = async (data: {
   email: string;
   rating: number;
   is_save: boolean;
+  prod_id: number;
 }) => {
   return Review.create({
     review: data.review,
@@ -40,6 +41,7 @@ export const createReview = async (data: {
     email: data.email,
     rating: data.rating,
     is_save: data.is_save,
+    productId: data.prod_id,
   });
 };
 

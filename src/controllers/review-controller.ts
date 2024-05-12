@@ -2,13 +2,8 @@ import { RequestHandler } from "express";
 import { httpStatusCodes } from "../utils/http-status-codes";
 import BaseError from "../utils/base-error";
 import { foundUser } from "../repositories/user-repository";
+import { foundProductId } from "../repositories/product-repository";
 import {
-  // foundCategories,
-  // foundCategoryId,
-  // foundCategoryName,
-  // createCategory,
-  // deleteCategoryId,
-  // updateCategoryId,
   createReview,
   foundReviews,
   foundReviewId,
@@ -21,7 +16,7 @@ import {
 export const addReview: RequestHandler = async (req, res, next) => {
   const { user } = req.session;
   const reg_email = user?.email;
-  const { name, email, rating, is_save, review } = req.body;
+  const { name, email, rating, is_save, review, prod_id } = req.body;
 
   try {
     const found_user = await foundUser(reg_email as string);
@@ -29,12 +24,12 @@ export const addReview: RequestHandler = async (req, res, next) => {
       return next(new BaseError("Please login!", httpStatusCodes.CONFLICT));
     }
 
-    // const found_category = await foundCategoryName(name);
-    // if (found_category) {
-    //   return next(
-    //     new BaseError("Category title found.", httpStatusCodes.CONFLICT)
-    //   );
-    // }
+    const found_product = await foundProductId(prod_id);
+    if (!found_product) {
+      return next(
+        new BaseError("Product not_found.", httpStatusCodes.NOT_FOUND)
+      );
+    }
 
     const payload = {
       name: name as string,
@@ -42,6 +37,7 @@ export const addReview: RequestHandler = async (req, res, next) => {
       rating: rating as number,
       review: review as string,
       is_save: is_save as boolean,
+      prod_id: found_product.id as number,
     };
 
     const created_category = await createReview(payload);

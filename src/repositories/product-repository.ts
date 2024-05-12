@@ -1,6 +1,7 @@
 import db from "../database/models";
 import { FindAndCountOptions } from "sequelize";
 const Product = db.Product;
+const Review = db.Review;
 
 interface Product {
   title?: string;
@@ -41,6 +42,15 @@ export const foundProductsPag = async (
 export const foundProductId = async (id: string) => {
   return Product.findOne({
     where: { uuid: id },
+    include: [
+      {
+        attributes: {
+          exclude: ["id", "productId"],
+        },
+        model: Review,
+        as: "reviews",
+      },
+    ],
   });
 };
 

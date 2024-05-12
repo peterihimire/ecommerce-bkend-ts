@@ -112,7 +112,7 @@ export const register: RequestHandler = async (req, res, next) => {
     sendSmtpEmail.to = [{ email }];
 
     // Set the subject and content of the email
-    sendSmtpEmail.subject = "Your order";
+    sendSmtpEmail.subject = "Email Verification";
     sendSmtpEmail.htmlContent = `
         <h3>Hi,</h3>
         <p>This is your otp ${otp}.Its valid for 10 minutes.</p>

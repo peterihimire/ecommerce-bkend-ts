@@ -1,18 +1,20 @@
 import { Router } from "express";
 import {
-  addCategory,
-  deleteCategory,
-  editCategory,
-  getCategories,
-  getCategory,
-} from "../controllers/category-controller";
-import { verifySessionAdmin } from "../middlewares/verify-session";
+  addReview,
+  getReview,
+  getReviews,
+  deleteReview,
+} from "../controllers/review-controller";
+import {
+  verifySessionAdmin,
+  verifySessionAndAuthorization,
+} from "../middlewares/verify-session";
 const router = Router();
 
-router.post("/add", verifySessionAdmin, addCategory);
-router.get("/get_categories", getCategories);
-router.get("/get_category/:cat_id", getCategory);
-router.patch("/update/:cat_id", verifySessionAdmin, editCategory);
-router.delete("/delete/:cat_id", verifySessionAdmin, deleteCategory);
+router.post("/add", verifySessionAndAuthorization, addReview);
+router.get("/get_reviews", getReviews);
+router.get("/get_review/:rev_id", getReview);
+// router.patch("/update/:cat_id", verifySessionAdmin, editCategory);
+router.delete("/delete/:rev_id", verifySessionAndAuthorization, deleteReview);
 
 export default router;

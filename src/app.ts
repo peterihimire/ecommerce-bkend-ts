@@ -13,6 +13,7 @@ import productRoute from "./routes/product-route";
 import cartRoute from "./routes/cart-route";
 import orderRoute from "./routes/order-route";
 import categoryRoute from "./routes/category-route";
+import reviewRoute from "./routes/review-route";
 import testRoute from "./routes/test-route";
 import {
   logErrorMiddleware,
@@ -203,6 +204,7 @@ app.use(
   session(sessionOptionsTwo),
   categoryRoute
 );
+app.use("/api/ecommerce/v1/reviews", session(sessionOptions), reviewRoute);
 app.use("/api/ecommerce/v1/test", testRoute);
 
 app.use(unknownRoute);
