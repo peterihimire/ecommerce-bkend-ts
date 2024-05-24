@@ -12,9 +12,9 @@ import { updateProfile } from "../repositories/profile-repository";
 // @desc To send SMS OTP to user
 // @access Public
 export const getUserInfo: RequestHandler = async (req, res, next) => {
-  const { user } = req.session;
-  const email = user?.email;
-  console.log("This is the user session...", user);
+  const { passport } = req.session;
+  const email = passport?.user;
+  console.log("This is the user session...", passport);
 
   try {
     const found_user = await foundUser(email!);

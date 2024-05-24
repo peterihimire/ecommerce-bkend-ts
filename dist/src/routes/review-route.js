@@ -1,12 +1,12 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
-const category_controller_1 = require("../controllers/category-controller");
+const review_controller_1 = require("../controllers/review-controller");
 const verify_session_1 = require("../middlewares/verify-session");
 const router = (0, express_1.Router)();
-router.post("/add", verify_session_1.verifySessionAdmin, category_controller_1.addCategory);
-router.get("/get_categories", category_controller_1.getCategories);
-router.get("/get_category/:cat_id", category_controller_1.getCategory);
-router.patch("/update/:cat_id", verify_session_1.verifySessionAdmin, category_controller_1.editCategory);
-router.delete("/delete/:cat_id", verify_session_1.verifySessionAdmin, category_controller_1.deleteCategory);
+router.post("/add", verify_session_1.verifySessionAndAuthorization, review_controller_1.addReview);
+router.get("/get_reviews", review_controller_1.getReviews);
+router.get("/get_review/:rev_id", review_controller_1.getReview);
+// router.patch("/update/:cat_id", verifySessionAdmin, editCategory);
+router.delete("/delete/:rev_id", verify_session_1.verifySessionAndAuthorization, review_controller_1.deleteReview);
 exports.default = router;

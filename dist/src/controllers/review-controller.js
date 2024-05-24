@@ -7,6 +7,7 @@ exports.deleteReview = exports.getReview = exports.getReviews = exports.addRevie
 const http_status_codes_1 = require("../utils/http-status-codes");
 const base_error_1 = __importDefault(require("../utils/base-error"));
 const user_repository_1 = require("../repositories/user-repository");
+const product_repository_1 = require("../repositories/product-repository");
 const review_repository_1 = require("../repositories/review-repository");
 // @route POST api/auth/login
 // @desc Login into account
@@ -14,24 +15,23 @@ const review_repository_1 = require("../repositories/review-repository");
 const addReview = async (req, res, next) => {
     const { user } = req.session;
     const reg_email = user === null || user === void 0 ? void 0 : user.email;
-    const { name, email, rating, is_save, review } = req.body;
+    const { name, email, rating, is_save, review, prod_id } = req.body;
     try {
         const found_user = await (0, user_repository_1.foundUser)(reg_email);
         if (!found_user) {
             return next(new base_error_1.default("Please login!", http_status_codes_1.httpStatusCodes.CONFLICT));
         }
-        // const found_category = await foundCategoryName(name);
-        // if (found_category) {
-        //   return next(
-        //     new BaseError("Category title found.", httpStatusCodes.CONFLICT)
-        //   );
-        // }
+        const found_product = await (0, product_repository_1.foundProductId)(prod_id);
+        if (!found_product) {
+            return next(new base_error_1.default("Product not_found.", http_status_codes_1.httpStatusCodes.NOT_FOUND));
+        }
         const payload = {
             name: name,
             email: email,
             rating: rating,
             review: review,
             is_save: is_save,
+            prod_id: found_product.id,
         };
         const created_category = await (0, review_repository_1.createReview)(payload);
         console.log("Created category yes...", created_category);

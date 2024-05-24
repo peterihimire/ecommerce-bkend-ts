@@ -206,7 +206,7 @@ const editProduct = async (req, res, next) => {
     const { admin } = req.session;
     const { prod_id } = req.params;
     const email = admin === null || admin === void 0 ? void 0 : admin.email;
-    const { title, slug, images, color, categories, price, brand, countInStock, rating, desc, size, numReviews, } = req.body;
+    const { title, slug, color, categories, price, brand, countInStock, rating, desc, size, numReviews, } = req.body;
     try {
         const found_admin = await (0, admin_auth_repository_1.foundAdmin)(email);
         if (!found_admin) {
@@ -214,10 +214,16 @@ const editProduct = async (req, res, next) => {
         }
         const found_product = await (0, product_repository_1.foundProductId)(prod_id);
         console.log("This is found product....", found_product);
+        const images = req.files;
+        console.log("this is the images array", images);
+        const imagesPathArray = images.map((img) => {
+            return img.path;
+        });
+        console.log("images url array ...", imagesPathArray);
         const payload = {
             title: title,
             slug: slug,
-            images: images, // Assuming images is an array of strings
+            images: imagesPathArray, // Assuming images is an array of strings
             color: color,
             categories: categories,
             price: parseFloat(price), // Convert price to number

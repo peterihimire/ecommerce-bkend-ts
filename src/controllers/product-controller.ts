@@ -270,7 +270,6 @@ export const editProduct: RequestHandler = async (req, res, next) => {
   const {
     title,
     slug,
-    images,
     color,
     categories,
     price,
@@ -293,10 +292,19 @@ export const editProduct: RequestHandler = async (req, res, next) => {
     const found_product = await foundProductId(prod_id);
     console.log("This is found product....", found_product);
 
+    const images = req.files;
+    console.log("this is the images array", images);
+
+    const imagesPathArray = (images as Express.Multer.File[]).map((img) => {
+      return img.path;
+    });
+
+    console.log("images url array ...", imagesPathArray);
+
     const payload = {
       title: title as string,
       slug: slug as string,
-      images: images as string[], // Assuming images is an array of strings
+      images: imagesPathArray as string[], // Assuming images is an array of strings
       color: color as string,
       categories: categories as string[],
       price: parseFloat(price), // Convert price to number

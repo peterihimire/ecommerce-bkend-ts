@@ -18,7 +18,7 @@ import {
   existingAcctId,
   createUser,
 } from "../repositories/user-repository";
-import { User, Client } from "../types/types";
+import { CustomUser, Client } from "../types/types";
 import { createProfile } from "../repositories/profile-repository";
 const sendinblue_api = require("sib-api-v3-sdk");
 // import sendinblue_api from "sib-api-v3-sdk";

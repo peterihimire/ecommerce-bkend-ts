@@ -89,7 +89,7 @@ const register = async (req, res, next) => {
         // Set the recipient email address
         sendSmtpEmail.to = [{ email }];
         // Set the subject and content of the email
-        sendSmtpEmail.subject = "Your order";
+        sendSmtpEmail.subject = "Email Verification";
         sendSmtpEmail.htmlContent = `
         <h3>Hi,</h3>
         <p>This is your otp ${otp}.Its valid for 10 minutes.</p>

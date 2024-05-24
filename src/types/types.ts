@@ -1,6 +1,9 @@
-export type User = {
+export type CustomUser = {
   id: string;
   email: string;
+};
+export type PassportUser = {
+  user: string;
 };
 
 export type Admin = {

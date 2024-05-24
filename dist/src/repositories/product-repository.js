@@ -6,6 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.deleteProductId = exports.updateProductId = exports.createProduct = exports.foundProductTitle = exports.foundProductId = exports.foundProductsPag = exports.foundProducts = void 0;
 const models_1 = __importDefault(require("../database/models"));
 const Product = models_1.default.Product;
+const Review = models_1.default.Review;
 const foundProducts = async () => {
     return Product.findAll({
         attributes: {
@@ -26,6 +27,15 @@ exports.foundProductsPag = foundProductsPag;
 const foundProductId = async (id) => {
     return Product.findOne({
         where: { uuid: id },
+        include: [
+            {
+                attributes: {
+                    exclude: ["id", "productId"],
+                },
+                model: Review,
+                as: "reviews",
+            },
+        ],
     });
 };
 exports.foundProductId = foundProductId;

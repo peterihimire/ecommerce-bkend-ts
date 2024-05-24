@@ -10,12 +10,12 @@ module.exports = (sequelize, DataTypes) => {
          */
         static associate(models) {
             // define association here
-            // Review.belongsTo(models.Product, {
-            //   as: "product",
-            //   foreignKey: "productId",
-            //   onDelete: "CASCADE",
-            //   hooks: true,
-            // });
+            Review.belongsTo(models.Product, {
+                as: "product",
+                foreignKey: "productId",
+                onDelete: "CASCADE",
+                hooks: true,
+            });
         }
     }
     Review.init({

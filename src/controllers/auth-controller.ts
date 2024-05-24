@@ -18,7 +18,7 @@ import {
   existingAcctId,
   createUser,
 } from "../repositories/user-repository";
-import { User } from "../types/types";
+import { CustomUser } from "../types/types";
 import { createProfile } from "../repositories/profile-repository";
 const sendinblue_api = require("sib-api-v3-sdk");
 // import sendinblue_api from "sib-api-v3-sdk";
@@ -206,20 +206,20 @@ export const login: RequestHandler = async (req, res, next) => {
     const { createdAt, updatedAt, ...session_data } = found_user.dataValues;
     console.log("This is the session data going to the session", session_data);
 
-    const new_session = {
-      id: session_data.id.toString(),
-      acct_id: session_data.acct_id,
-      email: session_data.email,
-      password: session_data.password,
-    };
-    console.log("This is the new session...", new_session);
+    // const new_session = {
+    //   id: session_data.id.toString(),
+    //   acct_id: session_data.acct_id,
+    //   email: session_data.email,
+    //   password: session_data.password,
+    // };
+    // console.log("This is the new session...", new_session);
 
-    req.session.user = new_session;
+    // req.session.user = new_session;
 
-    // added this 30th May 2023
-    req.session.save(function (err) {
-      if (err) return next(err);
-    });
+    // // added this 30th May 2023
+    // req.session.save(function (err) {
+    //   if (err) return next(err);
+    // });
 
     const { id, password, ...others } = found_user.dataValues;
 

@@ -64,54 +64,66 @@ const verifyAdmin: RequestHandler = (req, res, next) => {
   next();
 };
 
-// USER ONLY
-export const verifySessionAndAuthorization: RequestHandler = (
-  req,
-  res,
-  next
-) => {
-  verifySession(req, res, async () => {
-    const user = req.user;
-    const user_id = req.body?.id || req.params?.id;
+export const isLoggedIn: RequestHandler = (req, res, next) => {
+  // passport adds this to the request object
+  console.log("user object...", req.user);
+  console.log("Google session object...", req.session);
 
-    if (!user?.email) {
-      return next(
-        new BaseError(
-          "Not authorised to access resource, invalid or expired session!",
-          httpStatusCodes.UNAUTHORIZED
-        )
-      );
-    }
-
-    if (user?.id === user_id || user?.id) {
-      next();
-      return;
-    }
-
+  if (!req.isAuthenticated()) {
     return next(
-      new BaseError(
-        "Requires User Authorization!",
-        httpStatusCodes.UNAUTHORIZED
-      )
+      new BaseError("Session not valid continue!", httpStatusCodes.UNAUTHORIZED)
     );
-  });
-};
-
-// USER & CART ONLY
-export const verifySessionAndCart: RequestHandler = (req, res, next) => {
-  const user = req.user;
-  const user_id = req.body?.id || req.params?.id;
-
-  if (!user) {
-    next();
-    return;
   }
-
-  if (user?.id === user_id || user?.id) {
-    next();
-    return;
-  }
+  return next();
 };
+// // USER ONLY
+// export const verifySessionAndAuthorization: RequestHandler = (
+//   req,
+//   res,
+//   next
+// ) => {
+//   verifySession(req, res, async () => {
+//     const user = req.user;
+//     const user_id = req.body?.id || req.params?.id;
+
+//     if (!user?.email) {
+//       return next(
+//         new BaseError(
+//           "Not authorised to access resource, invalid or expired session!",
+//           httpStatusCodes.UNAUTHORIZED
+//         )
+//       );
+//     }
+
+//     if (user?.id === user_id || user?.id) {
+//       next();
+//       return;
+//     }
+
+//     return next(
+//       new BaseError(
+//         "Requires User Authorization!",
+//         httpStatusCodes.UNAUTHORIZED
+//       )
+//     );
+//   });
+// };
+
+// // USER & CART ONLY
+// export const verifySessionAndCart: RequestHandler = (req, res, next) => {
+//   const user = req.user;
+//   const user_id = req.body?.id || req.params?.id;
+
+//   if (!user) {
+//     next();
+//     return;
+//   }
+
+//   if (user?.id === user_id || user?.id) {
+//     next();
+//     return;
+//   }
+// };
 
 // ADMIN ONLY
 export const verifySessionAdmin: RequestHandler = (req, res, next) => {

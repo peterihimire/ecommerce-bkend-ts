@@ -9,6 +9,6 @@ router.post("/add", file_upload_1.productImages, verify_session_1.verifySessionA
 router.get("/get_products", product_controller_1.getProducts);
 router.get("/get_products_filter", product_controller_1.getProductsFilter);
 router.get("/get_product/:prod_id", product_controller_1.getProduct);
-router.patch("/update/:prod_id", verify_session_1.verifySessionAdmin, product_controller_1.editProduct);
+router.patch("/update/:prod_id", file_upload_1.productImages, verify_session_1.verifySessionAdmin, product_controller_1.editProduct);
 router.delete("/delete/:prod_id", verify_session_1.verifySessionAdmin, product_controller_1.deleteProduct);
 exports.default = router;

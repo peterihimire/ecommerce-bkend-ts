@@ -33,6 +33,7 @@ const createReview = async (data) => {
         email: data.email,
         rating: data.rating,
         is_save: data.is_save,
+        productId: data.prod_id,
     });
 };
 exports.createReview = createReview;

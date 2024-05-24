@@ -17,6 +17,7 @@ const product_route_1 = __importDefault(require("./routes/product-route"));
 const cart_route_1 = __importDefault(require("./routes/cart-route"));
 const order_route_1 = __importDefault(require("./routes/order-route"));
 const category_route_1 = __importDefault(require("./routes/category-route"));
+const review_route_1 = __importDefault(require("./routes/review-route"));
 const test_route_1 = __importDefault(require("./routes/test-route"));
 const error_handler_1 = require("./middlewares/error-handler");
 const connect_redis_1 = __importDefault(require("connect-redis"));
@@ -144,6 +145,7 @@ app.use("/api/ecommerce/v1/products", (0, express_session_1.default)(sessionOpti
 app.use("/api/ecommerce/v1/carts", (0, express_session_1.default)(sessionOptions), cart_route_1.default);
 app.use("/api/ecommerce/v1/orders", (0, express_session_1.default)(sessionOptions), order_route_1.default);
 app.use("/api/ecommerce/v1/categories", (0, express_session_1.default)(sessionOptionsTwo), category_route_1.default);
+app.use("/api/ecommerce/v1/reviews", (0, express_session_1.default)(sessionOptions), review_route_1.default);
 app.use("/api/ecommerce/v1/test", test_route_1.default);
 app.use(error_handler_1.unknownRoute);
 app.use(error_handler_1.logErrorMiddleware);

@@ -3,7 +3,9 @@ import session from "express-session";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import path from "path";
-import { User, Admin, Client } from "./types/types";
+import passport from "passport";
+import configurePassport from "./middlewares/passport";
+import { CustomUser, Admin, Client, PassportUser } from "./types/types";
 import { redisclient } from "./utils/redis-client";
 import onboardRoute from "./routes/onboard-route";
 import authRoute from "./routes/auth-route";
@@ -21,6 +23,7 @@ import {
   unknownRoute,
 } from "./middlewares/error-handler";
 import RedisStore from "connect-redis";
+configurePassport(passport);
 
 type Cart = {
   userId: string | null;
@@ -38,8 +41,9 @@ type Cart = {
 // Augment express-session with a custom SessionData object
 declare module "express-session" {
   interface SessionData {
-    //For User and Admin I used the imported types
-    user: User;
+    //For CustomUser and Admin I used the imported types
+    passport: PassportUser;
+    user: CustomUser;
     admin: Admin;
     cart: Cart;
     client: Client;
@@ -107,7 +111,7 @@ const sessionOptionsTwo = {
   store: redisStoreTwo,
   secret: String(process.env.ADMIN_SESSION_SECRET),
   resave: false,
-  saveUninitialized: false,
+  saveUninitialized: true,
   cookie: {
     secure: false, // if true only transmit cookie over https
     httpOnly: true, // if true prevent client side JS from reading the cookie
@@ -194,8 +198,21 @@ app.use(
   session(sessionOptionsTwo),
   adminAuthRoute
 );
-app.use("/api/ecommerce/v1/auth", session(sessionOptions), authRoute);
-app.use("/api/ecommerce/v1/users", session(sessionOptions), userRoute);
+app.use(
+  "/api/ecommerce/v1/auth",
+  session(sessionOptions),
+  passport.initialize(),
+  passport.session(),
+  authRoute
+);
+// app.use("/api/ecommerce/v1/auth", session(sessionOptions), authRoute);
+app.use(
+  "/api/ecommerce/v1/users",
+  session(sessionOptions),
+  passport.initialize(),
+  passport.session(),
+  userRoute
+);
 app.use("/api/ecommerce/v1/products", session(sessionOptionsTwo), productRoute);
 app.use("/api/ecommerce/v1/carts", session(sessionOptions), cartRoute);
 app.use("/api/ecommerce/v1/orders", session(sessionOptions), orderRoute);

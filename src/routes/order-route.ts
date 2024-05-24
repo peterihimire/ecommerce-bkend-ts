@@ -5,13 +5,21 @@ import {
   getOrders,
   cancelOrder,
 } from "../controllers/order-controller";
-import { verifySessionAndAuthorization } from "../middlewares/verify-session";
+import {
+  // verifySessionAndAuthorization
+} from "../middlewares/verify-session";
 const router = Router();
 
-router.post("/add", verifySessionAndAuthorization, addOrder);
-router.get("/get_order", verifySessionAndAuthorization, getOrder);
+router.post("/add",
+  // verifySessionAndAuthorization,
+  addOrder);
+router.get("/get_order",
+  // verifySessionAndAuthorization,
+  getOrder);
 router.get("/get_orders", getOrders);
-router.patch("/cancel_order", verifySessionAndAuthorization, cancelOrder);
+router.patch("/cancel_order",
+  // verifySessionAndAuthorization,
+  cancelOrder);
 // router.delete(
 //   "/delete_cart_prod",
 //   verifySessionAndAuthorization,
