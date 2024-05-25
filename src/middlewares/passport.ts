@@ -96,7 +96,7 @@ export default function configurePassport(passport: PassportStatic) {
         // Implement your authentication logic here
         try {
           const existing_user = await User.findOne({
-            where: { email: profile?.emails[0]?.value },
+            where: { email: await profile?.emails[0]?.value },
           });
 
           if (!existing_user) {
@@ -109,9 +109,9 @@ export default function configurePassport(passport: PassportStatic) {
             const user_data = {
               acct_id: created_user?.acct_id,
               userId: created_user?.id,
-              picture: profile?.photos[0]?.value,
-              first_name: profile?.name?.givenName,
-              last_name: profile?.name?.familyName,
+              picture: await profile?.photos[0]?.value,
+              first_name: await profile?.name?.givenName,
+              last_name: await profile?.name?.familyName,
             };
             await createProfile(user_data);
 

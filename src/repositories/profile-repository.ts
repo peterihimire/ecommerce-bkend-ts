@@ -8,15 +8,26 @@ interface Profile {
   last_name?: string;
   gender?: string;
   phone?: string;
+  picture?: string;
 }
 
 export const createProfile = async (data: {
   acct_id: string;
   userId: number;
+  first_name?: string;
+  last_name?: string;
+  gender?: string;
+  phone?: string;
+  picture?: string;
 }) => {
   return Profile.create({
     acct_id: data.acct_id,
     userId: data.userId,
+    first_name: data.first_name,
+    last_name: data.last_name,
+    gender: data.gender,
+    phone: data.phone,
+    picture: data.picture,
   });
 };
 
