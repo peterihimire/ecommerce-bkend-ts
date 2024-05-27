@@ -125,6 +125,7 @@ services:
       - 4050:443
   api:
     image: peterihimire/ecommerce-bkend-ts
+    platform: linux/amd64
     build:
       context: .
       target: production
