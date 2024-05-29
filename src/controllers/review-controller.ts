@@ -101,48 +101,48 @@ export const getReview: RequestHandler = async (req, res, next) => {
   }
 };
 
-// // @route POST api/auth/login
-// // @desc Login into account
-// // @access Private
-// export const editReview: RequestHandler = async (req, res, next) => {
-//   const { admin } = req.session;
-//   const { cat_id } = req.params;
+// @route POST api/auth/login
+// @desc Login into account
+// @access Private
+export const editReview: RequestHandler = async (req, res, next) => {
+  const { admin } = req.session;
+  const { cat_id } = req.params;
 
-//   const email = admin?.email;
-//   const { name, desc } = req.body;
+  const email = admin?.email;
+  const { name, desc } = req.body;
 
-//   try {
-//     const found_admin = await foundAdmin(email as string);
-//     if (!found_admin) {
-//       return next(
-//         new BaseError("Admin does not exist!", httpStatusCodes.CONFLICT)
-//       );
-//     }
+  try {
+    const found_email = await foundUser(email as string);
+    if (!found_email) {
+      return next(
+        new BaseError("Admin does not exist!", httpStatusCodes.CONFLICT)
+      );
+    }
 
-//     const found_category = await foundCategoryId(cat_id);
-//     console.log("This is found category....", found_category);
+    const found_category = await foundReviewId(cat_id);
+    console.log("This is found category....", found_category);
 
-//     const payload = {
-//       name: name as string,
-//       desc: desc as string,
-//     };
+    // const payload = {
+    //   name: name as string,
+    //   desc: desc as string,
+    // };
 
-//     const updated_category = await updateCategoryId(cat_id, payload);
-//     console.log("Updated category yes...", updated_category);
-//     const { id, createdAt, updatedAt, ...others } = updated_category.dataValues;
+    // const updated_category = await updateReviewId(cat_id, payload);
+    // console.log("Updated category yes...", updated_category);
+    // const { id, createdAt, updatedAt, ...others } = updated_category.dataValues;
 
-//     res.status(httpStatusCodes.OK).json({
-//       status: "success",
-//       msg: "Category updated!.",
-//       data: { ...others },
-//     });
-//   } catch (error: any) {
-//     if (!error.statusCode) {
-//       error.statusCode = httpStatusCodes.INTERNAL_SERVER;
-//     }
-//     next(error);
-//   }
-// };
+    res.status(httpStatusCodes.OK).json({
+      status: "success",
+      msg: "Category updated!.",
+      // data: { ...others },
+    });
+  } catch (error: any) {
+    if (!error.statusCode) {
+      error.statusCode = httpStatusCodes.INTERNAL_SERVER;
+    }
+    next(error);
+  }
+};
 
 // @route POST api/auth/login
 // @desc Login into account
