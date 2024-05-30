@@ -5,6 +5,7 @@ services:
     image: redis
     networks:
       - webnet
+    restart: always
   db:
     image: postgres
     environment:
@@ -17,6 +18,7 @@ services:
       - webnet
     ports:
       - 5439:5432
+    restart: always
   pgadmin:
     image: dpage/pgadmin4
     environment:
@@ -29,6 +31,7 @@ services:
     ports:
       - 4051:80
       - 4050:443
+    restart: always
   api:
     image: peterihimire/ecommerce-bkend-ts
     platform: linux/amd64
@@ -56,5 +59,6 @@ services:
       - CART_SESSION_SECRET=${CART_SESSION_SECRET}
     volumes:
       - ./documents/pdf:/app/documents/pdf # Mapping the static folder
+    restart: always
 networks:
   webnet:
