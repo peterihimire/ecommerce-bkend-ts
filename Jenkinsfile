@@ -8,7 +8,7 @@ pipeline {
     stages {
         stage('Clone repository') {
             steps {
-                git 'https://github.com/yourusername/your-repository.git'
+                git 'https://github.com/peterihimire/ecommerce-bkend-ts.git'
             }
         }
 
