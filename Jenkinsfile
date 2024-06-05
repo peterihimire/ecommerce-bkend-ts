@@ -8,9 +8,10 @@ pipeline {
     }
 
     stages {
-        stage('Clone repository') {
+  
+          stage('Clone repository') {
             steps {
-                git 'https://github.com/peterihimire/ecommerce-bkend-ts.git'
+                git branch: 'jenkins', url: 'https://github.com/peterihimire/ecommerce-bkend-ts.git'
             }
         }
 
@@ -21,7 +22,7 @@ pipeline {
                     sh '/usr/bin/docker compose down'
 
                     // Build and run the new services
-                     withDockerRegistry(credentialsId: DOCKER_HUB_CREDENTIALS, variable: 'DOCKER_HUB_CREDENTIALS') {
+                     withDockerRegistry(credentialsId: DOCKER_HUB_CREDENTIALS) {
                         sh '/usr/bin/docker compose up --build -d'
                     }
                 }
@@ -31,7 +32,7 @@ pipeline {
         stage('Run Seed') {
             steps {
                 script {
-                     withDockerRegistry(credentialsId: DOCKER_HUB_CREDENTIALS, variable: 'DOCKER_HUB_CREDENTIALS') {
+                     withDockerRegistry(credentialsId: DOCKER_HUB_CREDENTIALS) {
                         sh '/usr/bin/docker compose exec api npm run seed'
                     }
                 }
@@ -44,7 +45,7 @@ pipeline {
                     // Run migrations if necessary
                     // For example, you can use a boolean parameter to trigger migrations
                     if (params.RUN_MIGRATIONS == 'true') {
-                         withDockerRegistry(credentialsId: DOCKER_HUB_CREDENTIALS, variable: 'DOCKER_HUB_CREDENTIALS') {
+                         withDockerRegistry(credentialsId: DOCKER_HUB_CREDENTIALS) {
                             sh '/usr/bin/docker compose exec api npm run migr'
                         }
                     }
