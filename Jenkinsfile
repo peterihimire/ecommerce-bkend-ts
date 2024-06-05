@@ -21,7 +21,7 @@ pipeline {
                     sh '/usr/bin/docker compose down'
 
                     // Build and run the new services
-                    withCredentials([string(credentialsId: DOCKER_HUB_CREDENTIALS, variable: 'DOCKER_HUB_CREDENTIALS')]) {
+                     withDockerRegistry(credentialsId: DOCKER_HUB_CREDENTIALS, variable: 'DOCKER_HUB_CREDENTIALS') {
                         sh '/usr/bin/docker compose up --build -d'
                     }
                 }
@@ -31,7 +31,7 @@ pipeline {
         stage('Run Seed') {
             steps {
                 script {
-                    withCredentials([string(credentialsId: DOCKER_HUB_CREDENTIALS, variable: 'DOCKER_HUB_CREDENTIALS')]) {
+                     withDockerRegistry(credentialsId: DOCKER_HUB_CREDENTIALS, variable: 'DOCKER_HUB_CREDENTIALS') {
                         sh '/usr/bin/docker compose exec api npm run seed'
                     }
                 }
@@ -44,7 +44,7 @@ pipeline {
                     // Run migrations if necessary
                     // For example, you can use a boolean parameter to trigger migrations
                     if (params.RUN_MIGRATIONS == 'true') {
-                        withCredentials([string(credentialsId: DOCKER_HUB_CREDENTIALS, variable: 'DOCKER_HUB_CREDENTIALS')]) {
+                         withDockerRegistry(credentialsId: DOCKER_HUB_CREDENTIALS, variable: 'DOCKER_HUB_CREDENTIALS') {
                             sh '/usr/bin/docker compose exec api npm run migr'
                         }
                     }
