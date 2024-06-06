@@ -6,8 +6,8 @@ services:
     networks:
       - webnet
     restart: always
-    env_file:
-      - /root/.env
+    # env_file:
+    #   - /root/.env
 
   db:
     image: postgres
@@ -22,8 +22,8 @@ services:
     ports:
       - 5439:5432
     restart: always
-    env_file:
-      - /root/.env
+    # env_file:
+    #   - /root/.env
 
   pgadmin:
     image: dpage/pgadmin4
@@ -38,8 +38,8 @@ services:
       - 4051:80
       - 4050:443
     restart: always
-    env_file:
-      - /root/.env
+    # env_file:
+    #   - /root/.env
 
   api:
     image: peterihimire/ecommerce-bkend-ts
@@ -81,16 +81,16 @@ services:
     volumes:
       - ./documents/pdf:/app/documents/pdf # Mapping the static folder
     restart: always
-    env_file:
-      - /root/.env
+    # env_file:
+    #   - /root/.env
 
-  env-test:
-    image: alpine
-    command: env
-    env_file:
-      - /root/.env
-    networks:
-      - webnet
+  # env-test:
+  #   image: alpine
+  #   command: env
+  #   env_file:
+  #     - /root/.env
+  #   networks:
+  #     - webnet
 
 networks:
   webnet:

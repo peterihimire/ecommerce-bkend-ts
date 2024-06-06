@@ -15,12 +15,22 @@ pipeline {
             }
         }
 
+         stage('Load Environment Variables') {
+            steps {
+                script {
+                    // Ensure .env file is copied to the workspace if not already there
+                    sh `cp /root/.env ${WORKSPACE}/.env`
+                    
+                    // Load environment variables from the copied .env file
+                    sh `set -o allexport; source ${WORKSPACE}/.env; set +o allexport`
+                }
+            }
+        }
+
         stage('Build and Deploy') {
             steps {
                 script {
-                     // Load environment variables from .env file
-                    sh `set -o allexport; source ${WORKSPACE}/.env; set +o allexport`
-
+                   
                     // Bring down any existing services
                     sh '/usr/bin/docker compose down'
 
@@ -32,13 +42,13 @@ pipeline {
             }
         }
 
-        stage('Check Environment Variables') {
-          steps {
-              script {
-                  sh '/usr/bin/docker compose up env-test'
-              }
-          }
-        }
+        // stage('Check Environment Variables') {
+        //   steps {
+        //       script {
+        //           sh '/usr/bin/docker compose up env-test'
+        //       }
+        //   }
+        // }
 
         stage('Run Seed') {
           steps {
