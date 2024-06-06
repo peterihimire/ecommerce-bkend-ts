@@ -29,24 +29,20 @@ pipeline {
             }
         }
 
-          stage('Check Environment Variables') {
-            steps {
-                script {
-                    withDockerRegistry(credentialsId: DOCKER_HUB_CREDENTIALS) {
-                        sh 'docker compose up env-test'
-                    }
-                }
-            }
+        stage('Check Environment Variables') {
+          steps {
+              script {
+                  sh '/usr/bin/docker compose up env-test'
+              }
+          }
         }
 
         stage('Run Seed') {
-            steps {
-                script {
-                     withDockerRegistry(credentialsId: DOCKER_HUB_CREDENTIALS) {
-                        sh '/usr/bin/docker compose exec api npm run seed'
-                    }
-                }
-            }
+          steps {
+              script {
+                  sh '/usr/bin/docker compose exec api npm run seed'
+              }
+          }
         }
 
         stage('Run Migrations') {
