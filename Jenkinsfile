@@ -17,12 +17,12 @@ pipeline {
 
          stage('Load Environment Variables') {
             steps {
-                script {
+                  script {
                     // Ensure .env file is copied to the workspace if not already there
                     sh 'cp /root/.env ${WORKSPACE}/.env'
                     
                     // Load environment variables from the copied .env file
-                    sh 'set -o allexport; source ${WORKSPACE}/.env; set +o allexport'
+                    sh 'set -o allexport; . ${WORKSPACE}/.env; set +o allexport'
                 }
             }
         }
