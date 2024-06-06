@@ -6,6 +6,9 @@ services:
     networks:
       - webnet
     restart: always
+    env_file:
+      - /root/.env
+
   db:
     image: postgres
     environment:
@@ -19,6 +22,9 @@ services:
     ports:
       - 5439:5432
     restart: always
+    env_file:
+      - /root/.env
+
   pgadmin:
     image: dpage/pgadmin4
     environment:
@@ -32,14 +38,15 @@ services:
       - 4051:80
       - 4050:443
     restart: always
+    env_file:
+      - /root/.env
+
   api:
     image: peterihimire/ecommerce-bkend-ts
     platform: linux/amd64
     build:
       context: .
       target: production
-    # ports:
-    #   - 4040:4040
     depends_on:
       - db
       - redis
@@ -74,5 +81,103 @@ services:
     volumes:
       - ./documents/pdf:/app/documents/pdf # Mapping the static folder
     restart: always
+    env_file:
+      - /root/.env
+
+  env-test:
+    image: alpine
+    command: env
+    env_file:
+      - /root/.env
+    networks:
+      - webnet
+
 networks:
   webnet:
+
+
+# version: "3.8"
+
+# services:
+#   redis:
+#     image: redis
+#     networks:
+#       - webnet
+#     restart: always
+#   db:
+#     image: postgres
+#     environment:
+#       - POSTGRES_USER=${POSTGRES_USER}
+#       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+#       - POSTGRES_DB=${POSTGRES_DB}
+#     volumes:
+#       - ./data/pgdata:/var/lib/postgresql/data
+#     networks:
+#       - webnet
+#     ports:
+#       - 5439:5432
+#     restart: always
+#   pgadmin:
+#     image: dpage/pgadmin4
+#     environment:
+#       - PGADMIN_DEFAULT_EMAIL=${PGADMIN_DEFAULT_EMAIL}
+#       - PGADMIN_DEFAULT_PASSWORD=${PGADMIN_DEFAULT_PASSWORD}
+#     volumes:
+#       - ./data/pgadmindata:/var/lib/pgadmin/data
+#     networks:
+#       - webnet
+#     ports:
+#       - 4051:80
+#       - 4050:443
+#     restart: always
+#   api:
+#     image: peterihimire/ecommerce-bkend-ts
+#     platform: linux/amd64
+#     build:
+#       context: .
+#       target: production
+#     # ports:
+#     #   - 4040:4040
+#     depends_on:
+#       - db
+#       - redis
+#       - pgadmin
+#     networks:
+#       - webnet
+#     environment:
+#       - DB_HOST=db
+#       - REDIS_HOST=redis
+#       - PORT=${PORT}
+#       - DB_NAME=${DB_NAME}
+#       - DB_USER=${DB_USER}
+#       - DB_PASSWORD=${DB_PASSWORD}
+#       - REDIS_PORT=${REDIS_PORT}
+#       - SESSION_SECRET=${SESSION_SECRET}
+#       - ADMIN_SESSION_SECRET=${ADMIN_SESSION_SECRET}
+#       - CART_SESSION_SECRET=${CART_SESSION_SECRET}
+#       - PGADMIN_DEFAULT_EMAIL=${PGADMIN_DEFAULT_EMAIL}
+#       - PGADMIN_DEFAULT_PASSWORD=${PGADMIN_DEFAULT_PASSWORD}
+#       - POSTGRES_USER=${POSTGRES_USER}
+#       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+#       - POSTGRES_DB=${POSTGRES_DB}
+#       - PAYSTACK_PUBLIC_KEY=${PAYSTACK_PUBLIC_KEY}
+#       - PAYSTACK_SECRET_KEY=${PAYSTACK_SECRET_KEY}
+#       - STRIPE_PUBLISH_KEY=${STRIPE_PUBLISH_KEY}
+#       - STRIPE_SECRET_KEY=${STRIPE_SECRET_KEY}
+#       - STRIPE_ENDPOINT_SECRET=${STRIPE_ENDPOINT_SECRET}
+#       - BREVO_API_KEY=${BREVO_API_KEY}
+#       - SMS_KEY=${SMS_KEY}
+#       - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
+#       - GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET}
+#     volumes:
+#       - ./documents/pdf:/app/documents/pdf # Mapping the static folder
+#     restart: always
+#   env-test:
+#     image: alpine
+#     command: env
+#     env_file:
+#       - .env
+#     networks:
+#       - webnet
+# networks:
+#   webnet:

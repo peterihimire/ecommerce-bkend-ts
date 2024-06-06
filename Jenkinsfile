@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         DOCKER_REGISTRY = 'docker.io'
-        DOCKER_COMPOSE_VERSION = '1.29.2'
+        DOCKER_COMPOSE_VERSION = '2.27.0'
         DOCKER_HUB_CREDENTIALS = 'f3b65def-ff2b-4c13-900d-4c7f9dde7bfe' // Name of Docker Hub credentials in Jenkins
     }
 
@@ -24,6 +24,16 @@ pipeline {
                     // Build and run the new services
                      withDockerRegistry(credentialsId: DOCKER_HUB_CREDENTIALS) {
                         sh '/usr/bin/docker compose up --build -d'
+                    }
+                }
+            }
+        }
+
+          stage('Check Environment Variables') {
+            steps {
+                script {
+                    withDockerRegistry(credentialsId: DOCKER_HUB_CREDENTIALS) {
+                        sh 'docker compose up env-test'
                     }
                 }
             }
