@@ -18,6 +18,9 @@ pipeline {
         stage('Build and Deploy') {
             steps {
                 script {
+                     // Load environment variables from .env file
+                    sh `set -o allexport; source ${WORKSPACE}/.env; set +o allexport`
+
                     // Bring down any existing services
                     sh '/usr/bin/docker compose down'
 
