@@ -7,6 +7,13 @@ pipeline {
         DOCKER_HUB_CREDENTIALS = 'f3b65def-ff2b-4c13-900d-4c7f9dde7bfe' // Name of Docker Hub credentials in Jenkins
     }
 
+     parameters {
+        booleanParam(name: 'UNDO_MIGRATIONS', defaultValue: true, description: 'Undo migrations')
+        booleanParam(name: 'RUN_SEED', defaultValue: true, description: 'Run seed data')
+        booleanParam(name: 'RUN_MIGRATIONS', defaultValue: false, description: 'Run migrations')
+
+    }
+
     stages {
   
           stage('Clone repository') {
@@ -42,35 +49,64 @@ pipeline {
             }
         }
 
-        // stage('Check Environment Variables') {
-        //   steps {
-        //       script {
-        //           sh '/usr/bin/docker compose up env-test'
-        //       }
-        //   }
-        // }
-
-        stage('Run Seed') {
-          steps {
-              script {
-                  sh '/usr/bin/docker compose exec api npm run seed'
-              }
-          }
-        }
-
-        stage('Run Migrations') {
+           stage('Undo Migrations') {
+            when {
+                expression { return params.UNDO_MIGRATIONS }
+            }
             steps {
                 script {
-                    // Run migrations if necessary
-                    // For example, you can use a boolean parameter to trigger migrations
-                    if (params.RUN_MIGRATIONS == 'true') {
-                         withDockerRegistry(credentialsId: DOCKER_HUB_CREDENTIALS) {
-                            sh '/usr/bin/docker compose exec api npm run migr'
-                        }
+                    withDockerRegistry(credentialsId: DOCKER_HUB_CREDENTIALS) {
+                        sh '/usr/bin/docker compose exec api npm run undo_migr'
                     }
                 }
             }
         }
+
+           stage('Run Seed') {
+            when {
+                expression { return params.RUN_SEED }
+            }
+            steps {
+                script {
+                    sh '/usr/bin/docker compose exec api npm run seed'
+                }
+            }
+        }
+
+        stage('Run Migrations') {
+            when {
+                expression { return params.RUN_MIGRATIONS }
+            }
+            steps {
+                script {
+                    withDockerRegistry(credentialsId: DOCKER_HUB_CREDENTIALS) {
+                        sh '/usr/bin/docker compose exec api npm run migr'
+                    }
+                }
+            }
+        }
+
+        // stage('Run Seed') {
+        //   steps {
+        //       script {
+        //           sh '/usr/bin/docker compose exec api npm run seed'
+        //       }
+        //   }
+        // }
+
+        // stage('Run Migrations') {
+        //     steps {
+        //         script {
+        //             // Run migrations if necessary
+        //             // For example, you can use a boolean parameter to trigger migrations
+        //             if (params.RUN_MIGRATIONS == 'true') {
+        //                  withDockerRegistry(credentialsId: DOCKER_HUB_CREDENTIALS) {
+        //                     sh '/usr/bin/docker compose exec api npm run migr'
+        //                 }
+        //             }
+        //         }
+        //     }
+        // }
     }
 
 }

@@ -9,7 +9,8 @@
     "build": "rimraf ./dist && tsc",
     "start": "npm run build && node dist/src/index.js",
     "migr": "sequelize db:migrate && npm start",
-    "seed": "sequelize db:migrate && sequelize db:seed:all"
+    "seed": "sequelize db:migrate && sequelize db:seed:all",
+    "undo_migr": "sequelize db:migrate:undo:all "
   },
   "keywords": [
     "ecommerce",
