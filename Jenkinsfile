@@ -4,7 +4,7 @@ pipeline {
     environment {
       DOCKER_REGISTRY = 'docker.io'
       DOCKER_COMPOSE_VERSION = '2.27.0'
-      DOCKER_HUB_CREDENTIALS = 'f3b65def-ff2b-4c13-900d-4c7f9dde7bfe' // Name of Docker Hub credentials in Jenkins
+      DOCKER_HUB_CREDENTIALS = '954e61ad-1f15-4314-a185-bdc08f5f00bb' // Name of Docker Hub credentials in Jenkins
     }
 
     parameters {
