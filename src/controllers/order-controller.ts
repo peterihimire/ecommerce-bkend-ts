@@ -19,14 +19,9 @@ import { v4 as uuidv4 } from "uuid";
 import { foundProductId } from "../repositories/product-repository";
 import { foundUser } from "../repositories/user-repository";
 import {
-  foundCart,
-  addToCart,
   foundCartId,
   foundUserCart,
   foundUserCartId,
-  foundCartProd,
-  addCartProd,
-  removeCartProd,
 } from "../repositories/cart-repository";
 import { addCartProds } from "../repositories/order-repository";
 

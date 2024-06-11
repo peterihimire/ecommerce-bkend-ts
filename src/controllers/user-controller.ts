@@ -1,7 +1,6 @@
 import { RequestHandler } from "express";
 import { httpStatusCodes } from "../utils/http-status-codes";
 import BaseError from "../utils/base-error";
-import db from "../database/models";
 import dotenv from "dotenv";
 dotenv.config();
 
