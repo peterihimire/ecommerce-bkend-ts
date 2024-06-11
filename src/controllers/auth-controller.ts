@@ -6,8 +6,6 @@ import db from "../database/models";
 // import { default as bcrypt } from "bcryptjs";
 import bcrypt from "bcrypt";
 import crypto from "crypto";
-import randomString from "../utils/acc-generator";
-import { NUMLIST } from "../utils/list-data";
 import { sign, verify } from "jsonwebtoken";
 import dotenv from "dotenv";
 dotenv.config();
