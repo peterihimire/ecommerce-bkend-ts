@@ -4,7 +4,8 @@ services:
   redis:
     image: redis
     networks:
-      - webnet
+      webnet:
+        ipv4_address: 192.168.0.2
     restart: always
 
   db:
@@ -16,7 +17,8 @@ services:
     volumes:
       - ./data/pgdata:/var/lib/postgresql/data
     networks:
-      - webnet
+      webnet:
+        ipv4_address: 192.168.0.3
     ports:
       - 5439:5432
     restart: always
@@ -29,7 +31,8 @@ services:
     volumes:
       - ./data/pgadmindata:/var/lib/pgadmin/data
     networks:
-      - webnet
+      webnet:
+        ipv4_address: 192.168.0.4
     ports:
       - 4051:80
       - 4050:443
@@ -46,7 +49,8 @@ services:
       - redis
       - pgadmin
     networks:
-      - webnet
+      webnet:
+        ipv4_address: 192.168.0.5
     environment:
       - DB_HOST=db
       - REDIS_HOST=redis
@@ -80,3 +84,8 @@ services:
 
 networks:
   webnet:
+    ipam:
+      driver: default
+      config:
+        - subnet: "192.168.0.0/24"
+          gateway: 192.168.0.1
