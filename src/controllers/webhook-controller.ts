@@ -45,10 +45,6 @@ export const paystack_webhook: RequestHandler = async (req, res, next) => {
             checkout_object
           );
 
-          // const existing_user = await User.findOne({
-          //   where: { email: checkout_object.customer.email },
-          // });
-
           if (!existing_user) {
             return next(
               new BaseError(
