@@ -10,8 +10,7 @@ const SibApiV3Sdk = require("sib-api-v3-typescript");
 import dotenv from "dotenv";
 
 dotenv.config();
-const User = db.User;
-const Cart = db.Cart;
+
 const Order = db.Order;
 const Product = db.Product;
 const OrderProduct = db.OrderProduct;
