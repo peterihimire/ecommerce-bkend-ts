@@ -4,12 +4,12 @@ pipeline {
     environment {
       DOCKER_REGISTRY = 'docker.io'
       DOCKER_COMPOSE_VERSION = '2.27.0'
-      DOCKER_HUB_CREDENTIALS = '954e61ad-1f15-4314-a185-bdc08f5f00bb' // Name of Docker Hub credentials in Jenkins
+      DOCKER_HUB_CREDENTIALS = '954e61ad-1f15-4314-a185-bdc08f5f00bb' //Using [withDockerRegistry] Name of Docker Hub credentials in Jenkins
     }
 
     parameters {
-      booleanParam(name: 'UNDO_MIGRATIONS', defaultValue: true, description: 'Undo migrations')
-      booleanParam(name: 'RUN_SEED', defaultValue: true, description: 'Run seed data')
+      booleanParam(name: 'UNDO_MIGRATIONS', defaultValue: false, description: 'Undo migrations')
+      booleanParam(name: 'RUN_SEED', defaultValue: false, description: 'Run seed data')
       booleanParam(name: 'RUN_MIGRATIONS', defaultValue: false, description: 'Run migrations')
     }
 

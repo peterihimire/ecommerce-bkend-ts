@@ -171,11 +171,7 @@ export const login: RequestHandler = async (req, res, next) => {
   const original_password = req.body.password;
 
   try {
-    // const foundUser = await User.findOne({
-    //   attributes: ["email"],
-    //   where: { email: email },
-    // });
-
+   
     const found_user = await foundUser(email);
     console.log("This is found user....", found_user);
 
