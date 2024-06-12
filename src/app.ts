@@ -214,14 +214,32 @@ app.use(
   userRoute
 );
 app.use("/api/ecommerce/v1/products", session(sessionOptionsTwo), productRoute);
-app.use("/api/ecommerce/v1/carts", session(sessionOptions), cartRoute);
-app.use("/api/ecommerce/v1/orders", session(sessionOptions), orderRoute);
+app.use(
+  "/api/ecommerce/v1/carts",
+  session(sessionOptions),
+  passport.initialize(),
+  passport.session(),
+  cartRoute
+);
+app.use(
+  "/api/ecommerce/v1/orders",
+  session(sessionOptions),
+  passport.initialize(),
+  passport.session(),
+  orderRoute
+);
 app.use(
   "/api/ecommerce/v1/categories",
   session(sessionOptionsTwo),
   categoryRoute
 );
-app.use("/api/ecommerce/v1/reviews", session(sessionOptions), reviewRoute);
+app.use(
+  "/api/ecommerce/v1/reviews",
+  session(sessionOptions),
+  passport.initialize(),
+  passport.session(),
+  reviewRoute
+);
 app.use("/api/ecommerce/v1/test", testRoute);
 
 app.use(unknownRoute);
