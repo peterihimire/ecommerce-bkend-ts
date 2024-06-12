@@ -49,8 +49,11 @@ import { generatePDFFile, generateOrder } from "../utils/pdf-generator";
 // @access Private
 export const addOrder: RequestHandler = async (req, res, next) => {
   const { address } = req.body;
-  const { user } = req?.session;
-  const email: string | undefined = user?.email;
+  const { passport } = req.session;
+  const email = passport?.user;
+  console.log("This is the user session...", passport);
+  // const { user } = req?.session;
+  // const email: string | undefined = user?.email;
   let session: any;
 
   try {
@@ -130,7 +133,8 @@ export const addOrder: RequestHandler = async (req, res, next) => {
     // const file = await generatePDFFile("invoice", created_order);
     // console.log("This is the file content...", file);
     const docDefinition = await generateOrder(
-      user,
+      // user,
+      passport,
       created_order,
       order_products,
       address
@@ -312,10 +316,13 @@ export const addOrder: RequestHandler = async (req, res, next) => {
 // @desc Login into account
 // @access Private
 export const getOrder: RequestHandler = async (req, res, next) => {
-  const { user } = req?.session;
+  const { passport } = req.session;
+  const email = passport?.user;
+  console.log("This is the user session...", passport);
+  // const { user } = req?.session;
   const { order_id } = req?.body;
 
-  const email: string | undefined = user?.email;
+  // const email: string | undefined = user?.email;
 
   try {
     if (email === undefined) {
@@ -399,8 +406,11 @@ export const getOrder: RequestHandler = async (req, res, next) => {
 // @desc Login into account
 // @access Private
 export const getOrders: RequestHandler = async (req, res, next) => {
-  const { user } = req?.session;
-  const email: string | undefined = user?.email;
+  const { passport } = req.session;
+  const email = passport?.user;
+  console.log("This is the user session...", passport);
+  // const { user } = req?.session;
+  // const email: string | undefined = user?.email;
 
   try {
     if (email === undefined) {
@@ -474,10 +484,13 @@ export const getOrders: RequestHandler = async (req, res, next) => {
 // @desc Login into account
 // @access Private
 export const cancelOrder: RequestHandler = async (req, res, next) => {
-  const { user } = req?.session;
+  const { passport } = req.session;
+  const email = passport?.user;
+  console.log("This is the user session...", passport);
+  // const { user } = req?.session;
   const { order_id } = req.body;
   const status = "cancelled";
-  const email: string | undefined = user?.email;
+  // const email: string | undefined = user?.email;
 
   try {
     if (email === undefined) {

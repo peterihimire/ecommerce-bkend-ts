@@ -29,8 +29,11 @@ import {
 // @access Private
 export const addCart: RequestHandler = async (req, res, next) => {
   const { prod_id } = req.body;
-  const { user } = req?.session;
-  const email: string | undefined = user?.email;
+  const { passport } = req.session;
+  const email = passport?.user;
+  console.log("This is the user session...", passport);
+  // const { user } = req?.session;
+  // const email: string | undefined = user?.email;
   try {
     // let newCart: {
     //   cartId: string;
@@ -218,8 +221,11 @@ export const addCart: RequestHandler = async (req, res, next) => {
 // @desc Login into account
 // @access Private
 export const getCart: RequestHandler = async (req, res, next) => {
-  const { user } = req?.session;
-  const email: string | undefined = user?.email;
+  const { passport } = req.session;
+  const email = passport?.user;
+  console.log("This is the user session...", passport);
+  // const { user } = req?.session;
+  // const email: string | undefined = user?.email;
 
   try {
     if (email === undefined) {
@@ -287,9 +293,12 @@ export const getCart: RequestHandler = async (req, res, next) => {
 // @desc Login into account
 // @access Private
 export const updateProductQty: RequestHandler = async (req, res, next) => {
-  const { user } = req?.session;
+  const { passport } = req.session;
+  const email = passport?.user;
+  console.log("This is the user session...", passport);
+  // const { user } = req?.session;
   const { type, prod_id } = req.body;
-  const email: string | undefined = user?.email;
+  // const email: string | undefined = user?.email;
 
   try {
     if (email === undefined) {
@@ -375,9 +384,12 @@ export const updateProductQty: RequestHandler = async (req, res, next) => {
 // @desc Login into account
 // @access Private
 export const deleteCartProd: RequestHandler = async (req, res, next) => {
-  const { user } = req?.session;
+  const { passport } = req.session;
+  const email = passport?.user;
+  console.log("This is the user session...", passport);
+  // const { user } = req?.session;
   const { prod_id } = req.body;
-  const email: string | undefined = user?.email;
+  // const email: string | undefined = user?.email;
 
   try {
     if (email === undefined) {
@@ -425,9 +437,12 @@ export const deleteCartProd: RequestHandler = async (req, res, next) => {
 // @desc Login into account
 // @access Private
 export const adddCart: RequestHandler = async (req, res, next) => {
+  const { passport } = req.session;
+  const email = passport?.user;
+  console.log("This is the user session...", passport);
   const { prod_id } = req.body;
-  const { user } = req?.session;
-  const email: string | undefined = user?.email;
+  // const { user } = req?.session;
+  // const email: string | undefined = user?.email;
 
   let fetched_cart;
   let new_qty = 1;

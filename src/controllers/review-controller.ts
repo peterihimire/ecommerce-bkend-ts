@@ -14,8 +14,11 @@ import {
 // @desc Login into account
 // @access Private
 export const addReview: RequestHandler = async (req, res, next) => {
-  const { user } = req.session;
-  const reg_email = user?.email;
+  // const { user } = req.session;
+  const { passport } = req.session;
+  const reg_email = passport?.user;
+  console.log("This is the user session...", passport);
+  // const reg_email = user?.email;
   const { name, email, rating, is_save, review, prod_id } = req.body;
 
   try {
@@ -148,8 +151,11 @@ export const editReview: RequestHandler = async (req, res, next) => {
 // @desc Login into account
 // @access Private
 export const deleteReview: RequestHandler = async (req, res, next) => {
-  const { user } = req.session;
-  const reg_email = user?.email;
+  // const { user } = req.session;
+  const { passport } = req.session;
+  const reg_email = passport?.user;
+  console.log("This is the user session...", passport);
+  // const reg_email = user?.email;
   const { rev_id } = req.params;
 
   try {
