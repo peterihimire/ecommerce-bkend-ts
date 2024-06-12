@@ -2,8 +2,6 @@ import { RequestHandler } from "express";
 import { httpStatusCodes } from "../utils/http-status-codes";
 import BaseError from "../utils/base-error";
 import db from "../database/models";
-// import bcrypt from "bcryptjs";
-// import { default as bcrypt } from "bcryptjs";
 import bcrypt from "bcrypt";
 import crypto from "crypto";
 import { sign, verify } from "jsonwebtoken";

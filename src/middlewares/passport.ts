@@ -83,7 +83,8 @@ export default function configurePassport(passport: PassportStatic) {
         clientID: process.env.GOOGLE_CLIENT_ID!,
         clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
         callbackURL:
-          "http://127.0.0.1:4040/api/ecommerce/v1/auth/google/callback/",
+          "https://ecommerce.benkih.com/api/ecommerce/v1/auth/google/callback/",
+        // "http://127.0.0.1:4040/api/ecommerce/v1/auth/google/callback/",
         // scope: ["profile", "email"], // Adding required scopes here
       },
       async function (
