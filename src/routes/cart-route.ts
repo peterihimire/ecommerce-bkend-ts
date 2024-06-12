@@ -6,24 +6,29 @@ import {
   deleteCartProd,
 } from "../controllers/cart-controller";
 import {
+  isLoggedIn,
   // verifySessionAndAuthorization
 } from "../middlewares/verify-session";
 const router = Router();
 
-router.post("/add",
+router.post(
+  "/add",isLoggedIn,
   // verifySessionAndAuthorization,
-  addCart);
-router.get("/get_cart",
+  addCart
+);
+router.get(
+  "/get_cart",isLoggedIn,
   // verifySessionAndAuthorization,
-  getCart);
+  getCart
+);
 // router.get("/get_product/:prod_id", getProduct);
 router.patch(
-  "/update_prod_qty",
+  "/update_prod_qty",isLoggedIn,
   // verifySessionAndAuthorization,
   updateProductQty
 );
 router.delete(
-  "/delete_cart_prod",
+  "/delete_cart_prod",isLoggedIn,
   // verifySessionAndAuthorization,
   deleteCartProd
 );

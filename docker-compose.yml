@@ -77,7 +77,9 @@ services:
       - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
       - GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET}
     volumes:
-      - ./documents/pdf:/app/documents/pdf # Mapping the static folder
+      - ./documents/pdf:/app/documents/pdf # Mapping the static folder for PDFs
+      - ./documents/images:/app/documents/images # Mapping the folder for images
+      - ./documents/pictures:/app/documents/pictures # Mapping the folder for pictures
     expose:
       - "4040"
     restart: always

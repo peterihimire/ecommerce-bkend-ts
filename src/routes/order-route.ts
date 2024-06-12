@@ -6,20 +6,30 @@ import {
   cancelOrder,
 } from "../controllers/order-controller";
 import {
+  isLoggedIn,
   // verifySessionAndAuthorization
 } from "../middlewares/verify-session";
 const router = Router();
 
-router.post("/add",
+router.post(
+  "/add",
+  isLoggedIn,
   // verifySessionAndAuthorization,
-  addOrder);
-router.get("/get_order",
+  addOrder
+);
+router.get(
+  "/get_order",
+  isLoggedIn,
   // verifySessionAndAuthorization,
-  getOrder);
+  getOrder
+);
 router.get("/get_orders", getOrders);
-router.patch("/cancel_order",
+router.patch(
+  "/cancel_order",
+  isLoggedIn,
   // verifySessionAndAuthorization,
-  cancelOrder);
+  cancelOrder
+);
 // router.delete(
 //   "/delete_cart_prod",
 //   verifySessionAndAuthorization,
