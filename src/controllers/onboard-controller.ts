@@ -110,11 +110,59 @@ export const register: RequestHandler = async (req, res, next) => {
 
     // Set the subject and content of the email
     sendSmtpEmail.subject = "Email Verification";
-    sendSmtpEmail.htmlContent = `
-        <h3>Hi,</h3>
-        <p>This is your otp ${otp}.Its valid for 10 minutes.</p>
-        <p>Benkih E-commerce.</p>
-      `;
+    sendSmtpEmail.htmlContent = `<!DOCTYPE html>
+              <html lang="en">
+                <head>
+                  <meta charset="UTF-8">
+                  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                  <style>
+                    @media screen and (max-width: 600px) {
+                      .content {
+                          width: 100% !important;
+                          display: block !important;
+                          padding: 10px !important;
+                      }
+                      .header, .body, .footer {
+                          padding: 20px !important;
+                      }
+                    }
+                  </style>
+                  <title>benkih e-commeerce</title>
+                </head>
+                <body style="font-family: 'Poppins', Arial, sans-serif">
+                  <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                      <tr>
+                        <td align="center" style="padding: 20px;">
+                          <table class="content" width="600" border="0" cellspacing="0" cellpadding="0" style="border-collapse: collapse; border: 1px solid #cccccc;">
+                              <!-- Header -->
+                              <tr>
+                                  <td class="header" style="background-color: #345C72; padding: 40px; text-align: center; color: white; font-size: 20px;">
+                                    <img src="https://res.cloudinary.com/dymhdpka1/image/upload/v1714244037/peterihimire-logo_whf5lr.png" alt="Benkih E-commerce Logo" alt="Benkih E-commerce Logo" style="width: 40px; height: auto; vertical-align: middle; margin-right: 8px;" /> Benkih
+                                  </td>
+                              </tr>
+
+                              <!-- Body -->
+                              <tr>
+                                  <td class="body" style="padding: 40px; text-align: left; font-size: 16px; line-height: 1.6;">
+                                  Hello! <br>
+                                  This is your OTP: <strong>${otp}</strong>. It is valid for 10 minutes..
+                                  <br><br>
+                                      Lorem ipsum dolor sit amet consectetur adipisicing elit. Veniam corporis sint eum nemo animi velit exercitationem impedit. Incidunt, officia facilis  atque? Ipsam voluptas fugiat distinctio blanditiis veritatis.            
+                                  </td>
+                              </tr>
+
+                              <!-- Footer -->
+                              <tr>
+                                  <td class="footer" style="background-color: #333333; padding: 40px; text-align: center; color: white; font-size: 14px;">
+                                  Copyright &copy; ${new Date().getFullYear()} | benkih e-commerce. All rights reserved.
+                                  </td>
+                              </tr>
+                          </table>
+                        </td>
+                      </tr>
+                  </table>
+                </body>
+              </html>`;
 
     // Send the email
     apiInstance
@@ -302,4 +350,3 @@ export const verify_otp: RequestHandler = async (req, res, next) => {
     next(error);
   }
 };
-
