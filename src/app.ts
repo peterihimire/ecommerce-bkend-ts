@@ -157,21 +157,21 @@ app.use(express.json());
 // app.use(multerOptions);
 // app.use(picOptions);
 
-// Define the path to serve static files for the TypeScript code
-app.use(
-  "/documents/pdf",
-  express.static(path.join(__dirname, "../documents/pdf"))
-);
+// // Define the path to serve static files for the TypeScript code
+// app.use(
+//   "/documents/pdf",
+//   express.static(path.join(__dirname, "../documents/pdf"))
+// );
 
-app.use(
-  "/documents/image",
-  express.static(path.join(__dirname, "../documents/image"))
-);
+// app.use(
+//   "/documents/image",
+//   express.static(path.join(__dirname, "../documents/image"))
+// );
 
-app.use(
-  "/documents/picture",
-  express.static(path.join(__dirname, "../documents/picture"))
-);
+// app.use(
+//   "/documents/picture",
+//   express.static(path.join(__dirname, "../documents/picture"))
+// );
 
 // // Serve frontend
 // if (process.env.NODE_ENV === 'production') {
@@ -186,15 +186,15 @@ app.use(
 //   app.get('/', (req, res) => res.send('Please set to production'));
 // }
 
-// // Define the path to serve static files for the compiled JavaScript code
-// const staticPathPdf = path.join(__dirname, "../..", "documents", "pdf");
-// const staticPathPicture = path.join(__dirname, "../..", "documents", "picture");
-// const staticPathImage = path.join(__dirname, "../..", "documents", "image");
+// Define the path to serve static files for the compiled JavaScript code
+const staticPathPdf = path.join(__dirname, "../..", "documents", "pdf");
+const staticPathPicture = path.join(__dirname, "../..", "documents", "picture");
+const staticPathImage = path.join(__dirname, "../..", "documents", "image");
 
-// // Serve static files from the specified directory
-// app.use("/documents/pdf", express.static(staticPathPdf));
-// app.use("/documents/picture", express.static(staticPathPicture));
-// app.use("/documents/image", express.static(staticPathImage));
+// Serve static files from the specified directory
+app.use("/documents/pdf", express.static(staticPathPdf));
+app.use("/documents/picture", express.static(staticPathPicture));
+app.use("/documents/image", express.static(staticPathImage));
 
 app.use("/api/ecommerce/v1/onboard", session(sessionOptionsFour), onboardRoute);
 app.use(
