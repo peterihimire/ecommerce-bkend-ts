@@ -42,8 +42,8 @@ pipeline {
 
             // Build and run the new services
               withDockerRegistry(credentialsId: DOCKER_HUB_CREDENTIALS) {
-              // sh '/usr/bin/docker compose up --build -d'
-              sh '/usr/bin/docker compose up -d'
+              sh '/usr/bin/docker compose up --build -d'
+              // sh '/usr/bin/docker compose up -d'
             }
           }
         }
