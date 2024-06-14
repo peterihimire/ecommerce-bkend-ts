@@ -80,8 +80,10 @@ services:
       - ./documents/pdf:/app/documents/pdf # Mapping the static folder for PDFs
       - ./documents/image:/app/documents/image # Mapping the folder for images
       - ./documents/picture:/app/documents/picture # Mapping the folder for pictures
-    expose:
-      - "4040"
+    ports:
+      - "4040:4040"  # Publish to host
+    # expose:
+    #   - "4040"
     restart: always
   
   api_two:
@@ -126,8 +128,10 @@ services:
       - ./documents/pdf:/app/documents/pdf # Mapping the static folder for PDFs
       - ./documents/image:/app/documents/image # Mapping the folder for images
       - ./documents/picture:/app/documents/picture # Mapping the folder for pictures
-    expose:
-      - "4041"
+    ports:
+      - "4041:4040"  # Publish to host with different external port
+    # expose:
+    #   - "4041"
     restart: always
 
 networks:
