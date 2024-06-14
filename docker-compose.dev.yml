@@ -136,7 +136,7 @@ services:
       - ./:/app
       - /app/node_modules
     ports:
-      - 4041:4041
+      - 4041:4040
     restart: always
     env_file:
       - .env
