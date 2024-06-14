@@ -44,7 +44,7 @@ services:
     env_file:
       - .env
 
-  api:
+  api_one:
     build:
       context: .
       target: development
@@ -88,6 +88,55 @@ services:
       - /app/node_modules
     ports:
       - 4040:4040
+    restart: always
+    env_file:
+      - .env
+    command: npm run dev
+  
+  api_two:
+    build:
+      context: .
+      target: development
+    image: peterihimire/ecommerce-bkend-ts
+    platform: linux/amd64
+    depends_on:
+      - db
+      - redis
+      - pgadmin
+    networks:
+      appnet:
+        ipv4_address: 192.168.0.6
+    environment:
+      - NODE_ENV=development
+      - DB_HOST=db
+      - REDIS_HOST=redis
+      - PORT=${PORT}
+      - DB_NAME=${DB_NAME}
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - REDIS_PORT=${REDIS_PORT}
+      - SESSION_SECRET=${SESSION_SECRET}
+      - ADMIN_SESSION_SECRET=${ADMIN_SESSION_SECRET}
+      - CART_SESSION_SECRET=${CART_SESSION_SECRET}
+      - PGADMIN_DEFAULT_EMAIL=${PGADMIN_DEFAULT_EMAIL}
+      - PGADMIN_DEFAULT_PASSWORD=${PGADMIN_DEFAULT_PASSWORD}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+      - PAYSTACK_PUBLIC_KEY=${PAYSTACK_PUBLIC_KEY}
+      - PAYSTACK_SECRET_KEY=${PAYSTACK_SECRET_KEY}
+      - STRIPE_PUBLISH_KEY=${STRIPE_PUBLISH_KEY}
+      - STRIPE_SECRET_KEY=${STRIPE_SECRET_KEY}
+      - STRIPE_ENDPOINT_SECRET=${STRIPE_ENDPOINT_SECRET}
+      - BREVO_API_KEY=${BREVO_API_KEY}
+      - SMS_KEY=${SMS_KEY}
+      - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
+      - GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET}
+    volumes:
+      - ./:/app
+      - /app/node_modules
+    ports:
+      - 4041:4041
     restart: always
     env_file:
       - .env
