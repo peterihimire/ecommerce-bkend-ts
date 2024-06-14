@@ -120,10 +120,20 @@ export const register: RequestHandler = async (req, res, next) => {
                       .content {
                           width: 100% !important;
                           display: block !important;
+                          padding: 0px !important;
+                      }
+                       .container {
                           padding: 10px !important;
                       }
+                       .wrapper {
+                          width: 100% !important;
+                          display: block !important;
+                     
+                      }
                       .header, .body, .footer {
-                          padding: 20px !important;
+                          padding: 10px !important;
+                          padding-bottom: 10px !important;
+                          padding-top: 10px !important;
                       }
                     }
                   </style>
@@ -133,31 +143,39 @@ export const register: RequestHandler = async (req, res, next) => {
                   <table width="100%" border="0" cellspacing="0" cellpadding="0">
                       <tr>
                         <td align="center" style="padding: 20px;">
-                          <table class="content" width="600" border="0" cellspacing="0" cellpadding="0" style="border-collapse: collapse; border: 1px solid #cccccc;">
+                         <table class="wrapper" width="600" border="0" cellspacing="0" cellpadding="0" style="border-collapse: collapse; border: 1px solid #cccccc;">
+                           <tr>
+                           <td class="container" align="center" style="padding: 40px;">
+                          <table class="content" width="600" border="0" cellspacing="0" cellpadding="0" style="border-collapse: collapse; border: 0px solid #cccccc;">
                               <!-- Header -->
                               <tr>
-                                  <td class="header" style="background-color: #345C72; padding: 40px; text-align: center; color: white; font-size: 20px;">
-                                    <img src="https://res.cloudinary.com/dymhdpka1/image/upload/v1714244037/peterihimire-logo_whf5lr.png" alt="Benkih E-commerce Logo" alt="Benkih E-commerce Logo" style="width: 40px; height: auto; vertical-align: middle; margin-right: 8px;" /> Benkih
+                                  <td class="header" style="padding-bottom: 40px; text-align: left; color: grey; font-size: 30px; font-weight:bolder; border-bottom: 1px solid #cccccc;">
+                                    <img src="https://res.cloudinary.com/dymhdpka1/image/upload/v1714244037/peterihimire-logo_whf5lr.png" alt="Benkih E-commerce Logo" style="width: 80px; height: auto; vertical-align: middle; margin-right: 8px;" /> Benkih
                                   </td>
                               </tr>
 
                               <!-- Body -->
                               <tr>
-                                  <td class="body" style="padding: 40px; text-align: left; font-size: 16px; line-height: 1.6;">
-                                  Hello! <br>
-                                  This is your OTP: <strong>${otp}</strong>. It is valid for 10 minutes..
+                                  <td class="body" style="padding-bottom: 40px;padding-top: 40px; text-align: left; font-size: 16px; line-height: 1.6;">
+                                  <strong>Hello,</strong> <br>
+                                  Welcome to the Benkih e-commerce, we are glad you decided to take the step to check out what our community has to offer you.
                                   <br><br>
-                                      Lorem ipsum dolor sit amet consectetur adipisicing elit. Veniam corporis sint eum nemo animi velit exercitationem impedit. Incidunt, officia facilis  atque? Ipsam voluptas fugiat distinctio blanditiis veritatis.            
+                                  Verification Code <br>
+                                  <strong>${otp}</strong> <br><br>
+                                  This single-use code is valid for ten minutes.     
                                   </td>
                               </tr>
 
                               <!-- Footer -->
                               <tr>
-                                  <td class="footer" style="background-color: #333333; padding: 40px; text-align: center; color: white; font-size: 14px;">
-                                  Copyright &copy; ${new Date().getFullYear()} | benkih e-commerce. All rights reserved.
-                                  </td>
+                                <td class="footer" style="padding-top: 40px; text-align: left; color: #333333;; font-size: 14px; border-top: 1px solid #cccccc;">
+                                  This message was sent automatically by <a href='https://ecommerce.benkih.com' style="color: blue; text-decoration: none;" target="_blank">ecommerce.benkih.com</a>. Do not reply to this message as no response will be given.
+                                </td>
                               </tr>
                           </table>
+                           </td>
+                          </tr>
+                         </table>
                         </td>
                       </tr>
                   </table>
@@ -168,7 +186,7 @@ export const register: RequestHandler = async (req, res, next) => {
     apiInstance
       .sendTransacEmail(sendSmtpEmail)
       .then((data: any) => {
-        console.log("Email sent successfully. Response:", data);
+        // console.log("Email sent successfully. Response:", data);
         // Handle success
         res.status(httpStatusCodes.OK).json({
           status: "success",
