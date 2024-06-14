@@ -24,7 +24,7 @@ export const login: RequestHandler = async (req, res, next) => {
 
   try {
     const found_user = await foundUser(email);
-    console.log("This is found user....", found_user);
+    // console.log("This is found user....", found_user);
 
     if (!found_user) {
       return next(

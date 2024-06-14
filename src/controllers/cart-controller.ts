@@ -132,7 +132,7 @@ export const addCart: RequestHandler = async (req, res, next) => {
     }
     const existing_user = await foundUser(email);
 
-    console.log("Existing baba user...", existing_user);
+    // console.log("Existing baba user...", existing_user);
 
     let cart = await foundUserCartId(existing_user.id);
 
@@ -146,16 +146,16 @@ export const addCart: RequestHandler = async (req, res, next) => {
     // const productId = req.body.prod_id;
     // const product = await Product.findByPk(productId);
     const prod_info = await foundProductId(prod_id);
-    console.log("Prod_Info...", prod_info);
+    // console.log("Prod_Info...", prod_info);
 
     const existingCartProd = cart?.products?.find(
       (item: any) => item.uuid === prod_id
     );
-    console.log("Existing cart product...", existingCartProd);
-    console.log(
-      "Existing cart product datavalues...",
-      existingCartProd?.cart_products.dataValues
-    );
+    // console.log("Existing cart product...", existingCartProd);
+    // console.log(
+    //   "Existing cart product datavalues...",
+    //   existingCartProd?.cart_products.dataValues
+    // );
 
     let cartProduct = await foundCartProd(cart?.id, prod_info?.id);
 
@@ -179,9 +179,9 @@ export const addCart: RequestHandler = async (req, res, next) => {
       cartProduct = await addCartProd(payload);
     }
 
-    console.log("Is this point the case... for the id issue.", cart);
+    // console.log("Is this point the case... for the id issue.", cart);
     const cart_id = await cart?.id;
-    console.log("This is cart_id.", cart_id);
+    // console.log("This is cart_id.", cart_id);
     const cart_prods = await foundCartId(cart_id);
 
     const totalCartPrice = cart_prods.products.reduce(
@@ -195,7 +195,7 @@ export const addCart: RequestHandler = async (req, res, next) => {
     );
 
     const totalCartQty = cart_prods.products.reduce((total: any, item: any) => {
-      console.log("itme....", item?.cart_products?.quantity);
+      // console.log("itme....", item?.cart_products?.quantity);
       return total + item.cart_products.quantity;
     }, 0);
 

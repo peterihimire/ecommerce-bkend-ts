@@ -37,12 +37,12 @@ export const register: RequestHandler = async (req, res, next) => {
   const hash = crypto.createHmac("sha256", smsKey).update(data).digest("hex");
   const fullhash = `${hash}.${expire}`;
 
-  console.log("thia is ...", User);
+  // console.log("thia is ...", User);
   try {
-    console.log("This is ...", User);
+    // console.log("This is ...", User);
 
     const found_user = await foundUser(email);
-    console.log("This is found user....", found_user);
+    // console.log("This is found user....", found_user);
 
     if (found_user) {
       return next(
@@ -55,12 +55,12 @@ export const register: RequestHandler = async (req, res, next) => {
 
     const existing_acct_id = await existingAcctId(acctnum);
 
-    console.log("this is existing account identity...", existing_acct_id);
+    // console.log("this is existing account identity...", existing_acct_id);
 
     if (existing_acct_id) {
-      console.log("This code block got executed!", acctnum);
+      // console.log("This code block got executed!", acctnum);
       acctnum = randomString(10, NUMLIST);
-      console.log("After the code block, here's new acctnum!", acctnum);
+      // console.log("After the code block, here's new acctnum!", acctnum);
     }
     const salt = await bcrypt.genSalt();
     const hashed_password = await bcrypt.hash(original_password, salt);
@@ -312,12 +312,12 @@ export const verify_otp: RequestHandler = async (req, res, next) => {
 
     const existing_acct_id = await existingAcctId(acctnum);
 
-    console.log("this is existing account identity...", existing_acct_id);
+    // console.log("this is existing account identity...", existing_acct_id);
 
     if (existing_acct_id) {
-      console.log("This code block got executed!", acctnum);
+      // console.log("This code block got executed!", acctnum);
       acctnum = randomString(10, NUMLIST);
-      console.log("After the code block, here's new acctnum!", acctnum);
+      // console.log("After the code block, here's new acctnum!", acctnum);
     }
 
     const payload = {
@@ -327,14 +327,14 @@ export const verify_otp: RequestHandler = async (req, res, next) => {
     };
 
     const created_user = await createUser(payload);
-    console.log("Created user yes...", created_user);
+    // console.log("Created user yes...", created_user);
     const { id, password, ...others } = await created_user?.dataValues;
 
     const user_data = {
       acct_id: created_user?.acct_id,
       userId: created_user?.id,
     };
-    console.log("This is profile data...", user_data);
+    // console.log("This is profile data...", user_data);
     const created_profile = await createProfile(user_data);
     console.log("Created profile yes...", created_profile);
 
