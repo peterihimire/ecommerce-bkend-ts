@@ -54,7 +54,7 @@ services:
     environment:
       - DB_HOST=db
       - REDIS_HOST=redis
-      - PORT=${PORT}
+      - PORT=${PORT_ONE}
       - DB_NAME=${DB_NAME}
       - DB_USER=${DB_USER}
       - DB_PASSWORD=${DB_PASSWORD}
@@ -81,7 +81,7 @@ services:
       - ./documents/image:/app/documents/image # Mapping the folder for images
       - ./documents/picture:/app/documents/picture # Mapping the folder for pictures
     ports:
-      - "4040:4040"  # Publish to host
+      - ${PORT_ONE}:${PORT_ONE}  # Publish to host
     # expose:
     #   - "4040"
     restart: always
@@ -102,7 +102,7 @@ services:
     environment:
       - DB_HOST=db
       - REDIS_HOST=redis
-      - PORT=${PORT}
+      - PORT=${PORT_TWO}
       - DB_NAME=${DB_NAME}
       - DB_USER=${DB_USER}
       - DB_PASSWORD=${DB_PASSWORD}
@@ -129,7 +129,7 @@ services:
       - ./documents/image:/app/documents/image # Mapping the folder for images
       - ./documents/picture:/app/documents/picture # Mapping the folder for pictures
     ports:
-      - "4041:4040"  # Publish to host with different external port
+      - ${PORT_TWO}:${PORT_TWO}  # Publish to host with different external port
     # expose:
     #   - "4041"
     restart: always
