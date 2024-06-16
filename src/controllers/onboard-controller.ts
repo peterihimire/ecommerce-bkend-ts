@@ -131,9 +131,8 @@ export const register: RequestHandler = async (req, res, next) => {
                      
                       }
                       .header, .body, .footer {
-                          padding: 0px !important;
-                          padding-bottom: 0px !important;
-                          padding-top: 0px !important;
+                          padding-bottom: 10px !important;
+                          padding-top: 10px !important;
                       }
                     }
                   </style>
