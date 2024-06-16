@@ -1,6 +1,6 @@
 pipeline {
-    // agent any
-    agent {label 'staging'}
+    agent any
+    // agent {label 'staging'}
 
     environment {
       DOCKER_REGISTRY = 'docker.io'
