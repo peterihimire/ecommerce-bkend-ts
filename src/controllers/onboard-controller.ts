@@ -130,8 +130,21 @@ export const register: RequestHandler = async (req, res, next) => {
                           display: block !important;
                      
                       }
-                      .header, .body, .footer {
+                      .header {
                           padding-bottom: 10px !important;
+                          font-size: 20px !important;
+                      }
+                       .logo{
+                          width: 40px !important;
+                          margin-right: 4px !important;
+                        }
+                      .body{
+                          padding-bottom: 10px !important;
+                          padding-top: 10px !important;
+                      }
+
+                      .footer {
+                     
                           padding-top: 10px !important;
                       }
                     }
@@ -149,7 +162,7 @@ export const register: RequestHandler = async (req, res, next) => {
                               <!-- Header -->
                               <tr>
                                   <td class="header" style="padding-bottom: 40px; text-align: left; color: grey; font-size: 30px; font-weight:bolder; border-bottom: 1px solid #cccccc;">
-                                    <img src="https://res.cloudinary.com/dymhdpka1/image/upload/v1714244037/peterihimire-logo_whf5lr.png" alt="Benkih E-commerce Logo" style="width: 80px; height: auto; vertical-align: middle; margin-right: 8px;" /> Benkih
+                                    <img src="https://res.cloudinary.com/dymhdpka1/image/upload/v1714244037/peterihimire-logo_whf5lr.png" alt="Benkih E-commerce Logo" style="width: 80px; height: auto; vertical-align: middle; margin-right: 8px;" class="logo" /> Benkih
                                   </td>
                               </tr>
 
