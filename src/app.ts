@@ -51,12 +51,7 @@ declare module "express-session" {
 }
 
 const corsOptions = {
-  origin: [
-    // process.env.CORS_ORIGIN as string,
-    "https://silexcms.onrender.com",
-    "http://localhost:3000",
-    "https://localhost:3000",
-  ],
+  origin: ["https://localhost:3000", "http://localhost:3000"],
   methods: ["GET", "PUT", "PATCH", "POST", "OPTIONS", "DELETE", "HEAD"],
   allowedHeaders: [
     "Content-Type",
