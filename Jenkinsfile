@@ -9,8 +9,8 @@ pipeline {
     }
 
     parameters {
-      booleanParam(name: 'UNDO_MIGRATIONS', defaultValue: false, description: 'Undo migrations')
-      booleanParam(name: 'RUN_SEED', defaultValue: false, description: 'Run seed data')
+      booleanParam(name: 'UNDO_MIGRATIONS', defaultValue: true, description: 'Undo migrations')
+      booleanParam(name: 'RUN_SEED', defaultValue: true, description: 'Run seed data')
       booleanParam(name: 'RUN_MIGRATIONS', defaultValue: false, description: 'Run migrations')
     }
 
