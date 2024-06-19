@@ -16,6 +16,7 @@ import cartRoute from "./routes/cart-route";
 import orderRoute from "./routes/order-route";
 import categoryRoute from "./routes/category-route";
 import reviewRoute from "./routes/review-route";
+import contactRoute from "./routes/contact-route";
 import testRoute from "./routes/test-route";
 import {
   logErrorMiddleware,
@@ -239,6 +240,7 @@ app.use(
   passport.session(),
   reviewRoute
 );
+app.use("/api/ecommerce/v1/contacts", session(sessionOptionsTwo), contactRoute);
 app.use("/api/ecommerce/v1/test", testRoute);
 
 app.use(unknownRoute);

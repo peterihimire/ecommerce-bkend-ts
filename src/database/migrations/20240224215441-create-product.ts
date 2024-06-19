@@ -37,16 +37,10 @@ module.exports = {
         countInStock: {
           type: DataTypes.INTEGER,
         },
-        rating: {
-          type: DataTypes.FLOAT, // Change to DataTypes.FLOAT if rating can be decimal
-        },
         desc: {
           type: DataTypes.STRING,
         },
         size: {
-          type: DataTypes.STRING,
-        },
-        numReviews: {
           type: DataTypes.STRING,
         },
         uuid: {

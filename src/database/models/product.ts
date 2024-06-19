@@ -10,10 +10,8 @@ interface ProductAttributes {
   price: number;
   brand: string;
   countInStock: number;
-  rating: number;
   desc: string;
   size: string;
-  numReviews: string;
   uuid: string;
 }
 
@@ -27,10 +25,8 @@ module.exports = (sequelize: any, DataTypes: any) => {
     price!: number;
     brand!: string;
     countInStock!: number;
-    rating!: number;
     desc!: string;
     size!: string;
-    numReviews!: string;
     uuid!: string;
 
     /**
@@ -90,10 +86,8 @@ module.exports = (sequelize: any, DataTypes: any) => {
       },
       brand: DataTypes.STRING,
       countInStock: DataTypes.INTEGER,
-      rating: DataTypes.FLOAT,
       desc: DataTypes.STRING,
       size: DataTypes.STRING,
-      numReviews: DataTypes.STRING,
       uuid: {
         type: DataTypes.UUID,
         defaultValue: DataTypes.UUIDV4,
