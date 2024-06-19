@@ -57,7 +57,7 @@ pipeline {
         steps {
           script {
             withDockerRegistry(credentialsId: DOCKER_HUB_CREDENTIALS) {
-              sh '/usr/bin/docker compose exec api npm run undo_migr'
+              sh '/usr/bin/docker compose exec api_one npm run undo_migr'
             }
           }
         }
@@ -69,7 +69,7 @@ pipeline {
         }
         steps {
           script {
-            sh '/usr/bin/docker compose exec api npm run seed'
+            sh '/usr/bin/docker compose exec api_one npm run seed'
           }
         }
       }
@@ -81,7 +81,7 @@ pipeline {
         steps {
           script {
             withDockerRegistry(credentialsId: DOCKER_HUB_CREDENTIALS) {
-              sh '/usr/bin/docker compose exec api npm run migr'
+              sh '/usr/bin/docker compose exec api_one npm run migr'
             }
           }
         }
