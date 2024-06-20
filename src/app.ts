@@ -1,5 +1,5 @@
 import express, { Application, Request } from "express";
-import session from "express-session";
+import session, { SessionOptions } from "express-session";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import path from "path";
@@ -37,6 +37,12 @@ type Cart = {
   }[];
   totalQty: number;
   totalPrice: number;
+};
+
+type CustomSessionOptions = SessionOptions & {
+  cookie: {
+    sameSite: "none" | "lax" | "strict" | boolean;
+  };
 };
 
 // Augment express-session with a custom SessionData object
@@ -88,21 +94,22 @@ let redisStoreOnboard = new (RedisStore as any)({
   prefix: "ecommerce_onboard",
 });
 
-const sessionOptions = {
+const sessionOptions: CustomSessionOptions = {
   // store: new RedisStore({ client: redisClient }),
   store: redisStoreOne,
   secret: String(process.env.SESSION_SECRET),
   resave: false,
   saveUninitialized: false,
   cookie: {
-    secure: false, // if true only transmit cookie over https
+    secure: process.env.NODE_ENV === "production", // if true only transmit cookie over https
     httpOnly: true, // if true prevent client side JS from reading the cookie
     maxAge: 1000 * 60 * 60 * 12, // session max age in miliseconds
-    // sameSite: "none",
+    // sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+    sameSite: `none`,
   },
 };
 
-const sessionOptionsTwo = {
+const sessionOptionsTwo: CustomSessionOptions = {
   // store: new RedisStore({ client: redisClient }),
   store: redisStoreTwo,
   secret: String(process.env.ADMIN_SESSION_SECRET),
@@ -112,11 +119,12 @@ const sessionOptionsTwo = {
     secure: false, // if true only transmit cookie over https
     httpOnly: true, // if true prevent client side JS from reading the cookie
     maxAge: 1000 * 60 * 60 * 12, // session max age in miliseconds
-    // sameSite: "none",
+    // sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+    sameSite: `none`,
   },
 };
 
-const sessionOptionsThree = {
+const sessionOptionsThree: CustomSessionOptions = {
   // store: new RedisStore({ client: redisClient }),
   store: redisStoreCart,
   secret: String(process.env.SESSION_SECRET),
@@ -126,10 +134,11 @@ const sessionOptionsThree = {
     secure: false, // if true only transmit cookie over https
     httpOnly: true, // if true prevent client side JS from reading the cookie
     maxAge: 1000 * 60 * 60 * 12, // session max age in miliseconds
-    // sameSite: "none",
+    // sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+    sameSite: `none`,
   },
 };
-const sessionOptionsFour = {
+const sessionOptionsFour: CustomSessionOptions = {
   // store: new RedisStore({ client: redisClient }),
   store: redisStoreOnboard,
   secret: String(process.env.SESSION_SECRET),
@@ -139,7 +148,8 @@ const sessionOptionsFour = {
     secure: false, // if true only transmit cookie over https
     httpOnly: true, // if true prevent client side JS from reading the cookie
     maxAge: 1000 * 60 * 60 * 12, // session max age in miliseconds
-    // sameSite: "none",
+    // sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+    sameSite: `none`,
   },
 };
 
