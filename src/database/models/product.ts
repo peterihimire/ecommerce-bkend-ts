@@ -1,4 +1,5 @@
 "use strict";
+import { bool } from "aws-sdk/clients/signer";
 import { BuildOptions, DataTypes, Model, Sequelize } from "sequelize";
 
 interface ProductAttributes {
@@ -7,7 +8,11 @@ interface ProductAttributes {
   images: string[];
   color: string;
   categories: string[];
+  oldPrice: number;
   price: number;
+  flashSale: boolean;
+  featured: boolean;
+  popular: boolean;
   brand: string;
   countInStock: number;
   desc: string;
@@ -22,7 +27,11 @@ module.exports = (sequelize: any, DataTypes: any) => {
     images!: string[];
     color!: string;
     categories!: string[];
+    oldPrice!: number;
     price!: number;
+    flashSale!: boolean;
+    featured!: boolean;
+    popular!: boolean;
     brand!: string;
     countInStock!: number;
     desc!: string;
@@ -74,6 +83,16 @@ module.exports = (sequelize: any, DataTypes: any) => {
         allowNull: true,
         defaultValue: [],
       },
+      oldPrice: {
+        type: DataTypes.DECIMAL(10, 2),
+        get() {
+          // Workaround until sequelize issue #8019 is fixed
+          const value = this.getDataValue("price");
+          return value === null ? null : parseFloat(value.toString());
+        },
+        defaultValue: 0,
+        allowNull: false,
+      },
       price: {
         type: DataTypes.DECIMAL(10, 2),
         get() {
@@ -84,6 +103,9 @@ module.exports = (sequelize: any, DataTypes: any) => {
         defaultValue: 0,
         allowNull: false,
       },
+      flashSale: DataTypes.BOOLEAN,
+      featured: DataTypes.BOOLEAN,
+      popular: DataTypes.BOOLEAN,
       brand: DataTypes.STRING,
       countInStock: DataTypes.INTEGER,
       desc: DataTypes.STRING,

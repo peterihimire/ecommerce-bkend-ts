@@ -28,8 +28,20 @@ module.exports = {
         categories: {
           type: DataTypes.ARRAY(DataTypes.STRING), // Change to ARRAY type
         },
+        oldPrice: {
+          type: DataTypes.DECIMAL(10, 2),
+        },
         price: {
           type: DataTypes.DECIMAL(10, 2),
+        },
+        flashSale: {
+          type: DataTypes.BOOLEAN,
+        },
+        featured: {
+          type: DataTypes.BOOLEAN,
+        },
+        popular: {
+          type: DataTypes.BOOLEAN,
         },
         brand: {
           type: DataTypes.STRING,

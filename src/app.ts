@@ -41,7 +41,7 @@ type Cart = {
 
 type CustomSessionOptions = SessionOptions & {
   cookie: {
-    sameSite: "none" | "lax" | "strict" | boolean;
+    sameSite: "lax" | "lax" | "strict" | boolean;
   };
 };
 
@@ -102,11 +102,13 @@ const sessionOptions: CustomSessionOptions = {
   saveUninitialized: false,
   cookie: {
     // secure: process.env.NODE_ENV === "production", // if true only transmit cookie over https
-    secure: true,
+    secure: false,
+    // secure: true, //For when app is running in https
     httpOnly: true, // if true prevent client side JS from reading the cookie
     maxAge: 1000 * 60 * 60 * 12, // session max age in miliseconds
     // sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
-    sameSite: "none",
+    sameSite: "lax",
+    // sameSite: "none", //For when app is running in https
   },
 };
 
@@ -117,11 +119,11 @@ const sessionOptionsTwo: CustomSessionOptions = {
   resave: false,
   saveUninitialized: false,
   cookie: {
-    secure: true, // if true only transmit cookie over https
+    secure: false, // if true only transmit cookie over https
     httpOnly: true, // if true prevent client side JS from reading the cookie
     maxAge: 1000 * 60 * 60 * 12, // session max age in miliseconds
     // sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
-    sameSite: "none",
+    sameSite: "lax",
   },
 };
 
@@ -132,11 +134,11 @@ const sessionOptionsThree: CustomSessionOptions = {
   resave: false,
   saveUninitialized: false,
   cookie: {
-    secure: true, // if true only transmit cookie over https
+    secure: false, // if true only transmit cookie over https
     httpOnly: true, // if true prevent client side JS from reading the cookie
     maxAge: 1000 * 60 * 60 * 12, // session max age in miliseconds
     // sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
-    sameSite: "none",
+    sameSite: "lax",
   },
 };
 const sessionOptionsFour: CustomSessionOptions = {
@@ -146,11 +148,11 @@ const sessionOptionsFour: CustomSessionOptions = {
   resave: false,
   saveUninitialized: false,
   cookie: {
-    secure: true, // if true only transmit cookie over https
+    secure: false, // if true only transmit cookie over https
     httpOnly: true, // if true prevent client side JS from reading the cookie
     maxAge: 1000 * 60 * 60 * 12, // session max age in miliseconds
     // sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
-    sameSite: "none",
+    sameSite: "lax",
   },
 };
 
