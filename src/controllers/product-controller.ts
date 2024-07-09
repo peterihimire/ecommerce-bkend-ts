@@ -31,10 +31,12 @@ export const addProduct: RequestHandler = async (req, res, next) => {
     price,
     brand,
     countInStock,
-    rating,
+    popular,
     desc,
     size,
-    numReviews,
+    featured,
+    flashSale,
+    oldPrice,
   } = req.body;
 
   console.log("thia is ...", Product);
@@ -70,12 +72,14 @@ export const addProduct: RequestHandler = async (req, res, next) => {
       color: color as string,
       categories: categories as string[],
       price: parseFloat(price), // Convert price to number
+      oldPrice: parseFloat(oldPrice),
       brand: brand as string,
       countInStock: parseInt(countInStock), // Convert countInStock to number
-      rating: parseFloat(rating), // Convert rating to number
+      popular: popular as boolean,
       desc: desc as string,
       size: size as string,
-      numReviews: numReviews as string,
+      featured: featured as boolean,
+      flashSale: flashSale as boolean,
       // adminId: admin?.id as number,
     };
 

@@ -16,6 +16,24 @@ module.exports = {
         uuid: {
           type: DataTypes.STRING,
         },
+        firstname: {
+          type: DataTypes.STRING,
+        },
+        lastname: {
+          type: DataTypes.STRING,
+        },
+        email: {
+          type: DataTypes.STRING,
+        },
+        company: {
+          type: DataTypes.STRING,
+        },
+        ordernote: {
+          type: DataTypes.STRING,
+        },
+        state: {
+          type: DataTypes.STRING,
+        },
         address: {
           type: DataTypes.STRING,
         },

@@ -10,12 +10,15 @@ interface Product {
   color?: string;
   categories?: string[];
   price?: number;
+  oldPrice?: number;
   brand?: string;
   countInStock?: number;
-  rating?: number;
+
   desc?: string;
   size?: string;
-  numReviews?: string;
+  featured?: boolean;
+  flashSale: boolean;
+  popular: boolean;
 }
 
 export const foundProducts = async () => {
@@ -67,12 +70,14 @@ export const createProduct = async (data: {
   color: string;
   categories: string[];
   price: number;
+  oldPrice: number;
   brand: string;
   countInStock: number;
-  rating: number;
   desc: string;
   size: string;
-  numReviews: string;
+  featured?: boolean;
+  flashSale: boolean;
+  popular: boolean;
   // adminId: number;
 }) => {
   return Product.create({
@@ -82,12 +87,14 @@ export const createProduct = async (data: {
     color: data.color,
     categories: data.categories,
     price: data.price,
+    oldPrice: data.oldPrice,
     brand: data.brand,
     countInStock: data.countInStock,
-    rating: data.rating,
     desc: data.desc,
     size: data.size,
-    numReviews: data.numReviews,
+    featured: data.featured,
+    flashSale: data.flashSale,
+    popular: data.popular,
     // adminId: data.adminId,
   });
 };
@@ -113,8 +120,11 @@ export const updateProductId = async (id: string, data: Partial<Product>) => {
   if (data.categories !== undefined) {
     updated_product.categories = data.categories;
   }
-  if (!Number.isNaN(data.countInStock)) {
+  if (!Number.isNaN(data.price)) {
     updated_product.price = data.price;
+  }
+  if (!Number.isNaN(data.oldPrice)) {
+    updated_product.oldPrice = data.oldPrice;
   }
   if (data.brand !== undefined) {
     updated_product.brand = data.brand;
@@ -122,8 +132,8 @@ export const updateProductId = async (id: string, data: Partial<Product>) => {
   if (!Number.isNaN(data.countInStock)) {
     updated_product.countInStock = data.countInStock;
   }
-  if (!Number.isNaN(data.countInStock)) {
-    updated_product.rating = data.rating;
+  if (data.popular !== undefined) {
+    updated_product.popular = data.popular;
   }
   if (data.desc !== undefined) {
     updated_product.desc = data.desc;
@@ -131,10 +141,13 @@ export const updateProductId = async (id: string, data: Partial<Product>) => {
   if (data.size !== undefined) {
     updated_product.size = data.size;
   }
-  if (data.numReviews !== undefined) {
+  if (data.featured !== undefined) {
     // Convert numReviews to a number if provided as a string
     // updated_product.numReviews = parseInt(data.numReviews);
-    updated_product.numReviews = data.numReviews;
+    updated_product.featured = data.featured;
+  }
+  if (data.flashSale !== undefined) {
+    updated_product.flashSale = data.flashSale;
   }
 
   return updated_product.save();

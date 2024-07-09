@@ -3,6 +3,12 @@ import { BuildOptions, DataTypes, Model, Sequelize } from "sequelize";
 
 interface OrderAttributes {
   uuid: string;
+  firstname: string;
+  lastname: string;
+  email: string;
+  company: string;
+  ordernote: string;
+  state: string;
   address: string;
   totalQty: number;
   totalPrice: number;
@@ -13,6 +19,12 @@ interface OrderAttributes {
 module.exports = (sequelize: any, DataTypes: any) => {
   class Order extends Model<OrderAttributes> implements OrderAttributes {
     uuid!: string;
+    firstname!: string;
+    lastname!: string;
+    email!: string;
+    company!: string;
+    ordernote!: string;
+    state!: string;
     address!: string;
     totalQty!: number;
     totalPrice!: number;
@@ -49,7 +61,25 @@ module.exports = (sequelize: any, DataTypes: any) => {
         allowNull: false,
         unique: true,
       },
+      firstname: {
+        type: DataTypes.STRING,
+      },
+      lastname: {
+        type: DataTypes.STRING,
+      },
+      email: {
+        type: DataTypes.STRING,
+      },
       address: {
+        type: DataTypes.STRING,
+      },
+      company: {
+        type: DataTypes.STRING,
+      },
+      ordernote: {
+        type: DataTypes.STRING,
+      },
+      state: {
         type: DataTypes.STRING,
       },
       totalQty: {
