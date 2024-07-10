@@ -87,7 +87,7 @@ module.exports = (sequelize: any, DataTypes: any) => {
         type: DataTypes.DECIMAL(10, 2),
         get() {
           // Workaround until sequelize issue #8019 is fixed
-          const value = this.getDataValue("price");
+          const value = this.getDataValue("oldPrice");
           return value === null ? null : parseFloat(value.toString());
         },
         defaultValue: 0,

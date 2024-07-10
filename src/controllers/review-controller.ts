@@ -19,7 +19,7 @@ export const addReview: RequestHandler = async (req, res, next) => {
   const reg_email = passport?.user;
   console.log("This is the user session...", passport);
   // const reg_email = user?.email;
-  const { name, email, rating, is_save, review, prod_id } = req.body;
+  const { name, email, rating, is_save, review, prod_id, title } = req.body;
 
   try {
     const found_user = await foundUser(reg_email as string);
@@ -39,6 +39,7 @@ export const addReview: RequestHandler = async (req, res, next) => {
       email: email as string,
       rating: rating as number,
       review: review as string,
+      title: title as string,
       is_save: is_save as boolean,
       prod_id: found_product.id as number,
     };

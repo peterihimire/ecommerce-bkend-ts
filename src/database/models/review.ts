@@ -3,6 +3,7 @@ import { BuildOptions, DataTypes, Model, Sequelize } from "sequelize";
 
 interface ReviewAttributes {
   rating: number;
+  title: string;
   review: string;
   name: string;
   email: string;
@@ -13,6 +14,7 @@ interface ReviewAttributes {
 module.exports = (sequelize: any, DataTypes: any) => {
   class Review extends Model<ReviewAttributes> implements ReviewAttributes {
     rating!: number;
+    title!: string;
     review!: string;
     name!: string;
     email!: string;
@@ -37,6 +39,7 @@ module.exports = (sequelize: any, DataTypes: any) => {
   Review.init(
     {
       rating: DataTypes.FLOAT,
+      title: DataTypes.STRING,
       review: DataTypes.STRING,
       name: DataTypes.STRING,
       email: DataTypes.STRING,

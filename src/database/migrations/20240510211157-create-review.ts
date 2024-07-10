@@ -16,6 +16,9 @@ module.exports = {
         rating: {
           type: DataTypes.FLOAT,
         },
+        title: {
+          type: DataTypes.STRING,
+        },
         review: {
           type: DataTypes.STRING,
         },

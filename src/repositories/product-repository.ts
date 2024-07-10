@@ -13,7 +13,6 @@ interface Product {
   oldPrice?: number;
   brand?: string;
   countInStock?: number;
-
   desc?: string;
   size?: string;
   featured?: boolean;

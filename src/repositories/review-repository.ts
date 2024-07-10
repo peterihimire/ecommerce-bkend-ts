@@ -29,6 +29,7 @@ export const foundReviewId = async (id: string) => {
 
 export const createReview = async (data: {
   review: string;
+  title: string;
   name: string;
   email: string;
   rating: number;
@@ -37,6 +38,7 @@ export const createReview = async (data: {
 }) => {
   return Review.create({
     review: data.review,
+    title: data.title,
     name: data.name,
     email: data.email,
     rating: data.rating,
