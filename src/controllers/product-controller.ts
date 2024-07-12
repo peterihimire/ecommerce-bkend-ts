@@ -3,6 +3,7 @@ import { httpStatusCodes } from "../utils/http-status-codes";
 import BaseError from "../utils/base-error";
 import db from "../database/models";
 import dotenv from "dotenv";
+import qs from "qs";
 dotenv.config();
 const Product = db.Product;
 const Op = db.Sequelize.Op;
@@ -124,33 +125,42 @@ export const getProducts: RequestHandler = async (req, res, next) => {
 // @route POST api/auth/login
 // @desc Login into account
 // @access Private//0009785185
+
 export const getProductsFilter: RequestHandler = async (req, res, next) => {
-  const {
-    pageNum,
-    pageSize,
-    brand,
-    size,
-    price,
-    categories,
-    color,
-    minPrice,
-    maxPrice,
-  } = req.query;
+  const { page, limit, filter } = qs.parse(req.query as any) as {
+    page?: string;
+    limit?: string;
+    filter?: {
+      brand?: string;
+      size?: string;
+      price?: string;
+      categories?: string[];
+      color?: string;
+      minPrice?: string;
+      maxPrice?: string;
+    };
+  };
+
+  console.log("Query Parameters:", req.query);
+
+  const brand = filter?.brand;
+  const size = filter?.size;
+  const price = filter?.price;
+  const categories = filter?.categories;
+  const color = filter?.color;
+  const minPrice = filter?.minPrice;
+  const maxPrice = filter?.maxPrice;
 
   // Define a function to calculate pagination
   const getPagination = (
     pageNumb: string | undefined,
     sizeNum: string | undefined
   ) => {
-    const pageNumber: number = pageNumb ? parseInt(pageNumb, 10) : 0;
-    const pageSize: number = sizeNum ? parseInt(sizeNum, 10) : 5; // Default page size to 10 if not provided
+    const pageNumber: number = pageNumb ? parseInt(pageNumb, 10) : 1; // Start from page 1
+    const pageSize: number = sizeNum ? parseInt(sizeNum, 10) : 5; // Default page size to 5 if not provided
+    const offset: number = (pageNumber - 1) * pageSize; // Calculate offset based on 1-based page number
 
-    // Provide a default value of 10 if size is falsy
-    const limit: number = pageSize ? +pageSize : 10; // Default limit to 10 if size is falsy
-    const offset: number = pageNumber ? pageNumber * (limit ?? 0) : 0;
-    // const offset = page ? page * limit : 0;
-
-    return { limit, offset };
+    return { limit: pageSize, offset };
   };
 
   // Define a function to extract paging data
@@ -160,7 +170,8 @@ export const getProductsFilter: RequestHandler = async (req, res, next) => {
     limit: number
   ) => {
     const { count: totalItems, rows: products } = data;
-    const currentPage = page || 0;
+
+    const currentPage = page >= 1 ? page : 1; // Ensure currentPage starts from 1
     const totalPages = Math.ceil(totalItems / limit);
 
     return { totalItems, products, totalPages, currentPage };
@@ -176,23 +187,17 @@ export const getProductsFilter: RequestHandler = async (req, res, next) => {
   }
   // SINGLE PRICE
   if (price) {
-    // Assuming price is a numeric field in your database
     condition.price = { [Op.eq]: price };
   }
 
   // PRICE RANGE
   if (minPrice !== undefined || maxPrice !== undefined) {
-    // Create an empty object to store the condition
     condition.price = {};
-
-    // Check if minPrice is defined and set the lower bound of the range
     if (minPrice !== undefined) {
-      condition.price[Op.gte] = minPrice; // Op.gte means "greater than or equal to"
+      condition.price[Op.gte] = minPrice;
     }
-
-    // Check if maxPrice is defined and set the upper bound of the range
     if (maxPrice !== undefined) {
-      condition.price[Op.lte] = maxPrice; // Op.lte means "less than or equal to"
+      condition.price[Op.lte] = maxPrice;
     }
   }
 
@@ -206,16 +211,14 @@ export const getProductsFilter: RequestHandler = async (req, res, next) => {
     condition.size = { [Op.like]: `%${size}%` };
   }
 
-  // const { limit, offset } = getPagination(page, size);
   try {
-    const { limit, offset } = getPagination(
-      pageNum as string,
-      pageSize as string
-    );
-    const foundProducts = await foundProductsPag(condition, limit, offset);
-    console.log("This are the found products....", foundProducts);
+    const pageNum = page ? page.toString() : undefined;
+    const pageSize = limit ? limit.toString() : undefined;
+    const pagination = getPagination(pageNum, pageSize); // Ensure getPagination returns an object with limit
+    const { limit: pageLimit, offset } = pagination;
+    const foundProducts = await foundProductsPag(condition, pageLimit, offset);
 
-    const productsData = getPagingData(foundProducts, Number(pageNum), limit);
+    const productsData = getPagingData(foundProducts, Number(page), pageLimit);
     const { products, totalItems, totalPages, currentPage } = productsData;
     const productRecords = products.map((product: any) => {
       const { id, createdAt, updatedAt, ...others } = product.dataValues;
@@ -239,6 +242,122 @@ export const getProductsFilter: RequestHandler = async (req, res, next) => {
     next(error);
   }
 };
+
+// export const getProductsFilter: RequestHandler = async (req, res, next) => {
+//   const {
+//     pageNum,
+//     pageSize,
+//     brand,
+//     size,
+//     price,
+//     categories,
+//     color,
+//     minPrice,
+//     maxPrice,
+//   } = req.query;
+
+//   // Define a function to calculate pagination
+//   const getPagination = (
+//     pageNumb: string | undefined,
+//     sizeNum: string | undefined
+//   ) => {
+//     const pageNumber: number = pageNumb ? parseInt(pageNumb, 10) : 0;
+//     const pageSize: number = sizeNum ? parseInt(sizeNum, 10) : 5; // Default page size to 10 if not provided
+
+//     // Provide a default value of 10 if size is falsy
+//     const limit: number = pageSize ? +pageSize : 10; // Default limit to 10 if size is falsy
+//     const offset: number = pageNumber ? pageNumber * (limit ?? 0) : 0;
+//     // const offset = page ? page * limit : 0;
+
+//     return { limit, offset };
+//   };
+
+//   // Define a function to extract paging data
+//   const getPagingData = (
+//     data: { count: number; rows: any[] },
+//     page: number,
+//     limit: number
+//   ) => {
+//     const { count: totalItems, rows: products } = data;
+//     const currentPage = page || 0;
+//     const totalPages = Math.ceil(totalItems / limit);
+
+//     return { totalItems, products, totalPages, currentPage };
+//   };
+
+//   // Construct the condition based on the query parameters
+//   let condition: any = {};
+//   if (brand) {
+//     condition.brand = { [Op.like]: `%${brand}%` };
+//   }
+//   if (color) {
+//     condition.color = { [Op.like]: `%${color}%` };
+//   }
+//   // SINGLE PRICE
+//   if (price) {
+//     // Assuming price is a numeric field in your database
+//     condition.price = { [Op.eq]: price };
+//   }
+
+//   // PRICE RANGE
+//   if (minPrice !== undefined || maxPrice !== undefined) {
+//     // Create an empty object to store the condition
+//     condition.price = {};
+
+//     // Check if minPrice is defined and set the lower bound of the range
+//     if (minPrice !== undefined) {
+//       condition.price[Op.gte] = minPrice; // Op.gte means "greater than or equal to"
+//     }
+
+//     // Check if maxPrice is defined and set the upper bound of the range
+//     if (maxPrice !== undefined) {
+//       condition.price[Op.lte] = maxPrice; // Op.lte means "less than or equal to"
+//     }
+//   }
+
+//   // CATEGORIES ARRAY
+//   if (categories) {
+//     condition.categories = {
+//       [Op.contains]: categories instanceof Array ? categories : [categories],
+//     };
+//   }
+//   if (size) {
+//     condition.size = { [Op.like]: `%${size}%` };
+//   }
+
+//   // const { limit, offset } = getPagination(page, size);
+//   try {
+//     const { limit, offset } = getPagination(
+//       pageNum as string,
+//       pageSize as string
+//     );
+//     const foundProducts = await foundProductsPag(condition, limit, offset);
+//     console.log("This are the found products....", foundProducts);
+
+//     const productsData = getPagingData(foundProducts, Number(pageNum), limit);
+//     const { products, totalItems, totalPages, currentPage } = productsData;
+//     const productRecords = products.map((product: any) => {
+//       const { id, createdAt, updatedAt, ...others } = product.dataValues;
+//       return others;
+//     });
+
+//     res.status(httpStatusCodes.OK).json({
+//       status: "success",
+//       msg: "Searched Products!.",
+//       data: {
+//         totalItems,
+//         productRecords,
+//         totalPages,
+//         currentPage,
+//       },
+//     });
+//   } catch (error: any) {
+//     if (!error.statusCode) {
+//       error.statusCode = httpStatusCodes.INTERNAL_SERVER;
+//     }
+//     next(error);
+//   }
+// };
 
 // @route POST api/auth/login
 // @desc Login into account

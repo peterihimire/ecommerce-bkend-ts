@@ -47,6 +47,7 @@
     "pdfmake-unicode": "^0.0.1",
     "pg": "^8.11.1",
     "pg-hstore": "^2.3.4",
+    "qs": "^6.12.3",
     "redis": "^4.6.7",
     "request-ip": "^3.3.0",
     "sequelize": "^6.32.1",
