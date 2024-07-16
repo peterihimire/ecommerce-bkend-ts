@@ -34,6 +34,7 @@ import { BuildOptions, DataTypes, Model, Sequelize } from "sequelize";
 interface OrderProductAttributes {
   title: string;
   price: number;
+  image: string;
   quantity: number;
   uuid: string;
 }
@@ -45,6 +46,7 @@ module.exports = (sequelize: any, DataTypes: any) => {
   {
     title!: string;
     price!: number;
+    image!: string;
     quantity!: number;
     uuid!: string;
 
@@ -78,6 +80,7 @@ module.exports = (sequelize: any, DataTypes: any) => {
         defaultValue: 0,
         allowNull: false,
       },
+      image: DataTypes.STRING,
       quantity: {
         type: DataTypes.INTEGER,
         defaultValue: 0,

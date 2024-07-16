@@ -73,6 +73,9 @@ module.exports = {
         price: {
           type: DataTypes.DECIMAL(10, 2),
         },
+        image: {
+          type: DataTypes.STRING,
+        },
         quantity: {
           type: DataTypes.INTEGER,
         },

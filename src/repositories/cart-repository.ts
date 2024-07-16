@@ -39,6 +39,7 @@ export const foundCartId = async (id: number) => {
             "id",
             "quantity",
             "title",
+            "image",
             "price",
             "cartId",
             "productId",
@@ -96,6 +97,7 @@ export const foundUserCartId = async (id: number) => {
             "id",
             "quantity",
             "title",
+            "image",
             "price",
             "cartId",
             "productId",
@@ -137,6 +139,7 @@ export const addCartProd = async (data: {
   addedAt: Date;
   title: string;
   price: number;
+  image: string;
 }) => {
   return CartProduct.create({
     cartId: data.cartId,
@@ -147,6 +150,7 @@ export const addCartProd = async (data: {
     addedAt: data.addedAt,
     title: data.title,
     price: data.price,
+    image: data.image,
   });
 };
 

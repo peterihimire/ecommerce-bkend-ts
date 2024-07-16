@@ -4,6 +4,7 @@ import { BuildOptions, DataTypes, Model, Sequelize } from "sequelize";
 interface CartProductAttributes {
   title: string;
   price: number;
+  image: string;
   quantity: number;
   addedBy: string;
   addedAt: Date;
@@ -17,6 +18,7 @@ module.exports = (sequelize: any, DataTypes: any) => {
   {
     title!: string;
     price!: number;
+    image!: string;
     quantity!: number;
     addedBy!: string;
     addedAt!: Date;
@@ -52,6 +54,7 @@ module.exports = (sequelize: any, DataTypes: any) => {
         defaultValue: 0,
         allowNull: false,
       },
+      image: DataTypes.STRING,
       quantity: {
         type: DataTypes.INTEGER,
         defaultValue: 1,

@@ -55,6 +55,7 @@ export const foundOrderId = async (id: number) => {
             "id",
             "quantity",
             "title",
+            "image",
             "price",
             "orderId",
             "productId",

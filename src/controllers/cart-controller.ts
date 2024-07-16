@@ -146,7 +146,7 @@ export const addCart: RequestHandler = async (req, res, next) => {
     // const productId = req.body.prod_id;
     // const product = await Product.findByPk(productId);
     const prod_info = await foundProductId(prod_id);
-    // console.log("Prod_Info...", prod_info);
+    console.log("Prod_Info yes...", prod_info);
 
     const existingCartProd = cart?.products?.find(
       (item: any) => item.uuid === prod_id
@@ -164,6 +164,7 @@ export const addCart: RequestHandler = async (req, res, next) => {
       prodId: prod_info?.id as number,
       quantity: newQty as number,
       addedBy: email as string,
+      image: prod_info.images[0] as string,
       // uuid: uuidv4() as string,
       uuid: cart.uuid as string,
       addedAt: new Date() as Date,
@@ -243,6 +244,7 @@ export const getCart: RequestHandler = async (req, res, next) => {
       );
     }
     const cart_prods = await foundCartId(existing_user.cart.id);
+    console.log("This is user cart product, checking for image", cart_prods);
 
     const totalCartPrice = cart_prods.products.reduce(
       (total: any, item: any) => {
@@ -263,6 +265,7 @@ export const getCart: RequestHandler = async (req, res, next) => {
         prod_uuid: item.uuid,
         title: item.cart_products.title,
         price: item.cart_products.price,
+        image: item.cart_products.image,
         quantity: item.cart_products.quantity,
       };
     });

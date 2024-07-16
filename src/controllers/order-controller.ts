@@ -89,7 +89,7 @@ export const addOrder: RequestHandler = async (req, res, next) => {
       created_order.uuid
     );
     const cart_prods = await foundCartId(existing_user.cart.id);
-    console.log("This is cart_prods...", cart_prods);
+    console.log("This is cart_prods in order checking image...", cart_prods);
     const products_arr = cart_prods.products.map((item: any) => {
       console.log("Single item..", item.cart_products);
       return {
