@@ -15,12 +15,14 @@ const router = Router();
 router.post(
   "/upload/profile_picture",
   profileImage,
+  isLoggedIn,
   // verifySessionAndAuthorization,
   uploadPicture
 );
 router.get("/acct_info", isLoggedIn, getUserInfo);
 router.patch(
   "/update",
+  isLoggedIn,
   // verifySessionAndAuthorization,
   updateUser
 );

@@ -55,8 +55,9 @@ export const getUserInfo: RequestHandler = async (req, res, next) => {
 // @desc Login into account
 // @access Private
 export const updateUser: RequestHandler = async (req, res, next) => {
-  const { user } = req.session;
-  const email = user?.email;
+   const { passport } = req.session;
+   const email = passport?.user;
+   console.log("This is the user session...", passport);
 
   const { first_name, last_name, gender, title, phone } = req.body;
 
@@ -115,8 +116,9 @@ export const updateUser: RequestHandler = async (req, res, next) => {
 // @desc To create an account
 // @access Public
 export const uploadPicture: RequestHandler = async (req, res, next) => {
-  const { user } = req.session;
-  const email = user?.email;
+  const { passport } = req.session;
+  const email = passport?.user;
+  console.log("This is the user session...", passport);
 
   try {
     // FOR USER
