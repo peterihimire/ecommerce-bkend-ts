@@ -83,8 +83,8 @@ export default function configurePassport(passport: PassportStatic) {
         clientID: process.env.GOOGLE_CLIENT_ID!,
         clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
         callbackURL:
-          "https://ecommerce.benkih.com/api/ecommerce/v1/auth/google/callback/",
-        // "http://127.0.0.1:4040/api/ecommerce/v1/auth/google/callback/",
+          // "https://ecommerce.benkih.com/api/ecommerce/v1/auth/google/callback/",
+          "http://127.0.0.1:4040/api/ecommerce/v1/auth/google/callback/",
         // scope: ["profile", "email"], // Adding required scopes here
       },
       async function (
@@ -92,6 +92,7 @@ export default function configurePassport(passport: PassportStatic) {
         refreshToken: string,
         profile: any,
         cb: (error: any, user?: any) => void
+        // done: (error: any, user?: any) => void,
       ) {
         console.log("Google profile object...", profile);
         // Implement your authentication logic here
@@ -106,7 +107,7 @@ export default function configurePassport(passport: PassportStatic) {
               acct_id: profile?.id,
             });
 
-            // GENERATE WALLET FOR NEW ACCOUNT
+            // GENERATE NEW ACCOUNT
             const user_data = {
               acct_id: created_user?.acct_id,
               userId: created_user?.id,
@@ -145,84 +146,3 @@ export default function configurePassport(passport: PassportStatic) {
     }
   );
 }
-
-//   // serializeUser
-//   console.log("Operation reaching here...............");
-//   passport.serializeUser(function (user, done) {
-//     console.log("From passport serielize, user...", user);
-//     done(null, user.phone);
-//   });
-
-//   // deserializeUser returns the entire User data,
-//   passport.deserializeUser(async function (phone, done) {
-//     try {
-//       const existing_user = await User.findOne({ where: { phone: phone } });
-//       console.log("From passport deserielize, existing_user...", existing_user);
-//       done(null, existing_user);
-//     } catch (error) {
-//       console.log("THisi si error...", error);
-//       done(error);
-//     }
-//   });
-// };
-
-// module.exports = passport;
-
-// //Persists user data inside
-// passport.serializeUser(async function (user, done) {
-//   console.log("From passport middleware config, user object...", user);
-//   done(null, await user?.phone);
-// });
-
-// passport.deserializeUser(async function (phone, done) {
-//   try {
-//     const existing_user = await User.findOne({
-//       where: { phone: phone },
-//     });
-// console.log(
-//   "From passport middleware deserielize, existing_user...",
-//   existing_user
-// );
-//     return done(null, existing_user);
-//   } catch (error) {
-//     return done(error);
-//   }
-// });
-
-// if (!existing_user) {
-//   done(
-//     null,
-//     false,
-//     new BaseError(
-//       "Account does not exist , please signup for an account!",
-//       httpStatusCodes.UNAUTHORIZED
-//     )
-//   );
-// }
-
-// if (existing_user && existing_user.blacklist === true) {
-//   done(
-//     null,
-//     false,
-//     new BaseError(
-//       "Account has been blacklisted!",
-//       httpStatusCodes.UNAUTHORIZED
-//     )
-//   );
-// }
-
-// const hashed_password = await bcrypt.compare(
-//   originalPassword,
-//   existing_user.password
-// );
-
-// if (!hashed_password) {
-//   done(
-//     null,
-//     false,
-//     new BaseError(
-//       "Wrong password or username!",
-//       httpStatusCodes.UNAUTHORIZED
-//     )
-//   );
-// }

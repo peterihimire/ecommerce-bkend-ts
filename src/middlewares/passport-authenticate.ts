@@ -15,7 +15,11 @@ import { httpStatusCodes } from "../utils/http-status-codes";
 // const httpStatusCodes = require("../utils/http-status-codes");
 // const BaseError = require("../utils/base-error");
 
-export function local_authenticate(req: Request, res: Response, next: NextFunction) {
+export function local_authenticate(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
   passport.authenticate("local-login", (err: any, user: any, info: any) => {
     console.log("This is user from authenticate", user);
     console.log("This is info from authenticate", info);
@@ -48,7 +52,11 @@ export function local_authenticate(req: Request, res: Response, next: NextFuncti
 }
 
 // Google authenticate middleware
-export function google_authenticate(req: Request, res: Response, next: NextFunction) {
+export function google_authenticate(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
   passport.authenticate("google", { scope: ["profile", "email"] })(
     req,
     res,
@@ -57,7 +65,11 @@ export function google_authenticate(req: Request, res: Response, next: NextFunct
 }
 
 // Google callback handler
-export function google_callback(req: Request, res: Response, next: NextFunction) {
+export function google_callback(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
   passport.authenticate("google", (err: any, user: any, info: any) => {
     console.log("Uuser from authenticate", user);
     console.log("Iinfo from authenticate", info);
@@ -76,57 +88,20 @@ export function google_callback(req: Request, res: Response, next: NextFunction)
       if (err) {
         return next(err);
       }
-      return res.status(httpStatusCodes.OK).json({
-        status: "success login",
-        user,
-      });
+      // return res.redirect(`http://localhost:3000/collections`);
+      // return res.status(httpStatusCodes.OK).json({
+      //   status: "success login",
+      //   user,
+      // });
+      req.user = user;
+      const userData = encodeURIComponent(JSON.stringify(user));
+      return res.redirect(
+        `http://localhost:3000/auth/google/callback?user=${userData}`
+      );
     });
   })(req, res, next);
 }
 
-// function google_authenticate(req, res, next) {
-//   passport.authenticate("google", { scope: ["profile"] }, (err, user, info) => {
-//     console.log("This is user from authenticate", user);
-//     console.log("This is info from authenticate", info);
-
-//     if (err) {
-//       return next(err);
-//     }
-
-//     // if (info) {
-//     //   return res.status(401).json({
-//     //     status: "fail",
-//     //     message: info,
-//     //   });
-//     // }
-
-//     if (!user) {
-//       return res.status(httpStatusCodes.UNAUTHORIZED).json({
-//         status: "fail",
-//         message: "Redirect to login.",
-//       });
-//     }
-
-//     req.logIn(user, (err) => {
-//       if (err) {
-//         return next(err);
-//       }
-// req.user = user;
-// next();
-//       return res.status(httpStatusCodes.OK).json({
-//         status: "success login",
-//         user,
-//       });
-//     });
-//     // return res.status(httpStatusCodes.OK).json({
-//     //   status: "success login",
-//     //   user,
-//     // });
-
-//     req.user = user;
-//     next();
-//   })(req, res, next);
-// }
 module.exports = {
   local_authenticate,
   google_authenticate,
