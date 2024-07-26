@@ -1,36 +1,20 @@
 import { Router } from "express";
 import {
   addCart,
+  addCartQty,
   getCart,
   updateProductQty,
   deleteCartProd,
+  updateCartProdQty,
 } from "../controllers/cart-controller";
-import {
-  isLoggedIn,
-  // verifySessionAndAuthorization
-} from "../middlewares/verify-session";
+import { isLoggedIn } from "../middlewares/verify-session";
 const router = Router();
 
-router.post(
-  "/add",isLoggedIn,
-  // verifySessionAndAuthorization,
-  addCart
-);
-router.get(
-  "/get_cart",isLoggedIn,
-  // verifySessionAndAuthorization,
-  getCart
-);
-// router.get("/get_product/:prod_id", getProduct);
-router.patch(
-  "/update_prod_qty",isLoggedIn,
-  // verifySessionAndAuthorization,
-  updateProductQty
-);
-router.delete(
-  "/delete_cart_prod",isLoggedIn,
-  // verifySessionAndAuthorization,
-  deleteCartProd
-);
+router.post("/add", isLoggedIn, addCart);
+router.post("/add-qty", isLoggedIn, addCartQty);
+router.get("/get_cart", isLoggedIn, getCart);
+router.patch("/update_prod_qty", isLoggedIn, updateProductQty);
+router.patch("/update-cart-product", isLoggedIn, updateCartProdQty);
+router.delete("/delete_cart_prod/:prod_id", isLoggedIn, deleteCartProd);
 
 export default router;
