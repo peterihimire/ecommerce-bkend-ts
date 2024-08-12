@@ -68,11 +68,10 @@ export const isLoggedIn: RequestHandler = (req, res, next) => {
   // passport adds this to the request object
   console.log("user object...", req.user);
   console.log("Google session object...", req.session);
+  console.log("status code here..", httpStatusCodes.UNAUTHORIZED);
 
   if (!req.isAuthenticated()) {
-    return next(
-      new BaseError("Session not valid continue!", httpStatusCodes.UNAUTHORIZED)
-    );
+    return next(new BaseError("Unauthenticated", httpStatusCodes.UNAUTHORIZED));
   }
   return next();
 };
