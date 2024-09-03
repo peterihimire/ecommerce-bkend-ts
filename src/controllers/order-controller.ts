@@ -15,6 +15,7 @@ const Order = db.Order;
 const Product = db.Product;
 const OrderProduct = db.OrderProduct;
 
+
 import { v4 as uuidv4 } from "uuid";
 import { foundProductId } from "../repositories/product-repository";
 import { foundUser } from "../repositories/user-repository";
@@ -128,10 +129,15 @@ export const addOrder: RequestHandler = async (req, res, next) => {
 
     console.log("Product arrays shit...", products_arr);
 
+    // Creates order
     const order_products = await addCartProds(products_arr);
+
+    // Clears the cart
 
     // const file = await generatePDFFile("invoice", created_order);
     // console.log("This is the file content...", file);
+
+    // Generates the order invoice
     const docDefinition = await generateOrder(
       // user,
       passport,

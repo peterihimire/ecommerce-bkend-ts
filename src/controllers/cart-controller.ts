@@ -692,6 +692,57 @@ export const deleteCartProd: RequestHandler = async (req, res, next) => {
   }
 };
 
+export const clearCart: RequestHandler = async (req, res, next) => {
+  const { passport } = req.session;
+  const email = passport?.user;
+
+  try {
+    if (email === undefined) {
+      return next(
+        new BaseError("Account does not exist!", httpStatusCodes.CONFLICT)
+      );
+    }
+
+    const existing_user = await foundUser(email);
+    const existing_cart = await existing_user.getCart();
+    if (!existing_cart) {
+      return next(new BaseError("Cart not found!", httpStatusCodes.CONFLICT));
+    }
+
+    let cart = await foundUserCartId(existing_user.id);
+    const cart_prods = (await foundCartId(existing_user.cart.id)) || [];
+
+    // Remove each product from the cart
+    for (const cart_prod of cart_prods.products) {
+      const prod_info = await foundProductId(cart_prod.uuid);
+      await removeCartProd(cart.id, prod_info.id);
+    }
+
+    // Update total quantity and price of the cart to 0 and save
+    cart.totalQty = 0;
+    cart.totalPrice = 0;
+    await cart.save();
+
+    const cart_response = {
+      cart_uuid: cart_prods?.uuid,
+      products: cart_prods.products,
+      total_qty: existing_user?.cart?.totalQty,
+      total_price: existing_user?.cart?.totalPrice,
+    };
+
+    res.status(httpStatusCodes.OK).json({
+      status: "success",
+      msg: "Cart products cleared.",
+      data: cart_response,
+    });
+  } catch (error: any) {
+    if (!error.statusCode) {
+      error.statusCode = httpStatusCodes.INTERNAL_SERVER;
+    }
+    next(error);
+  }
+};
+
 // @route POST api/auth/login
 // @desc Login into account
 // @access Private
